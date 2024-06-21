@@ -1,0 +1,19 @@
+{
+    "manifest_version": 3,
+    "name": "Hue Chess",
+    "version": "1.0",
+    "permissions": [
+        "activeTab",
+        "storage"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+        "matches": ["*://lichess.org/*"],
+        "js": ["content.js"]
+        }
+    ]
+}
+  
