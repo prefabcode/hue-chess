@@ -263,9 +263,10 @@ const updateProgressBar = (completedBoards = null, hueValue = null) => {
             progressBar.style.alignItems = 'center';
             progressBar.style.margin = '0 10px';
             progressBar.style.flexGrow = '1';
+            progressBar.style.justifyContent = 'flex-end';
 
             const progressBarContainer = document.createElement('div');
-            progressBarContainer.style.flexGrow = '1';
+            progressBarContainer.style.flexBasis = '180px';
             progressBarContainer.style.height = '10px';
             progressBarContainer.style.borderRadius = '5px';
             progressBarContainer.style.backgroundColor = '#ccc';
@@ -287,7 +288,6 @@ const updateProgressBar = (completedBoards = null, hueValue = null) => {
             progressBar.appendChild(levelText);
 
             const header = document.querySelector('header');
-            const siteTitleNav = header.querySelector('.site-title-nav');
             const siteButtons = header.querySelector('.site-buttons');
             header.insertBefore(progressBar, siteButtons);
         } else {
