@@ -133,13 +133,16 @@ const incrementHue = async () => {
                     // Increment completedBoards
                     chrome.storage.local.get(['completedBoards'], (result) => {
                         const completedBoards = (result.completedBoards || 0) + 1;
-                        chrome.storage.local.set({ completedBoards }, () => {
+                        chrome.storage.local.set({ completedBoards, currentHue: newValue }, () => {
                             console.log(`Completed boards incremented, now: ${completedBoards}`);
                             updateProgressBar(completedBoards, newValue);
                         });
                     });
                 } else {
-                    updateProgressBar(null, newValue);
+                    // Update current hue in storage
+                    chrome.storage.local.set({ currentHue: newValue }, () => {
+                        updateProgressBar(null, newValue);
+                    });
                 }
 
                 // Set the new value to the hue slider and dispatch the event
@@ -266,15 +269,17 @@ const updateProgressBar = (completedBoards = null, hueValue = null) => {
             progressBar.style.justifyContent = 'flex-end';
 
             const progressBarContainer = document.createElement('div');
+            progressBarContainer.id = 'progress-bar-container';
             progressBarContainer.style.flexBasis = '180px';
             progressBarContainer.style.height = '10px';
             progressBarContainer.style.borderRadius = '5px';
-            progressBarContainer.style.backgroundColor = '#ccc';
+            progressBarContainer.style.backgroundColor = '#8c8c8c';
 
             const progressFill = document.createElement('div');
+            progressFill.id = 'progress-fill';
             progressFill.style.height = '100%';
             progressFill.style.borderRadius = '5px';
-            progressFill.style.backgroundColor = '#4caf50';
+            progressFill.style.backgroundColor = 'hsl(88, 62%, 37%)';
             progressFill.style.width = `${progress}%`;
 
             progressBarContainer.appendChild(progressFill);
@@ -283,6 +288,7 @@ const updateProgressBar = (completedBoards = null, hueValue = null) => {
             const levelText = document.createElement('span');
             levelText.id = 'level-text';
             levelText.style.marginLeft = '10px';
+            levelText.style.marginBottom = '1px';
             levelText.textContent = `Level ${level}`;
 
             progressBar.appendChild(levelText);
@@ -291,15 +297,21 @@ const updateProgressBar = (completedBoards = null, hueValue = null) => {
             const siteButtons = header.querySelector('.site-buttons');
             header.insertBefore(progressBar, siteButtons);
         } else {
-            const progressFill = progressBar.querySelector('div');
+            const progressFill = progressBar.querySelector('#progress-fill');
             const levelText = document.getElementById('level-text');
             progressFill.style.width = `${progress}%`;
             levelText.textContent = `Level ${level}`;
         }
 
         // Adapt to light and dark modes
-        const isDarkMode = document.body.classList.contains('dark');
-        progressBar.style.color = isDarkMode ? '#f7f7f7' : '#5e5e5e';
+        const isDarkMode = document.body.classList.contains('dark') || document.body.classList.contains('transp');
+        if (isDarkMode) {
+            const progressBarContainer = progressBar.querySelector('#progress-bar-container');
+            const progressFill = progressBar.querySelector('#progress-fill');
+            progressFill.style.backgroundColor = '#f7f7f7';
+            progressBarContainer.style.backgroundColor = 'hsl(37, 5%, 22%)';
+        }
+
     });
 };
 
@@ -312,8 +324,8 @@ const init = () => {
         } else {
             console.log("Extension already initialized");
             // Initialize the progress bar with current values
-            chrome.storage.local.get(['completedBoards'], (result) => {
-                updateProgressBar(result.completedBoards, null);
+            chrome.storage.local.get(['completedBoards', 'currentHue'], (result) => {
+                updateProgressBar(result.completedBoards, result.currentHue);
             });
         }
     });
