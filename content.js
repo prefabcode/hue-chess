@@ -5,6 +5,12 @@ const timeControlIncrements = {
     'Classical': 11
 };
 
+const levelNames = [
+    "Brown", "Wood", "Wood2", "Wood3", "Wood4", "Maple", "Maple2", "Horsey", "Leather", "Blue",
+    "Blue2", "Blue3", "Canvas", "Blue-Marble", "IC", "Green", "Marble", "Green-Plastic", "Olive", "Grey",
+    "Metal", "Newspaper", "Purple", "Purple-Diag", "Pink"
+];
+
 const getGameType = () => {
     return new Promise((resolve) => {
         waitForElm('.game__meta .header .setup').then((setupElement) => {
@@ -256,6 +262,7 @@ const updateProgressBar = (completedBoards = null, hueValue = null) => {
     chrome.storage.local.get(['completedBoards'], (result) => {
         const level = (completedBoards !== null ? completedBoards : result.completedBoards) + 1;
         const progress = hueValue !== null ? hueValue : 0;
+        const levelName = levelNames[level - 1];
 
         let progressBar = document.getElementById('hue-progress-bar');
         if (!progressBar) {
@@ -289,7 +296,7 @@ const updateProgressBar = (completedBoards = null, hueValue = null) => {
             levelText.id = 'level-text';
             levelText.style.marginLeft = '10px';
             levelText.style.marginBottom = '1px';
-            levelText.textContent = `Level ${level}`;
+            levelText.textContent = `Level ${level} - ${levelName}`;
 
             progressBar.appendChild(levelText);
 
@@ -300,7 +307,7 @@ const updateProgressBar = (completedBoards = null, hueValue = null) => {
             const progressFill = progressBar.querySelector('#progress-fill');
             const levelText = document.getElementById('level-text');
             progressFill.style.width = `${progress}%`;
-            levelText.textContent = `Level ${level}`;
+            levelText.textContent = `Level ${level} - ${levelName}`;
         }
 
         // Adapt to light and dark modes
@@ -311,9 +318,9 @@ const updateProgressBar = (completedBoards = null, hueValue = null) => {
             progressFill.style.backgroundColor = '#f7f7f7';
             progressBarContainer.style.backgroundColor = 'hsl(37, 5%, 22%)';
         }
-
     });
 };
+
 
 const init = () => {
     console.log("Initializing extension...");
