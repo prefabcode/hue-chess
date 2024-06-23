@@ -129,6 +129,17 @@ const incrementHue = async () => {
                         nextButton.click();
                         console.log("Clicked next board button");
                     }
+
+                    // Increment completedBoards
+                    chrome.storage.local.get(['completedBoards'], (result) => {
+                        const completedBoards = (result.completedBoards || 0) + 1;
+                        chrome.storage.local.set({ completedBoards }, () => {
+                            console.log(`Completed boards incremented, now: ${completedBoards}`);
+                            updateProgressBar(completedBoards, newValue);
+                        });
+                    });
+                } else {
+                    updateProgressBar(null, newValue);
                 }
 
                 // Set the new value to the hue slider and dispatch the event
@@ -229,11 +240,66 @@ const initializeExtension = () => {
                 userTag.click(); // Close the user menu
 
                 // Mark the initialization as done
-                chrome.storage.local.set({ initialized: true }, () => {
+                chrome.storage.local.set({ initialized: true, completedBoards: 0 }, () => {
                     console.log("Initialization complete, flag set in storage");
+                    updateProgressBar(0, 0);
                 });
             });
         });
+    });
+};
+
+const updateProgressBar = (completedBoards = null, hueValue = null) => {
+    chrome.storage.local.get(['completedBoards'], (result) => {
+        const level = (completedBoards !== null ? completedBoards : result.completedBoards) + 1;
+        const progress = hueValue !== null ? hueValue : 0;
+
+        let progressBar = document.getElementById('hue-progress-bar');
+        if (!progressBar) {
+            // Create progress bar
+            progressBar = document.createElement('div');
+            progressBar.id = 'hue-progress-bar';
+            progressBar.style.display = 'flex';
+            progressBar.style.alignItems = 'center';
+            progressBar.style.margin = '0 10px';
+            progressBar.style.flexGrow = '1';
+
+            const progressBarContainer = document.createElement('div');
+            progressBarContainer.style.flexGrow = '1';
+            progressBarContainer.style.height = '10px';
+            progressBarContainer.style.borderRadius = '5px';
+            progressBarContainer.style.backgroundColor = '#ccc';
+
+            const progressFill = document.createElement('div');
+            progressFill.style.height = '100%';
+            progressFill.style.borderRadius = '5px';
+            progressFill.style.backgroundColor = '#4caf50';
+            progressFill.style.width = `${progress}%`;
+
+            progressBarContainer.appendChild(progressFill);
+            progressBar.appendChild(progressBarContainer);
+
+            const levelText = document.createElement('span');
+            levelText.id = 'level-text';
+            levelText.style.marginLeft = '10px';
+            levelText.textContent = `Level ${level}`;
+
+            progressBar.appendChild(levelText);
+
+            const header = document.querySelector('header');
+            const siteTitleNav = header.querySelector('.site-title-nav');
+            const siteButtons = header.querySelector('.site-buttons');
+            header.insertBefore(progressBar, siteButtons);
+        } else {
+            const progressFill = progressBar.querySelector('div');
+            const levelText = document.getElementById('level-text');
+            progressFill.style.width = `${progress}%`;
+            levelText.textContent = `Level ${level}`;
+        }
+
+        // Adapt to light and dark modes
+        const isDarkMode = document.body.classList.contains('dark');
+        progressBar.style.color = isDarkMode ? '#f7f7f7' : '#5e5e5e';
     });
 };
 
@@ -245,6 +311,10 @@ const init = () => {
             initializeExtension();
         } else {
             console.log("Extension already initialized");
+            // Initialize the progress bar with current values
+            chrome.storage.local.get(['completedBoards'], (result) => {
+                updateProgressBar(result.completedBoards, null);
+            });
         }
     });
 
