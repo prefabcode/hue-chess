@@ -1,0 +1,7 @@
+.sub.board .selector, 
+.sub.board .reset, 
+.sub.board .list,
+.sub.board .board-hue {
+    display: none !important;
+}
+
