@@ -4,8 +4,13 @@
     "version": "1.0",
     "permissions": [
         "activeTab",
-        "storage"
+        "storage",
+        "scripting"
     ],
+    "action": {
+        "default_popup": "popup.html"
+    },
+    "options_page": "popup.html",
     "background": {
         "service_worker": "background.js"
     },
@@ -14,6 +19,12 @@
         "matches": ["*://lichess.org/*"],
         "js": ["content.js"],
         "css": ["customStyles.css"]
+        }
+    ],
+    "web_accessible_resources": [
+        {
+          "resources": ["popup.html"],
+          "matches": ["<all_urls>"]
         }
     ]
 }

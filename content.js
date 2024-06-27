@@ -379,6 +379,8 @@ const init = () => {
         }
     });
 
+    monitorBoardDiv();
+
     checkUrlAndStartMonitoring();
     let currentUrl = window.location.href;
 
@@ -408,6 +410,47 @@ function waitForElm(selector) {
             subtree: true
         });
     });
+}
+
+function monitorBoardDiv() {
+    const observer = new MutationObserver(() => {
+        const boardDiv = document.querySelector('.sub.board');
+        const injectedDiv = document.querySelector('#injected-div');
+        if (boardDiv && !injectedDiv) {
+            injectDiv(boardDiv);
+        }
+    });
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+}
+
+function injectDiv(boardDiv) {
+    // Create the injected div
+    const injectedDiv = document.createElement('div');
+    injectedDiv.id = 'injected-div';
+
+    // Create the message
+    const message = document.createElement('p');
+    message.innerText = 'Board Settings controlled by Hue Chess Extension';
+
+    // Create the settings button
+    const settingsButton = document.createElement('button');
+    settingsButton.innerText = 'Open Hue Chess Settings';
+    settingsButton.addEventListener('click', () => {
+        chrome.runtime.sendMessage({ action: 'openSettings' });
+    });
+
+    // Append the message and button to the injected div
+    injectedDiv.appendChild(message);
+    injectedDiv.appendChild(settingsButton);
+
+    // Append the injected div to the board div
+    boardDiv.appendChild(injectedDiv);
+
+    console.log('Injected div added to .sub .board');
 }
 
 init();
