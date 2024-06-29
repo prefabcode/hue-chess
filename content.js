@@ -511,6 +511,8 @@ function openSettingsModal() {
     document.getElementById('export-progress').addEventListener('click', exportExtensionState);
     document.getElementById('import-progress').addEventListener('click', importExtensionState);
 }
+// expose settings modal to extension button
+window.openSettingsModal = openSettingsModal;
 
 function exportExtensionState() {
     chrome.storage.local.get(['initialized', 'completedBoards', 'currentHue'], (result) => {
