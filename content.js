@@ -462,6 +462,7 @@ function openSettingsModal() {
     let modal = document.querySelector('#hue-chess-settings-modal');
     if (modal) {
         modal.style.display = 'block';
+        updateModalContent();
         return;
     }
 
@@ -477,25 +478,16 @@ function openSettingsModal() {
     modal.style.zIndex = '1000';
     modal.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
 
-    // Create the modal content
     const modalContent = `
-        <h2>Hue Chess Challenge Extension Settings</h2>
-        <button id="export-progress">Export Progress</button>
-        <button id="import-progress">Import Progress</button>
-        <input type="text" id="import-input" placeholder="Paste base64 string here" />
-        <h3>Default Challenge (Active)</h3>
-        <p>Accumulate hue points from any game.</p>
-        <h3>Time Control Challenges</h3>
-        <p>(Selecting one will reset progress)</p>
-        <button class="challenge-button" data-challenge="bullet">Bullet Challenge</button>
-        <button class="challenge-button" data-challenge="blitz">Blitz Challenge</button>
-        <button class="challenge-button" data-challenge="rapid">Rapid Challenge</button>
-        <button class="challenge-button" data-challenge="classical">Classical Challenge</button>
-        <button id="reset-challenge">Reset Current Challenge</button>
-        <p>Current Challenge: Default</p>
-        <p>Current Level: 5</p>
-        <p>Hue Progress: 43/100</p>
-        <button id="close-settings-modal">Close</button>
+    <h2>Hue Chess Challenge Extension Settings</h2>
+    <button id="export-progress">Export Progress</button>
+    <button id="import-progress">Import Progress</button>
+    <input type="text" id="import-input" placeholder="Paste base64 string here" />
+    <p>Accumulate hue points from any game.</p>
+    <button id="reset-progress">Reset Progress</button>
+    <p>Current Level: <span id="current-level">1</span></p>
+    <p>Hue Points: <span id="hue-points">0/100</span></p>
+    <button id="close-settings-modal">Close</button>
     `;
     modal.innerHTML = modalContent;
 
@@ -510,9 +502,22 @@ function openSettingsModal() {
     // Add event listeners for other buttons as needed
     document.getElementById('export-progress').addEventListener('click', exportExtensionState);
     document.getElementById('import-progress').addEventListener('click', importExtensionState);
+    document.getElementById('reset-progress').addEventListener('click', confirmResetProgress);
+
+    updateModalContent();
 }
 // expose settings modal to extension button
 window.openSettingsModal = openSettingsModal;
+
+function updateModalContent() {
+    chrome.storage.local.get(['completedBoards', 'currentHue'], (result) => {
+        const level = (result.completedBoards !== null ? result.completedBoards : 0) + 1;
+        const huePoints = `${result.currentHue || 0}/100`;
+
+        document.getElementById('current-level').innerText = level;
+        document.getElementById('hue-points').innerText = huePoints;
+    });
+}
 
 function exportExtensionState() {
     chrome.storage.local.get(['initialized', 'completedBoards', 'currentHue'], (result) => {
@@ -552,10 +557,32 @@ function importExtensionState() {
         chrome.storage.local.set(extensionState, () => {
             alert('Extension state imported successfully.');
             updateUIAfterImport(extensionState);
+            updateModalContent();
         });
     } catch (error) {
         alert('Invalid base64 string. Please try again.');
     }
+}
+
+function confirmResetProgress() {
+    const confirmReset = confirm('Are you sure you want to reset your progress? This action cannot be undone.');
+    if (confirmReset) {
+        resetProgress();
+        updateModalContent();
+    }
+}
+
+function resetProgress() {
+    const resetState = {
+        initialized: true,
+        completedBoards: 0,
+        currentHue: 0
+    };
+
+    chrome.storage.local.set(resetState, () => {
+        console.log('Progress has been reset.');
+        updateUIAfterImport(resetState);
+    });
 }
 
 function updateUIAfterImport(extensionState) {
