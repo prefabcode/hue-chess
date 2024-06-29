@@ -440,7 +440,7 @@ function injectDiv(boardDiv) {
     const settingsButton = document.createElement('button');
     settingsButton.innerText = 'Open Hue Chess Settings';
     settingsButton.addEventListener('click', () => {
-        chrome.runtime.sendMessage({ action: 'openSettings' });
+        openSettingsModal();
     });
 
     // Append the message and button to the injected div
@@ -451,6 +451,58 @@ function injectDiv(boardDiv) {
     boardDiv.appendChild(injectedDiv);
 
     console.log('Injected div added to .sub .board');
+}
+
+function openSettingsModal() {
+    // Check if the modal already exists
+    let modal = document.querySelector('#hue-chess-settings-modal');
+    if (modal) {
+        modal.style.display = 'block';
+        return;
+    }
+
+    // Create the modal
+    modal = document.createElement('div');
+    modal.id = 'hue-chess-settings-modal';
+    modal.style.position = 'fixed';
+    modal.style.top = '50%';
+    modal.style.left = '50%';
+    modal.style.transform = 'translate(-50%, -50%)';
+    modal.style.backgroundColor = 'white';
+    modal.style.padding = '20px';
+    modal.style.zIndex = '1000';
+    modal.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
+
+    // Create the modal content
+    const modalContent = `
+        <h2>Hue Chess Challenge Extension Settings</h2>
+        <button id="export-progress">Export Progress</button>
+        <button id="import-progress">Import Progress</button>
+        <h3>Default Challenge (Active)</h3>
+        <p>Accumulate hue points from any game.</p>
+        <h3>Time Control Challenges</h3>
+        <p>(Selecting one will reset progress)</p>
+        <button class="challenge-button" data-challenge="bullet">Bullet Challenge</button>
+        <button class="challenge-button" data-challenge="blitz">Blitz Challenge</button>
+        <button class="challenge-button" data-challenge="rapid">Rapid Challenge</button>
+        <button class="challenge-button" data-challenge="classical">Classical Challenge</button>
+        <button id="reset-challenge">Reset Current Challenge</button>
+        <p>Current Challenge: Default</p>
+        <p>Current Level: 5</p>
+        <p>Hue Progress: 43/100</p>
+        <button id="close-settings-modal">Close</button>
+    `;
+    modal.innerHTML = modalContent;
+
+    // Append the modal to the body
+    document.body.appendChild(modal);
+
+    // Add event listeners for modal buttons
+    document.getElementById('close-settings-modal').addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    // Add event listeners for other buttons as needed
 }
 
 init();
