@@ -440,6 +440,10 @@ function injectDiv(boardDiv) {
     const settingsButton = document.createElement('button');
     settingsButton.innerText = 'Open Hue Chess Settings';
     settingsButton.addEventListener('click', () => {
+        const userTag = document.getElementById('user_tag');
+        const backButton = document.querySelector('.sub.board .head');
+        if (backButton) backButton.click();
+        if (userTag) userTag.click();
         openSettingsModal();
     });
 
@@ -575,7 +579,7 @@ function updateUIAfterImport(extensionState) {
             console.log("Clicked board button");
 
             waitForElm('.list').then((boardList) => {
-                const targetBoardTitle = levelNames[completedBoards];
+                const targetBoardTitle = levelNames[completedBoards].toLowerCase();
                 const targetBoardButton = boardList.querySelector(`button[title="${targetBoardTitle}"]`);
                 if (!targetBoardButton) {
                     console.log(`${targetBoardTitle} board button not found`);
@@ -595,6 +599,8 @@ function updateUIAfterImport(extensionState) {
                     hueSlider.value = currentHue;
                     hueSlider.dispatchEvent(new Event('input'));
                     console.log(`Set hue slider to ${currentHue}`);
+                    const backButton = document.querySelector('.sub.board .head');
+                    if (backButton) backButton.click();
                     userTag.click(); // Close the user menu
 
                     // Update the progress bar
