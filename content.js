@@ -439,6 +439,7 @@ function injectDiv(boardDiv) {
     // Create the settings button
     const settingsButton = document.createElement('button');
     settingsButton.innerText = 'Open Hue Chess Settings';
+    settingsButton.classList.add('button', 'button-green', 'text');
     settingsButton.addEventListener('click', () => {
         const userTag = document.getElementById('user_tag');
         const backButton = document.querySelector('.sub.board .head');
