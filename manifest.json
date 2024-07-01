@@ -17,6 +17,12 @@
         "js": ["content.js"],
         "css": ["customStyles.css"]
         }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources":  ["settings.html"],
+            "matches": ["<all_urls>"]
+        }
     ]
 }
   

@@ -466,45 +466,33 @@ function openSettingsModal() {
         return;
     }
 
-    // Create the modal
-    modal = document.createElement('div');
-    modal.id = 'hue-chess-settings-modal';
-    modal.style.position = 'fixed';
-    modal.style.top = '50%';
-    modal.style.left = '50%';
-    modal.style.transform = 'translate(-50%, -50%)';
-    modal.style.backgroundColor = 'white';
-    modal.style.padding = '20px';
-    modal.style.zIndex = '1000';
-    modal.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
+    fetch(chrome.runtime.getURL('settings.html'))
+        .then(response => response.text())
+        .then(data => {
+            // Create a temporary div to hold the fetched HTML
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = data;
 
-    const modalContent = `
-    <h2>Hue Chess Challenge Extension Settings</h2>
-    <button id="export-progress">Export Progress</button>
-    <button id="import-progress">Import Progress</button>
-    <input type="text" id="import-input" placeholder="Paste base64 string here" />
-    <p>Accumulate hue points from any game.</p>
-    <button id="reset-progress">Reset Progress</button>
-    <p>Current Level: <span id="current-level">1</span></p>
-    <p>Hue Points: <span id="hue-points">0/100</span></p>
-    <button id="close-settings-modal">Close</button>
-    `;
-    modal.innerHTML = modalContent;
+            // Extract the modal element from the fetched HTML
+            modal = tempDiv.querySelector('#hue-chess-settings-modal');
 
-    // Append the modal to the body
-    document.body.appendChild(modal);
+            // Append the modal to the body
+            document.body.appendChild(modal);
 
-    // Add event listeners for modal buttons
-    document.getElementById('close-settings-modal').addEventListener('click', () => {
-        modal.style.display = 'none';
-    });
+            modal.style.display = 'block';
 
-    // Add event listeners for other buttons as needed
-    document.getElementById('export-progress').addEventListener('click', exportExtensionState);
-    document.getElementById('import-progress').addEventListener('click', importExtensionState);
-    document.getElementById('reset-progress').addEventListener('click', confirmResetProgress);
+            // Add event listeners for modal buttons
+            document.getElementById('close-settings-modal').addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
 
-    updateModalContent();
+            document.getElementById('export-progress').addEventListener('click', exportExtensionState);
+            document.getElementById('import-progress').addEventListener('click', importExtensionState);
+            document.getElementById('reset-progress').addEventListener('click', confirmResetProgress);
+
+            // Update the modal content with current level and hue progress
+            updateModalContent();
+        });
 }
 // expose settings modal to extension button
 window.openSettingsModal = openSettingsModal;
