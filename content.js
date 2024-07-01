@@ -462,6 +462,7 @@ function openSettingsModal() {
     // Check if the modal already exists
     let modal = document.querySelector('#hue-chess-settings-modal');
     if (modal) {
+        document.body.style.overflowY = 'hidden';
         modal.showModal();
         updateModalContent();
         return;
@@ -480,10 +481,12 @@ function openSettingsModal() {
             // Append the modal to the body
             document.body.appendChild(modal);
 
+            document.body.style.overflowY = 'hidden';
             modal.showModal();
 
             // Add event listeners for modal buttons
             document.getElementById('close-settings-modal').addEventListener('click', () => {
+                document.body.style.overflowY = 'scroll';
                 modal.close();
             });
 
