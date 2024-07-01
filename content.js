@@ -462,7 +462,7 @@ function openSettingsModal() {
     // Check if the modal already exists
     let modal = document.querySelector('#hue-chess-settings-modal');
     if (modal) {
-        modal.style.display = 'block';
+        modal.showModal();
         updateModalContent();
         return;
     }
@@ -480,11 +480,11 @@ function openSettingsModal() {
             // Append the modal to the body
             document.body.appendChild(modal);
 
-            modal.style.display = 'block';
+            modal.showModal();
 
             // Add event listeners for modal buttons
             document.getElementById('close-settings-modal').addEventListener('click', () => {
-                modal.style.display = 'none';
+                modal.close();
             });
 
             document.getElementById('export-progress').addEventListener('click', exportExtensionState);
