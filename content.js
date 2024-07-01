@@ -1,8 +1,8 @@
 const timeControlIncrements = {
-    'Bullet': 1,
-    'Blitz': 4,
-    'Rapid': 7,
-    'Classical': 11
+    'Bullet': [1, 3],
+    'Blitz': [3, 6],
+    'Rapid': [6, 10],
+    'Classical': [10, 15]
 };
 
 const levelNames = [
@@ -18,8 +18,10 @@ const getGameType = () => {
 
             for (const [key, value] of Object.entries(timeControlIncrements)) {
                 if (setupText.includes(key)) {
-                    console.log(`Detected game type: ${key}, setting increment value to ${value}`);
-                    resolve(value);
+                    const [min, max] = value;
+                    const incrementValue = Math.floor(Math.random() * (max - min + 1)) + min;
+                    console.log(`Detected game type: ${key}, setting increment value to ${incrementValue}`);
+                    resolve(incrementValue);
                     return;
                 }
             }
