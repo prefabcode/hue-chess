@@ -9,12 +9,12 @@
     ],
     "action": {},
     "background": {
-        "service_worker": "background.js"
+        "service_worker": "build/background.js"
     },
     "content_scripts": [
         {
         "matches": ["*://lichess.org/*"],
-        "js": ["content.js"],
+        "js": ["build/background.js", "build/content.js"],
         "css": ["customStyles.css"]
         }
     ],
