@@ -1,4 +1,4 @@
-import { updateUIAfterImport, exportExtensionState, importExtensionState, confirmResetProgress } from './storageManagement.js';
+import { exportExtensionState, importExtensionState, confirmResetProgress } from './storageManagement.js';
 
 export const levelNames = [
     "Brown", "Wood", "Wood2", "Wood3", "Wood4", "Maple", "Maple2", "Horsey", "Leather", "Blue",
@@ -187,3 +187,58 @@ export const waitForElm = (selector) => {
         });
     });
 }
+
+export const updateUIAfterImport = (extensionState) => {
+    const { completedBoards, currentHue } = extensionState;
+
+    waitForElm('#user_tag').then((userTag) => {
+        userTag.click();
+
+        const dasherApp = document.getElementById('dasher_app');
+        if (!dasherApp) {
+            console.log("Dasher app not found");
+            return;
+        }
+
+        waitForElm('.subs').then((subsDiv) => {
+            const boardButton = Array.from(subsDiv.querySelectorAll('button')).find(button => button.textContent === 'Board');
+            if (!boardButton) {
+                console.log("Board button not found");
+                return;
+            }
+
+            boardButton.click();
+            console.log("Clicked board button");
+
+            waitForElm('.list').then((boardList) => {
+                const targetBoardTitle = levelNames[completedBoards].toLowerCase();
+                const targetBoardButton = boardList.querySelector(`button[title="${targetBoardTitle}"]`);
+                if (!targetBoardButton) {
+                    console.log(`${targetBoardTitle} board button not found`);
+                    return;
+                }
+
+                targetBoardButton.click();
+                console.log(`Clicked ${targetBoardTitle} board button`);
+
+                waitForElm('.board-hue').then((boardHueDiv) => {
+                    const hueSlider = boardHueDiv.querySelector('input.range');
+                    if (!hueSlider) {
+                        console.log("Hue slider not found");
+                        return;
+                    }
+
+                    hueSlider.value = currentHue;
+                    hueSlider.dispatchEvent(new Event('input'));
+                    console.log(`Set hue slider to ${currentHue}`);
+                    const backButton = document.querySelector('.sub.board .head');
+                    if (backButton) backButton.click();
+                    userTag.click(); // Close the user menu
+
+                    // Update the progress bar
+                    updateProgressBar(completedBoards, currentHue);
+                });
+            });
+        });
+    });
+};
