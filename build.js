@@ -4,7 +4,7 @@ const path = require('path');
 
 // Helper function to copy a file
 function copyFileSync(source, target) {
-  const targetFile = target;
+  let targetFile = target;
 
   // If target is a directory, a new file with the same name will be created
   if (fs.existsSync(target)) {
@@ -46,5 +46,17 @@ try {
   console.log('settings.html copied to build directory');
 } catch (err) {
   console.error('Error copying settings.html:', err);
+  process.exit(1);
+}
+
+// Copy manifest.json
+const sourceManifest = path.join(__dirname, 'manifest.json');
+const targetManifest = path.join(__dirname, 'build', 'manifest.json');
+
+try {
+  copyFileSync(sourceManifest, targetManifest);
+  console.log('manifest.json copied to build directory');
+} catch (err) {
+  console.error('Error copying manifest.json:', err);
   process.exit(1);
 }
