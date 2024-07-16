@@ -10,15 +10,9 @@ export const exportExtensionState = () => {
         const jsonString = JSON.stringify(extensionState);
         const base64String = btoa(jsonString);
 
-        // Create a textarea to copy the base64 string
-        const textarea = document.createElement('textarea');
-        textarea.value = base64String;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
+        navigator.clipboard.writeText(base64String);
 
-        alert('Extension state copied to clipboard as base64 string.');
+        alert('Hue chess profile string copied to clipboard');
     });
 };
 
