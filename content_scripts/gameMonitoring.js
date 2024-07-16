@@ -1,3 +1,5 @@
+import { waitForElm } from "./uiUpdates";
+
 export const getUserColor = () => {
     console.log("Attempting to get user color...");
     const userTag = document.getElementById('user_tag');

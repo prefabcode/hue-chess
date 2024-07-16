@@ -1,4 +1,4 @@
-import { updateProgressBar } from './uiUpdates.js';
+import { updateProgressBar, waitForElm, levelNames, updateModalContent } from './uiUpdates.js';
 
 export const exportExtensionState = () => {
     chrome.storage.local.get(['initialized', 'completedBoards', 'currentHue'], (result) => {
@@ -7,7 +7,6 @@ export const exportExtensionState = () => {
             completedBoards: result.completedBoards,
             currentHue: result.currentHue || 0,
         };
-
         const jsonString = JSON.stringify(extensionState);
         const base64String = btoa(jsonString);
 

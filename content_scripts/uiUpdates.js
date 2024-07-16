@@ -1,4 +1,10 @@
-import { updateUIAfterImport } from './storageManagement.js';
+import { updateUIAfterImport, exportExtensionState, importExtensionState, confirmResetProgress } from './storageManagement.js';
+
+export const levelNames = [
+    "Brown", "Wood", "Wood2", "Wood3", "Wood4", "Maple", "Maple2", "Horsey", "Leather", "Blue",
+    "Blue2", "Blue3", "Canvas", "Blue-Marble", "IC", "Green", "Marble", "Green-Plastic", "Olive", "Grey",
+    "Metal", "Newspaper", "Purple", "Purple-Diag", "Pink"
+];
 
 export const updateProgressBar = (completedBoards = null, hueValue = null) => {
     chrome.storage.local.get(['completedBoards'], (result) => {
@@ -161,3 +167,23 @@ export const updateModalContent = () => {
         document.getElementById('hue-points').innerText = huePoints;
     });
 };
+
+export const waitForElm = (selector) => {
+    return new Promise(resolve => {
+        if (document.querySelector(selector)) {
+            return resolve(document.querySelector(selector));
+        }
+
+        const observer = new MutationObserver(mutations => {
+            if (document.querySelector(selector)) {
+                observer.disconnect();
+                resolve(document.querySelector(selector));
+            }
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    });
+}

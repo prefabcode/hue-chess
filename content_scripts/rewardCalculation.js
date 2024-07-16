@@ -1,4 +1,4 @@
-import { updateProgressBar } from './uiUpdates.js';
+import { updateProgressBar, waitForElm } from './uiUpdates.js';
 
 const timeControlIncrements = {
     'Bullet': [1, 3],
@@ -6,12 +6,6 @@ const timeControlIncrements = {
     'Rapid': [6, 10],
     'Classical': [10, 15]
 };
-
-const levelNames = [
-    "Brown", "Wood", "Wood2", "Wood3", "Wood4", "Maple", "Maple2", "Horsey", "Leather", "Blue",
-    "Blue2", "Blue3", "Canvas", "Blue-Marble", "IC", "Green", "Marble", "Green-Plastic", "Olive", "Grey",
-    "Metal", "Newspaper", "Purple", "Purple-Diag", "Pink"
-];
 
 export const getGameType = () => {
     return new Promise((resolve) => {
