@@ -1,4 +1,6 @@
 import { updateProgressBar, monitorBoardDiv, waitForElm } from './uiUpdates.js';
+import { incrementHue  } from './rewardCalculation.js';
+import { checkUrlAndStartMonitoring } from './gameMonitoring.js';
 
 export const initializeExtension = () => {
     console.log("Initializing extension for the first time...");
@@ -98,7 +100,7 @@ export const initializeExtension = () => {
     });
 };
 
-export const init = (incrementHue, checkUrlAndStartMonitoring) => {
+export const init = () => {
     console.log("Initializing extension...");
 
     chrome.storage.local.get(['initialized'], (result) => {
