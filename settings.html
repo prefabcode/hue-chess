@@ -22,14 +22,33 @@
                 <p>Hue Points: <span id="hue-points"></span></p>
             </div>
             
-            <!-- Future Challenges Placeholder -->
-            <div class="challenges" style="display: none;">
-                <h3>Time Control Challenges (Coming Soon)</h3>
-                <p>Selecting one will reset progress</p>
-                <button class="challenge-button" data-challenge="bullet">Bullet Challenge</button>
-                <button class="challenge-button" data-challenge="blitz">Blitz Challenge</button>
-                <button class="challenge-button" data-challenge="rapid">Rapid Challenge</button>
-                <button class="challenge-button" data-challenge="classical">Classical Challenge</button>
+            <!-- Perks -->
+            <div class="perks">
+                <h3>Select Perks</h3>
+                <div>
+                    <input type="checkbox" id="berzerker-perk" name="berzerker-perk">
+                    <label for="berzerker-perk">Berzerker Mode: Extra hue points for winning with half the time or less.</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="gladiator-perk" name="gladiator-perk">
+                    <label for="gladiator-perk">Gladiator Mode: Lose all progress in a level if you lose more than N games.</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="bongcloud-perk" name="bongcloud-perk">
+                    <label for="bongcloud-perk">Bongcloud Mode: Extra hue points for a King move on move 2.</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="analysis-perk" name="analysis-perk">
+                    <label for="analysis-perk">Analysis Mode: Extra hue points for spending 5 minutes in post-game analysis if you win the next game.</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="revenge-perk" name="revenge-perk">
+                    <label for="revenge-perk">Revenge Mode: Extra hue points for beating an opponent you previously lost to.</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="speedrun-perk" name="speedrun-perk">
+                    <label for="speedrun-perk">Speedrun Mode: 4x-5x hue points per win.</label>
+                </div>
             </div>
             
             <!-- Actions -->
