@@ -1,4 +1,4 @@
-import { updateProgressBar, monitorBoardDiv, waitForElm } from './uiUpdates.js';
+import { updateProgressBar, monitorBoardDiv, waitForElm, updatePerksIcon } from './uiUpdates.js';
 import { incrementHue  } from './rewardCalculation.js';
 import { checkUrlAndStartMonitoring } from './gameMonitoring.js';
 
@@ -115,6 +115,7 @@ export const init = () => {
         }
     });
 
+    updatePerksIcon();
     monitorBoardDiv();
 
     checkUrlAndStartMonitoring(incrementHue);

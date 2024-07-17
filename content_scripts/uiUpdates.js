@@ -237,3 +237,75 @@ export const updateUIAfterImport = (extensionState) => {
         });
     });
 };
+
+export const updatePerksIcon = () => {
+    chrome.storage.local.get(['activePerks'], (result) => {
+        const activePerks = result.activePerks || [];
+        
+        // Check if there are any active perks
+        if (activePerks.length === 0) {
+            const perksIcon = document.getElementById('perks-icon');
+            if (perksIcon) {
+                perksIcon.remove();
+            }
+            return;
+        }
+
+        // Create the perks icon
+        let perksIcon = document.getElementById('perks-icon');
+        if (!perksIcon) {
+            perksIcon = document.createElement('div');
+            perksIcon.id = 'perks-icon';
+            perksIcon.style.position = 'relative';
+            perksIcon.style.display = 'flex';
+            perksIcon.style.alignItems = 'center';
+            perksIcon.style.marginRight = '10px';
+            perksIcon.style.cursor = 'pointer';
+
+            const perksIconImg = document.createElement('img');
+            perksIconImg.src = chrome.runtime.getURL('images/perks-icon.png'); // Assuming you have an icon image
+            perksIconImg.alt = 'Active Perks';
+            perksIconImg.style.width = '24px';
+            perksIconImg.style.height = '24px';
+            perksIcon.appendChild(perksIconImg);
+
+            const header = document.querySelector('header');
+            const progressBar = header.querySelector('#hue-progress-bar');
+            header.insertBefore(perksIcon, progressBar);
+
+            // Create the tooltip
+            const tooltip = document.createElement('div');
+            tooltip.id = 'perks-tooltip';
+            tooltip.style.position = 'absolute';
+            tooltip.style.bottom = '30px';
+            tooltip.style.left = '50%';
+            tooltip.style.transform = 'translateX(-50%)';
+            tooltip.style.padding = '10px';
+            tooltip.style.borderRadius = '5px';
+            tooltip.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+            tooltip.style.color = '#fff';
+            tooltip.style.whiteSpace = 'nowrap';
+            tooltip.style.visibility = 'hidden';
+            tooltip.style.opacity = '0';
+            tooltip.style.transition = 'opacity 0.3s';
+
+            perksIcon.appendChild(tooltip);
+
+            // Add event listeners once
+            perksIcon.addEventListener('mouseenter', () => {
+                tooltip.style.visibility = 'visible';
+                tooltip.style.opacity = '1';
+            });
+
+            perksIcon.addEventListener('mouseleave', () => {
+                tooltip.style.visibility = 'hidden';
+                tooltip.style.opacity = '0';
+            });
+        }
+    
+        // Update the tooltip content
+        const tooltip = document.getElementById('perks-tooltip');
+        tooltip.innerHTML = activePerks.length ? `Active Perks: ${activePerks.join(', ')}` : 'No Active Perks';
+
+    });
+};
