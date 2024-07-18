@@ -5,3 +5,113 @@
     display: none !important;
 }
 
+.speedrun-mode {
+    display: flex;
+    justify-content: center;
+}
+
+/* Switch styles */
+.cmn-toggle {
+    position: absolute;
+    margin-inline-start:-99999px}
+
+.force-ltr .cmn-toggle {
+    margin-left: -99999px
+}
+
+.cmn-toggle+label {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+    user-select: none;
+    padding: 1px;
+    width: 40px;
+    height: 24px;
+    border: 1px solid var(--c-border);
+    border-radius: 24px;
+}
+
+.cmn-toggle+label::before,.cmn-toggle+label::after {
+    display: block;
+    position: absolute;
+    content: "";
+    width: 22px;
+    height: 22px;
+    bottom: 0
+}
+
+html:not([dir=rtl]) .cmn-toggle+label::before,html:not([dir=rtl]) .cmn-toggle+label::after {
+    left: 0
+}
+
+html[dir=rtl] .cmn-toggle+label::before,html[dir=rtl] .cmn-toggle+label::after {
+    right: 0
+}
+
+.cmn-toggle+label::before {
+    font-size: 1em;
+    z-index: 1;
+    text-align: center;
+    line-height: 22px
+}
+
+.cmn-toggle+label::after {
+    border-radius: 100%;
+    box-shadow: 0 1px 2.5px rgba(0,0,0,.3)
+}
+
+html.transp .cmn-toggle+label::after {
+    background: linear-gradient(to bottom, hsl(37, 7%, 22%), hsl(37, 5%, 19%) 100%)
+}
+
+.cmn-toggle:not(:checked)+label {
+    background-color: var(--c-bad)
+}
+
+.cmn-toggle--subtle:not(:checked)+label {
+    background-color: var(--c-font-dimmer)
+}
+
+.cmn-toggle:checked+label {
+    background-color: var(--c-good)
+}
+
+.cmn-toggle:disabled+label {
+    opacity: 60%;
+    cursor: not-allowed !important
+}
+
+.cmn-toggle:hover:not(:disabled)+label {
+    transition: background 150ms
+}
+
+.cmn-toggle:hover:not(:disabled)+label::before {
+    transition: margin 150ms,color 150ms
+}
+
+.cmn-toggle:hover:not(:disabled)+label::after {
+    transition: margin 150ms
+}
+
+html.transp .cmn-toggle:hover:not(:disabled)+label::after {
+    background: linear-gradient(to bottom, hsl(37, 7%, 22%), hsl(37, 5%, 19%) 100%)
+}
+
+.cmn-toggle:not(:checked)+label::before {
+    content: "";
+    color: var(--c-bad)
+}
+
+.cmn-toggle--subtle:not(:checked)+label::before {
+    color: var(--c-font-dimmer)
+}
+
+.cmn-toggle:checked+label::before,.cmn-toggle:checked+label::after {
+    margin-inline-start:16px}
+
+.cmn-toggle:checked+label::before {
+    content: "";
+    color: var(--c-good)
+}
+

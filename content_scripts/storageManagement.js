@@ -83,3 +83,11 @@ export const getActivePerks = () => {
         });
     });
 };
+
+export const isSpeedrunModeEnabled = () => {
+    return new Promise((resolve) => {
+        chrome.storage.local.get(['speedrunMode'], (result) => {
+            resolve(result.speedrunMode || false);
+        });
+    });
+};

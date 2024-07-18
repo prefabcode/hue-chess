@@ -1,4 +1,6 @@
 import { updateProgressBar, waitForElm } from './uiUpdates.js';
+import { isSpeedrunModeEnabled } from './storageManagement.js';
+import { calculatePerkBonuses } from './perks.js';
 
 const timeControlIncrements = {
     'Bullet': [1, 3],
@@ -30,10 +32,17 @@ export const getGameType = () => {
 };
 
 export const incrementHue = async () => {
-    const incrementValue = await getGameType();
+    let incrementValue = await getGameType();
     console.log(`initial increment value ${incrementValue}`);
 
-    const perkBonus = await calculatePerkBonuses(incrementValue);
+    // Check if Speedrun mode is enabled
+    const speedrunMode = await isSpeedrunModeEnabled();
+    if (speedrunMode) {
+        incrementValue *= 4;
+        console.log(`Speedrun mode enabled, new increment value: ${incrementValue}`);
+    }
+
+    const perkBonus = await calculatePerkBonuses();
     console.log(`Perk bonus: ${perkBonus}`);
 
     incrementValue += perkBonus;

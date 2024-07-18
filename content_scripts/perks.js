@@ -1,52 +1,52 @@
 import { getActivePerks } from "./storageManagement.js";
 
-const isBerzerkerFulfilled = (incrementValue) => {
+const isBerzerkerFulfilled = () => {
     // will return either bonusValue or 0. 
     return 0;
 }
 
-const isGladiatorFulfilled = (incrementValue) => {
+const isGladiatorFulfilled = () => {
     return 0;
 }
 
-const isBongcloudFulfilled = (incrementValue) => {
+const isBongcloudFulfilled = () => {
     return 0;
 }
 
-const isAnalysisFulfilled = (incrementValue) => {
+const isAnalysisFulfilled = () => {
     return 0;
 }
 
-const isSpeedrunFulfilled = (incrementValue) => {
+const isSpeedrunFulfilled = () => {
     return 0;
 }
 
-const isRevengeFulfilled = (incrementValue) => {
+const isRevengeFulfilled = () => {
     return 0;
 }
 
-export const calculatePerkBonuses = async (incrementValue) => {
+export const calculatePerkBonuses = async () => {
     let bonus = 0;
 
     const activePerks = await getActivePerks(); // Function to get active perks from storage
 
     if (activePerks.includes('berzerker')) {
-        bonus += isBerzerkerFulfilled(incrementValue);
+        bonus += isBerzerkerFulfilled();
     }
     if (activePerks.includes('gladiator')) {
-        bonus += isGladiatorFulfilled(incrementValue);
+        bonus += isGladiatorFulfilled();
     }
     if (activePerks.includes('speedrun')) {
-        bonus += isSpeedrunFulfilled(incrementValue);
+        bonus += isSpeedrunFulfilled();
     }
     if (activePerks.includes('bongcloud')) {
-        bonus += isBongcloudFulfilled(incrementValue);
+        bonus += isBongcloudFulfilled();
     }
     if (activePerks.includes('analysis')) {
-        bonus += isAnalysisFulfilled(incrementValue);
+        bonus += isAnalysisFulfilled();
     }
     if (activePerks.includes('revenge')) {
-        bonus += isRevengeFulfilled(incrementValue);
+        bonus += isRevengeFulfilled();
     }
 
     return bonus;
