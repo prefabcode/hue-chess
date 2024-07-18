@@ -1,4 +1,4 @@
-import { exportExtensionState, importExtensionState, confirmResetProgress } from './storageManagement.js';
+import { exportExtensionState, importExtensionState, confirmResetProgress, updateActivePerks } from './storageManagement.js';
 import { levelNames } from './constants.js';
 
 export const updateProgressBar = (completedBoards = null, hueValue = null) => {
@@ -145,6 +145,16 @@ export const openSettingsModal = () => {
             document.getElementById('export-progress').addEventListener('click', exportExtensionState);
             document.getElementById('import-progress').addEventListener('click', importExtensionState);
             document.getElementById('reset-progress').addEventListener('click', confirmResetProgress);
+
+             // Add event listeners for perks checkboxes
+             const perkCheckboxes = document.querySelectorAll('.perks input[type="checkbox"]');
+             perkCheckboxes.forEach(checkbox => {
+                 checkbox.addEventListener('change', (event) => {
+                     const perk = event.target.id.replace('-perk', '');
+                     const isChecked = event.target.checked;
+                     updateActivePerks(perk, isChecked);
+                 });
+             });
 
             // Update the modal content with current level and hue progress
             updateModalContent();
