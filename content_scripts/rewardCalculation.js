@@ -80,7 +80,7 @@ export const incrementHue = async () => {
                 console.log(`Current hue value: ${currentValue}, New hue value: ${newValue}`);
 
                 if (newValue >= 100) {
-                    newValue = 0;
+                    let carryOverValue = newValue - 100;
                     console.log("Max hue reached, resetting to 0 and changing board");
 
                     // Change to the next board
@@ -95,9 +95,9 @@ export const incrementHue = async () => {
                     // Increment completedBoards
                     chrome.storage.local.get(['completedBoards'], (result) => {
                         const completedBoards = (result.completedBoards || 0) + 1;
-                        chrome.storage.local.set({ completedBoards, currentHue: newValue }, () => {
+                        chrome.storage.local.set({ completedBoards, currentHue: carryOverValue }, () => {
                             console.log(`Completed boards incremented, now: ${completedBoards}`);
-                            updateProgressBar(completedBoards, newValue);
+                            updateProgressBar(completedBoards, carryOverValue);
                         });
                     });
                 } else {
@@ -108,7 +108,7 @@ export const incrementHue = async () => {
                 }
 
                 // Set the new value to the hue slider and dispatch the event
-                hueSlider.value = newValue;
+                hueSlider.value = newValue >= 100 ? newValue - 100 : newValue;
                 hueSlider.dispatchEvent(new Event('input'));
                 console.log("Updated hue slider value");
                 userTag.click();
