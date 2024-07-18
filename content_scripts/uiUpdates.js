@@ -147,14 +147,24 @@ export const openSettingsModal = () => {
             document.getElementById('reset-progress').addEventListener('click', confirmResetProgress);
 
              // Add event listeners for perks checkboxes
-             const perkCheckboxes = document.querySelectorAll('.perks input[type="checkbox"]');
-             perkCheckboxes.forEach(checkbox => {
-                 checkbox.addEventListener('change', (event) => {
-                     const perk = event.target.id.replace('-perk', '');
-                     const isChecked = event.target.checked;
-                     updateActivePerks(perk, isChecked);
-                 });
-             });
+            const perkCheckboxes = document.querySelectorAll('.perks input[type="checkbox"]');
+            perkCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', (event) => {
+                    const perk = event.target.id.replace('-perk', '');
+                    const isChecked = event.target.checked;
+
+                    // Check the number of active perks
+                    chrome.storage.local.get(['activePerks'], (result) => {
+                        const activePerks = result.activePerks || [];
+                        if (isChecked && activePerks.length >= 4) {
+                            alert('You can only select up to 4 perks.');
+                            event.target.checked = false; // Uncheck the checkbox
+                        } else {
+                            updateActivePerks(perk, isChecked);
+                        }
+                    });
+                });
+            });
 
             // Update the modal content with current level and hue progress
             updateModalContent();
