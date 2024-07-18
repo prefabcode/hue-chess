@@ -75,3 +75,11 @@ export const updateActivePerks = (perk, isChecked) => {
         });
     });
 };
+
+export const getActivePerks = () => {
+    return new Promise((resolve) => {
+        chrome.storage.local.get(['activePerks'], (result) => {
+            resolve(result.activePerks || []);
+        });
+    });
+};

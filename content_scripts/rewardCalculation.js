@@ -31,7 +31,12 @@ export const getGameType = () => {
 
 export const incrementHue = async () => {
     const incrementValue = await getGameType();
-    console.log(`Incrementing hue by ${incrementValue} points...`);
+    console.log(`initial increment value ${incrementValue}`);
+
+    const perkBonus = await calculatePerkBonuses(incrementValue);
+    console.log(`Perk bonus: ${perkBonus}`);
+
+    incrementValue += perkBonus;
 
     waitForElm('#user_tag').then((userTag) => {
         userTag.click();
