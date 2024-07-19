@@ -1,4 +1,4 @@
-import { updateUIAfterImport, updateModalContent } from './uiUpdates.js';
+import { updateUIAfterImport, updateModalContent, updatePerksIcon } from './uiUpdates.js';
 
 export const exportExtensionState = () => {
     chrome.storage.local.get(['initialized', 'completedBoards', 'currentHue'], (result) => {
@@ -56,5 +56,38 @@ export const resetProgress = () => {
     chrome.storage.local.set(resetState, () => {
         console.log('Progress has been reset.');
         updateUIAfterImport(resetState);
+    });
+};
+
+export const updateActivePerks = (perk, isChecked) => {
+    chrome.storage.local.get(['activePerks'], (result) => {
+        let activePerks = result.activePerks || [];
+        if (isChecked) {
+            if (!activePerks.includes(perk)) {
+                activePerks.push(perk);
+            }
+        } else {
+            activePerks = activePerks.filter(p => p !== perk);
+        }
+        chrome.storage.local.set({ activePerks }, () => {
+            console.log(`Active perks updated: ${activePerks}`);
+            updatePerksIcon();  // Update the tooltip content
+        });
+    });
+};
+
+export const getActivePerks = () => {
+    return new Promise((resolve) => {
+        chrome.storage.local.get(['activePerks'], (result) => {
+            resolve(result.activePerks || []);
+        });
+    });
+};
+
+export const isSpeedrunModeEnabled = () => {
+    return new Promise((resolve) => {
+        chrome.storage.local.get(['speedrunMode'], (result) => {
+            resolve(result.speedrunMode || false);
+        });
     });
 };

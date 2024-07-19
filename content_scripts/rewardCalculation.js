@@ -1,4 +1,6 @@
 import { updateProgressBar, waitForElm } from './uiUpdates.js';
+import { isSpeedrunModeEnabled } from './storageManagement.js';
+import { calculatePerkBonuses } from './perks.js';
 
 const timeControlIncrements = {
     'Bullet': [1, 3],
@@ -30,8 +32,20 @@ export const getGameType = () => {
 };
 
 export const incrementHue = async () => {
-    const incrementValue = await getGameType();
-    console.log(`Incrementing hue by ${incrementValue} points...`);
+    let incrementValue = await getGameType();
+    console.log(`initial increment value ${incrementValue}`);
+
+    // Check if Speedrun mode is enabled
+    const speedrunMode = await isSpeedrunModeEnabled();
+    if (speedrunMode) {
+        incrementValue *= 4;
+        console.log(`Speedrun mode enabled, new increment value: ${incrementValue}`);
+    }
+
+    const perkBonus = await calculatePerkBonuses();
+    console.log(`Perk bonus: ${perkBonus}`);
+
+    incrementValue += perkBonus;
 
     waitForElm('#user_tag').then((userTag) => {
         userTag.click();
@@ -66,7 +80,7 @@ export const incrementHue = async () => {
                 console.log(`Current hue value: ${currentValue}, New hue value: ${newValue}`);
 
                 if (newValue >= 100) {
-                    newValue = 0;
+                    let carryOverValue = newValue - 100;
                     console.log("Max hue reached, resetting to 0 and changing board");
 
                     // Change to the next board
@@ -81,9 +95,9 @@ export const incrementHue = async () => {
                     // Increment completedBoards
                     chrome.storage.local.get(['completedBoards'], (result) => {
                         const completedBoards = (result.completedBoards || 0) + 1;
-                        chrome.storage.local.set({ completedBoards, currentHue: newValue }, () => {
+                        chrome.storage.local.set({ completedBoards, currentHue: carryOverValue }, () => {
                             console.log(`Completed boards incremented, now: ${completedBoards}`);
-                            updateProgressBar(completedBoards, newValue);
+                            updateProgressBar(completedBoards, carryOverValue);
                         });
                     });
                 } else {
@@ -94,7 +108,7 @@ export const incrementHue = async () => {
                 }
 
                 // Set the new value to the hue slider and dispatch the event
-                hueSlider.value = newValue;
+                hueSlider.value = newValue >= 100 ? newValue - 100 : newValue;
                 hueSlider.dispatchEvent(new Event('input'));
                 console.log("Updated hue slider value");
                 userTag.click();

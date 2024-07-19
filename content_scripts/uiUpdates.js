@@ -1,10 +1,5 @@
-import { exportExtensionState, importExtensionState, confirmResetProgress } from './storageManagement.js';
-
-export const levelNames = [
-    "Brown", "Wood", "Wood2", "Wood3", "Wood4", "Maple", "Maple2", "Horsey", "Leather", "Blue",
-    "Blue2", "Blue3", "Canvas", "Blue-Marble", "IC", "Green", "Marble", "Green-Plastic", "Olive", "Grey",
-    "Metal", "Newspaper", "Purple", "Purple-Diag", "Pink"
-];
+import { exportExtensionState, importExtensionState, confirmResetProgress, updateActivePerks } from './storageManagement.js';
+import { levelNames } from './constants.js';
 
 export const updateProgressBar = (completedBoards = null, hueValue = null) => {
     chrome.storage.local.get(['completedBoards'], (result) => {
@@ -150,6 +145,38 @@ export const openSettingsModal = () => {
             document.getElementById('export-progress').addEventListener('click', exportExtensionState);
             document.getElementById('import-progress').addEventListener('click', importExtensionState);
             document.getElementById('reset-progress').addEventListener('click', confirmResetProgress);
+            
+            // Add event listener for Speedrun mode toggle
+            const speedrunToggle = document.getElementById('toggle-speedrun-mode');
+            chrome.storage.local.get(['speedrunMode'], (result) => {
+                speedrunToggle.checked = result.speedrunMode || false;
+            });
+            speedrunToggle.addEventListener('change', (event) => {
+                const isEnabled = event.target.checked;
+                chrome.storage.local.set({ speedrunMode: isEnabled }, () => {
+                    console.log(`Speedrun mode set to ${isEnabled}`);
+                });
+            });
+            
+             // Add event listeners for perks checkboxes
+            const perkCheckboxes = document.querySelectorAll('.perks input[type="checkbox"]');
+            perkCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', (event) => {
+                    const perk = event.target.id.replace('-perk', '');
+                    const isChecked = event.target.checked;
+
+                    // Check the number of active perks
+                    chrome.storage.local.get(['activePerks'], (result) => {
+                        const activePerks = result.activePerks || [];
+                        if (isChecked && activePerks.length >= 4) {
+                            alert('You can only select up to 4 perks.');
+                            event.target.checked = false; // Uncheck the checkbox
+                        } else {
+                            updateActivePerks(perk, isChecked);
+                        }
+                    });
+                });
+            });
 
             // Update the modal content with current level and hue progress
             updateModalContent();
@@ -240,5 +267,78 @@ export const updateUIAfterImport = (extensionState) => {
                 });
             });
         });
+    });
+};
+
+export const updatePerksIcon = () => {
+    chrome.storage.local.get(['activePerks'], (result) => {
+        const activePerks = result.activePerks || [];
+        
+        // Check if there are any active perks
+        if (activePerks.length === 0) {
+            const perksIcon = document.getElementById('perks-icon');
+            if (perksIcon) {
+                perksIcon.remove();
+            }
+            return;
+        }
+        waitForElm('#hue-progress-bar').then(() => {
+            // Create the perks icon
+            let perksIcon = document.getElementById('perks-icon');
+            if (!perksIcon) {
+                perksIcon = document.createElement('div');
+                perksIcon.id = 'perks-icon';
+                perksIcon.style.position = 'relative';
+                perksIcon.style.display = 'flex';
+                perksIcon.style.alignItems = 'center';
+                perksIcon.style.marginRight = '10px';
+                perksIcon.style.cursor = 'pointer';
+    
+                const perksIconImg = document.createElement('img');
+                perksIconImg.src = chrome.runtime.getURL('images/perks-icon.png'); // Assuming you have an icon image
+                perksIconImg.alt = 'Active Perks';
+                perksIconImg.style.width = '24px';
+                perksIconImg.style.height = '24px';
+                perksIcon.appendChild(perksIconImg);
+    
+                const header = document.querySelector('header');
+                const progressBar = header.querySelector('#hue-progress-bar');
+                header.insertBefore(perksIcon, progressBar);
+    
+                // Create the tooltip
+                const tooltip = document.createElement('div');
+                tooltip.id = 'perks-tooltip';
+                tooltip.style.position = 'absolute';
+                tooltip.style.bottom = '30px';
+                tooltip.style.left = '50%';
+                tooltip.style.transform = 'translateX(-50%)';
+                tooltip.style.padding = '10px';
+                tooltip.style.borderRadius = '5px';
+                tooltip.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+                tooltip.style.color = '#fff';
+                tooltip.style.whiteSpace = 'nowrap';
+                tooltip.style.visibility = 'hidden';
+                tooltip.style.opacity = '0';
+                tooltip.style.transition = 'opacity 0.3s';
+    
+                perksIcon.appendChild(tooltip);
+    
+                // Add event listeners once
+                perksIcon.addEventListener('mouseenter', () => {
+                    tooltip.style.visibility = 'visible';
+                    tooltip.style.opacity = '1';
+                });
+    
+                perksIcon.addEventListener('mouseleave', () => {
+                    tooltip.style.visibility = 'hidden';
+                    tooltip.style.opacity = '0';
+                });
+            }
+        
+            // Update the tooltip content
+            const tooltip = document.getElementById('perks-tooltip');
+            tooltip.innerHTML = activePerks.length ? `Active Perks: ${activePerks.join(', ')}` : 'No Active Perks';
+        });
+
     });
 };
