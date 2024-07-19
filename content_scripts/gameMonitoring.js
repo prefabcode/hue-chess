@@ -70,35 +70,35 @@ export const isPlayingGame = () => {
         const apiUrl = `https://lichess.org/api/users/status?ids=${userName}&withGameIds=true`;
 
         fetch(apiUrl)
-					.then(response => {
-							if (!response.ok) {
-									throw new Error(`API request failed with status ${response.status}`);
-							}
-							return response.json();
-					})
-					.then(data => {
-							if (data && data.length > 0) {
-									const userStatus = data[0];
-									const currentGameId = window.location.pathname.split('/')[1];
-									const isPlaying = userStatus.playing && currentGameId.includes(userStatus.playingId);
-									
-									if (isPlaying) {
-											setPlayingId(userStatus.playingId).then(() => {
-													console.log("Playing ID stored:", userStatus.playingId);
-											});
-									}
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`API request failed with status ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data && data.length > 0) {
+                    const userStatus = data[0];
+                    const currentGameId = window.location.pathname.split('/')[1];
+                    const isPlaying = userStatus.playing && currentGameId.includes(userStatus.playingId);
 
-									console.log(isPlaying ? "User is playing a game" : "User is not playing a game");
-									resolve(isPlaying);
-							} else {
-									console.log("No data received from API or user not found");
-									resolve(false);
-							}
-					})
-					.catch(error => {
-							console.error("Error fetching user status from Lichess API:", error);
-							resolve(false);
-					});
+                    if (isPlaying) {
+                        setPlayingId(userStatus.playingId).then(() => {
+                            console.log("Playing ID stored:", userStatus.playingId);
+                        });
+                    }
+
+                    console.log(isPlaying ? "User is playing a game" : "User is not playing a game");
+                    resolve(isPlaying);
+                } else {
+                    console.log("No data received from API or user not found");
+                    resolve(false);
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching user status from Lichess API:", error);
+                resolve(false);
+            });
     });
 };
 
