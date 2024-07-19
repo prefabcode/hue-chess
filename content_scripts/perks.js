@@ -22,18 +22,14 @@ const isBongcloudFulfilled = async (userName) => {
 					}
 
 					const data = await response.text();
-					console.log("PGN Data:", data);
 
 					const parsedGames = pgnParser.parse(data);
-					console.log("Parsed Games:", parsedGames);
 
 					const game = parsedGames[0];
-					console.log("Parsed Game:", game);
 
 					// Determine the player's color
 					const whitePlayer = game.tags.White;
 					const blackPlayer = game.tags.Black;
-					console.log(`White Player: ${whitePlayer}, Black Player: ${blackPlayer}`);
 
 					let playerColor = null;
 
@@ -48,11 +44,9 @@ const isBongcloudFulfilled = async (userName) => {
 							return 0;
 					}
 
-					console.log(`Player ${userName} is playing as ${playerColor}.`);
 
 					// Check if the player played Ke2 on the second move
 					const moves = game.moves;
-					console.log("Moves:", moves);
 
 					let secondMove = null;
 
@@ -64,13 +58,13 @@ const isBongcloudFulfilled = async (userName) => {
 
 					console.log(`Second Move for ${playerColor}: ${secondMove}`);
 
-					if ((playerColor === 'white' && secondMove === 'Ke2') || (playerColor === 'black' && secondMove === 'Ke7')) {
-							console.log('Ke2 / Ke7 detected. Bongcloud bonus applied');
+					if (secondMove.startsWith('K')) {
+							console.log('King move detected on move 2. Bongcloud bonus applied');
 							const bonus = Math.floor(Math.random() * (4 - 2 + 1)) + 2;
 							console.log(`Bongcloud bonus points: ${bonus}`);
 							return bonus;
 					} else {
-							console.log('Player did not play Ke2 on the second move.');
+							console.log('Player did not play a King move on move 2.');
 					}
 			} catch (error) {
 					console.error("Error fetching game data from Lichess API:", error);
@@ -116,7 +110,7 @@ export const calculatePerkBonuses = async () => {
         bonus += isSpeedrunFulfilled();
     }
     if (activePerks.includes('bongcloud')) {
-        bonus += isBongcloudFulfilled(userName);
+        bonus += await isBongcloudFulfilled(userName);
     }
     if (activePerks.includes('analysis')) {
         bonus += isAnalysisFulfilled();
