@@ -80,7 +80,7 @@ export const isPlayingGame = () => {
                 if (data && data.length > 0) {
                     const userStatus = data[0];
                     const currentGameId = window.location.pathname.split('/')[1];
-                    const isPlaying = userStatus.playing && userStatus.playingId === currentGameId;
+                    const isPlaying = userStatus.playing && currentGameId.includes(userStatus.playingId);
                     console.log(isPlaying ? "User is playing a game" : "User is not playing a game");
                     resolve(isPlaying);
                 } else {
