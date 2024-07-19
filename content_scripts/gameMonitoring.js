@@ -1,5 +1,5 @@
-import { waitForElm } from "./uiUpdates";
 import { incrementHue } from "./rewardCalculation.js";
+import { setPlayingId } from "./storageManagement.js";
 
 export const getUserColor = () => {
     console.log("Attempting to get user color...");
@@ -81,6 +81,13 @@ export const isPlayingGame = () => {
                     const userStatus = data[0];
                     const currentGameId = window.location.pathname.split('/')[1];
                     const isPlaying = userStatus.playing && currentGameId.includes(userStatus.playingId);
+
+                    if (isPlaying) {
+                        setPlayingId(userStatus.playingId).then(() => {
+                            console.log("Playing ID stored:", userStatus.playingId);
+                        });
+                    }
+
                     console.log(isPlaying ? "User is playing a game" : "User is not playing a game");
                     resolve(isPlaying);
                 } else {

@@ -91,3 +91,20 @@ export const isSpeedrunModeEnabled = () => {
         });
     });
 };
+
+export const getPlayingId = () => {
+    return new Promise((resolve) => {
+        chrome.storage.local.get(['playingId'], (result) => {
+            resolve(result.playingId || null);
+        });
+    });
+};
+
+export const setPlayingId = (playingId) => {
+    return new Promise((resolve) => {
+        chrome.storage.local.set({ playingId }, () => {
+            console.log("Playing ID stored:", playingId);
+            resolve();
+        });
+    });
+};
