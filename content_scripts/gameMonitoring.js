@@ -1,4 +1,5 @@
 import { waitForElm } from "./uiUpdates";
+import { incrementHue } from "./rewardCalculation.js";
 
 export const getUserColor = () => {
     console.log("Attempting to get user color...");
@@ -94,7 +95,7 @@ export const isPlayingGame = () => {
     });
 };
 
-export const monitorGame = (incrementHue) => {
+export const monitorGame = () => {
     console.log("Monitoring game...");
     const userColor = getUserColor();
     if (!userColor) return;
@@ -108,13 +109,13 @@ export const monitorGame = (incrementHue) => {
     }, 1000);
 };
 
-export const checkUrlAndStartMonitoring = (incrementHue) => {
+export const checkUrlAndStartMonitoring = () => {
     const url = window.location.href;
     const gameIdPattern = /https:\/\/lichess\.org\/[a-zA-Z0-9]{8,}/;
     if (gameIdPattern.test(url)) {
         isPlayingGame().then((isPlaying) => {
             if (isPlaying) {
-                monitorGame(incrementHue);
+                monitorGame();
             } else {
                 console.log("User is not playing in this game, no monitoring needed");
             }

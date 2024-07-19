@@ -1,5 +1,4 @@
 import { updateProgressBar, monitorBoardDiv, waitForElm, updatePerksIcon } from './uiUpdates.js';
-import { incrementHue  } from './rewardCalculation.js';
 import { checkUrlAndStartMonitoring } from './gameMonitoring.js';
 
 export const initializeExtension = () => {
@@ -118,13 +117,13 @@ export const init = () => {
     updatePerksIcon();
     monitorBoardDiv();
 
-    checkUrlAndStartMonitoring(incrementHue);
+    checkUrlAndStartMonitoring();
     let currentUrl = window.location.href;
 
     setInterval(() => {
         if (currentUrl !== window.location.href) {
             currentUrl = window.location.href;
-            checkUrlAndStartMonitoring(incrementHue);
+            checkUrlAndStartMonitoring();
         }
     }, 1000);
 };
