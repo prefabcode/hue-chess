@@ -180,7 +180,7 @@ export const calculatePerkBonuses = async () => {
     const game = parsedGames[0];
 
     if (activePerks.includes('berzerker')) {
-      bonus += isBerzerkerFulfilled();
+      bonus += isBerzerkerFulfilled(userName, game);
     }
     if (activePerks.includes('gladiator')) {
       bonus += isGladiatorFulfilled();
