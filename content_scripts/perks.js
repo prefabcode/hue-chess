@@ -86,6 +86,12 @@ const isRevengeFulfilled = () => {
   return 0;
 }
 
+const isHueMasterFulfilled = () => {
+  const hasNoRatingClass = document.body.classList.contains('no-rating');
+  if (hasNoRatingClass) console.log('body has no-rating class, adding 1 hue point to bonus');
+  return hasNoRatingClass ? 1 : 0;
+}
+
 export const calculatePerkBonuses = async () => {
   let bonus = 0;
   // code that retrieves username.
@@ -117,6 +123,9 @@ export const calculatePerkBonuses = async () => {
   }
   if (activePerks.includes('revenge')) {
     bonus += isRevengeFulfilled();
+  }
+  if (activePerks.includes('hue-master')) {
+    bonus += isHueMasterFulfilled();
   }
 
   return bonus;
