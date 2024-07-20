@@ -168,8 +168,8 @@ export const openSettingsModal = () => {
                     // Check the number of active perks
                     chrome.storage.local.get(['activePerks'], (result) => {
                         const activePerks = result.activePerks || [];
-                        if (isChecked && activePerks.length >= 4) {
-                            alert('You can only select up to 4 perks.');
+                        if (isChecked && activePerks.length >= 3) {
+                            alert('You can only select up to 3 perks.');
                             event.target.checked = false; // Uncheck the checkbox
                         } else {
                             updateActivePerks(perk, isChecked);
