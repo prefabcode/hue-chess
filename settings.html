@@ -1,77 +1,76 @@
 <dialog id="hue-chess-settings-modal">
-    <div class="close-button-anchor">
-        <button id="close-settings-modal"
-            class="close-button" 
-            data-icon="" 
-            aria-label="Close">
-        </button>
-    </div>
-    <div class="scrollable">
-        <div class="dialog-content">
-            <h2>Hue Chess Settings</h2>
-            
-            <!-- Mode Description and Status -->
-            <div class="mode-status">
-                <p id="mode-description">Accumulate hue points by winning Bullet, Blitz, Rapid, or Classical games.</p>
-            </div>
-            
-            <!-- Current Level and Hue Points -->
-            <div class="progress-info">
-                <p>Current Level: <span id="current-level"></span></p>
-                <p>Hue Points: <span id="hue-points"></span></p>
-            </div>
-            
-            <!-- Speedrun Mode -->
-            <div class="speedrun-mode">
-                <label for="toggle-speedrun-mode" title="Speedrun Mode: 4x hue points per win">Speedrun Mode</label>
-                <div class="switch" title="Toggle Speedrun Mode">
-                    <input id="toggle-speedrun-mode" 
-                        class="cmn-toggle cmn-toggle--subtle" 
-                        type="checkbox">
-                    <label for="toggle-speedrun-mode"></label>
-                </div>
-            </div>
-            
-            <!-- Perks -->
-            <div class="perks">
-                <h3>Select Perks</h3>
-                <div>
-                    <input type="checkbox" id="berzerker-perk" name="berzerker-perk">
-                    <label for="berzerker-perk">Berzerker Mode: Extra hue points for winning with half the time or less.</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="gladiator-perk" name="gladiator-perk">
-                    <label for="gladiator-perk">Gladiator Mode: Lose all progress in a level if you lose more than N games.</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="bongcloud-perk" name="bongcloud-perk">
-                    <label for="bongcloud-perk">Bongcloud: Earn extra hue points for moving your king on move 2.</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="analysis-perk" name="analysis-perk">
-                    <label for="analysis-perk">Analysis Mode: Extra hue points for spending 5 minutes in post-game analysis if you win the next game.</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="revenge-perk" name="revenge-perk">
-                    <label for="revenge-perk">Revenge Mode: Extra hue points for beating an opponent you previously lost to.</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="hue-master-perk" name="hue-master-perk">
-                    <label for="hue-master-perk">Hue Master: Earn one extra hue point per win, as long as you have "Show player ratings" turned off within Lichess -> preferences -> display settings.</label>
-                </div>
-            </div>
-            
-            <!-- Actions -->
-            <div class="actions">
-                <button id="reset-progress">Reset Progress</button>
-            </div>
-            
-            <!-- Import/Export Options -->
-            <div class="import-export">
-                <button id="export-progress">Export Progress</button>
-                <button id="import-progress">Import Progress</button>
-                <input type="text" id="import-input" placeholder="Paste base64 string here" />
-            </div>
+  <div class="close-button-anchor">
+    <button id="close-settings-modal" class="close-button" data-icon="" aria-label="Close">
+    </button>
+  </div>
+  <div class="scrollable">
+    <div class="dialog-content">
+      <h2>Hue Chess Settings</h2>
+
+      <!-- Mode Description and Status -->
+      <div class="mode-status">
+        <p id="mode-description">Accumulate hue points by winning Bullet, Blitz, Rapid, or Classical games.</p>
+      </div>
+
+      <!-- Current Level and Hue Points -->
+      <div class="progress-info">
+        <p>Current Level: <span id="current-level"></span></p>
+        <p>Hue Points: <span id="hue-points"></span></p>
+      </div>
+
+      <!-- Speedrun Mode -->
+      <div class="speedrun-mode">
+        <label for="toggle-speedrun-mode" title="Speedrun Mode: 4x hue points per win">Speedrun Mode</label>
+        <div class="switch" title="Toggle Speedrun Mode">
+          <input id="toggle-speedrun-mode" class="cmn-toggle cmn-toggle--subtle" type="checkbox">
+          <label for="toggle-speedrun-mode"></label>
         </div>
+      </div>
+
+      <!-- Perks -->
+      <div class="perks">
+        <h3>Select Perks</h3>
+        <div>
+          <input type="checkbox" id="berzerker-perk" name="berzerker-perk">
+          <label for="berzerker-perk">Berzerker Mode: Extra hue points for winning with half the time or less.</label>
+        </div>
+        <div>
+          <input type="checkbox" id="gladiator-perk" name="gladiator-perk">
+          <label for="gladiator-perk">Gladiator Mode: Lose all progress in a level if you lose more than N
+            games.</label>
+        </div>
+        <div>
+          <input type="checkbox" id="bongcloud-perk" name="bongcloud-perk">
+          <label for="bongcloud-perk">Bongcloud: Earn extra hue points for moving your king on move 2.</label>
+        </div>
+        <div>
+          <input type="checkbox" id="analysis-perk" name="analysis-perk">
+          <label for="analysis-perk">Analysis Mode: Extra hue points for spending 5 minutes in post-game analysis if you
+            win the next game.</label>
+        </div>
+        <div>
+          <input type="checkbox" id="revenge-perk" name="revenge-perk">
+          <label for="revenge-perk">Revenge Mode: Extra hue points for beating an opponent you previously lost
+            to.</label>
+        </div>
+        <div>
+          <input type="checkbox" id="hue-master-perk" name="hue-master-perk">
+          <label for="hue-master-perk">Hue Master: Earn one extra hue point per win, as long as you have "Show player
+            ratings" turned off within Lichess -> preferences -> display settings.</label>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="actions">
+        <button id="reset-progress">Reset Progress</button>
+      </div>
+
+      <!-- Import/Export Options -->
+      <div class="import-export">
+        <button id="export-progress">Export Progress</button>
+        <button id="import-progress">Import Progress</button>
+        <input type="text" id="import-input" placeholder="Paste base64 string here" />
+      </div>
     </div>
+  </div>
 </dialog>
