@@ -1,8 +1,74 @@
 import { getActivePerks, getPlayingId } from "./storageManagement.js";
 import * as pgnParser from '@mliebelt/pgn-parser';
 
-const isBerzerkerFulfilled = () => {
-  // will return either bonusValue or 0.
+const isBerzerkerFulfilled = (userName, game) => {
+  const whitePlayer = game.tags.White;
+  const blackPlayer = game.tags.Black;
+
+  let playerColor = null;
+
+  if (whitePlayer === userName) {
+      playerColor = 'white';
+  } else if (blackPlayer === userName) {
+      playerColor = 'black';
+  }
+
+  if (!playerColor) {
+      console.error('Player not found in this game.');
+      return;
+  }
+
+  console.log(`Player ${userName} is playing as ${playerColor}.`);
+
+  // Extract time control information
+  const timeControl = game.tags['TimeControl'] || '';
+  const { seconds: initialTime, increment } = timeControl[0];
+
+  if (!initialTime) {
+      console.error('Time control not found or invalid.');
+      return;
+  }
+
+  console.log(`Initial Time: ${initialTime} seconds, Increment: ${increment || 0} seconds`);
+
+  // Check the last two moves made in the game
+  const moves = game.moves;
+  let lastMove = null;
+
+  if (moves.length > 0) {
+      const lastMoveIndex = moves.length - 1;
+      const secondLastMoveIndex = moves.length - 2;
+
+      const lastMoveData = moves[lastMoveIndex];
+      const secondLastMoveData = moves[secondLastMoveIndex];
+
+      if (lastMoveData.turn === playerColor.charAt(0)) {
+          lastMove = lastMoveData;
+      } else if (secondLastMoveData.turn === playerColor.charAt(0)) {
+          lastMove = secondLastMoveData;
+      }
+  }
+
+  if (!lastMove || !lastMove.commentDiag || !lastMove.commentDiag.clk) {
+      console.error('No valid last move with time information for the player.');
+      return;
+  }
+
+  console.log('last move:', lastMove);
+
+  const timeMatch = lastMove.commentDiag.clk;
+  const [hours, minutes, seconds] = timeMatch.split(':').map(Number);
+  const remainingTimeInSeconds = hours * 3600 + minutes * 60 + seconds;
+
+  console.log(`Last Move Remaining Time for ${playerColor}: ${remainingTimeInSeconds} seconds`);
+
+  const totalTimeAllowed = initialTime;
+
+  if (remainingTimeInSeconds >= totalTimeAllowed / 2) {
+    const bonus = Math.floor(Math.random() * (8 - 6 + 1)) + 6;
+    console.log(`Berzerker bonus applied: ${bonus}`);
+    return bonus;
+  } 
   return 0;
 }
 
