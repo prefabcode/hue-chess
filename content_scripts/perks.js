@@ -74,8 +74,26 @@ const isBerzerkerFulfilled = (userName, game) => {
   return 0;
 }
 
-const isGladiatorFulfilled = () => {
-  return 0;
+const isGladiatorFulfilled = (initialIncrementValue, gameType) => {
+  let bonus = 0;
+  switch (gameType) {
+    case 'Bullet':
+      bonus = (5 - initialIncrementValue) + Math.floor(Math.random() * 3); // Ensure total is 5-7
+      break;
+    case 'Blitz':
+      bonus = (8 - initialIncrementValue) + Math.floor(Math.random() * 3); // Ensure total is 8-10
+      break;
+    case 'Rapid':
+      bonus = (11 - initialIncrementValue) + Math.floor(Math.random() * 4); // Ensure total is 11-14
+      break;
+    case 'Classical':
+      bonus = (15 - initialIncrementValue) + Math.floor(Math.random() * 4); // Ensure total is 15-18
+      break;
+    case 'Unknown':
+      bonus = (8 - initialIncrementValue) + Math.floor(Math.random() * 3); // Ensure total is 8-10, for variants
+      break;
+  }
+  return bonus;
 }
 
 const isBongcloudFulfilled = (userName, game) => {
@@ -197,7 +215,7 @@ const containsEndgame = (moves) => {
   });
 };
 
-export const calculatePerkBonuses = async () => {
+export const calculatePerkBonuses = async (initialIncrementValue, gameType) => {
   let bonus = 0;
   // code that retrieves username.
   const userTag = document.getElementById('user_tag');
@@ -230,7 +248,7 @@ export const calculatePerkBonuses = async () => {
       bonus += isBerzerkerFulfilled(userName, game);
     }
     if (activePerks.includes('gladiator')) {
-      bonus += isGladiatorFulfilled();
+      bonus += isGladiatorFulfilled(initialIncrementValue, gameType);
     }
     if (activePerks.includes('bongcloud')) {
       bonus += isBongcloudFulfilled(userName, game);

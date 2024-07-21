@@ -12,3 +12,9 @@ export const materialValues = {
     'P': 1
 };
 
+export const timeControlIncrements = {
+    'Bullet': [1, 3],
+    'Blitz': [3, 6],
+    'Rapid': [6, 10],
+    'Classical': [10, 15]
+};

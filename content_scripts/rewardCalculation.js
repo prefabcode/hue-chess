@@ -1,15 +1,9 @@
 import { updateProgressBar, waitForElm } from './uiUpdates.js';
 import { isSpeedrunModeEnabled } from './storageManagement.js';
 import { calculatePerkBonuses } from './perks.js';
+import { timeControlIncrements } from './constants.js';
 
-const timeControlIncrements = {
-    'Bullet': [1, 3],
-    'Blitz': [3, 6],
-    'Rapid': [6, 10],
-    'Classical': [10, 15]
-};
-
-export const getGameType = () => {
+export const getInitialRewardValue = () => {
     return new Promise((resolve) => {
         waitForElm('.game__meta .header .setup').then((setupElement) => {
             const setupText = setupElement.innerText;
@@ -19,20 +13,20 @@ export const getGameType = () => {
                     const [min, max] = value;
                     const incrementValue = Math.floor(Math.random() * (max - min + 1)) + min;
                     console.log(`Detected game type: ${key}, setting increment value to ${incrementValue}`);
-                    resolve(incrementValue);
+                    resolve({ incrementValue, gameType: key });
                     return;
                 }
             }
 
             // Default to 1 if no game type is detected
             console.log("No game type detected, defaulting increment value to 1");
-            resolve(1);
+            resolve({ incrementValue: 1, gameType: 'Unknown' });
         });
     });
 };
 
 export const incrementHue = async () => {
-    let incrementValue = await getGameType();
+    let { incrementValue, gameType } = await getInitialRewardValue();
     console.log(`initial increment value ${incrementValue}`);
 
     // Check if Speedrun mode is enabled
@@ -42,7 +36,7 @@ export const incrementHue = async () => {
         console.log(`Speedrun mode enabled, new increment value: ${incrementValue}`);
     }
 
-    const perkBonus = await calculatePerkBonuses();
+    const perkBonus = await calculatePerkBonuses(incrementValue, gameType);
     console.log(`Perk bonus: ${perkBonus}`);
 
     incrementValue += perkBonus;
