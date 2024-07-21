@@ -4,3 +4,11 @@ export const levelNames = [
     "Metal", "Newspaper", "Purple", "Purple-Diag", "Pink"
 ];
 
+export const materialValues = {
+    'Q': 9,
+    'R': 5,
+    'B': 3,
+    'N': 3,
+    'P': 1
+};
+
