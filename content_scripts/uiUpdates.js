@@ -1,4 +1,4 @@
-import { exportExtensionState, importExtensionState, confirmResetProgress, updateActivePerks } from './storageManagement.js';
+import { exportExtensionState, importExtensionState, confirmResetProgress, updateActivePerks, setWinningStreak } from './storageManagement.js';
 import { levelNames } from './constants.js';
 
 export const updateProgressBar = (completedBoards = null, hueValue = null) => {
@@ -164,6 +164,11 @@ export const openSettingsModal = () => {
         checkbox.addEventListener('change', (event) => {
           const perk = event.target.id.replace('-perk', '');
           const isChecked = event.target.checked;
+
+          if (perk === 'hot-streak') {
+            console.log(`hot-streak perk toggled with value:${isChecked}, resetting win streak`);
+            setWinningStreak(0);
+          }
 
           // Check the number of active perks
           chrome.storage.local.get(['activePerks'], (result) => {

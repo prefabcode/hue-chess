@@ -1,6 +1,6 @@
 import * as pgnParser from '@mliebelt/pgn-parser';
 import { Chess } from 'chess.js'
-import { getActivePerks, getPlayingId } from "./storageManagement.js";
+import { getActivePerks, getPlayingId, getWinningStreak } from "./storageManagement.js";
 import { materialValues } from "./constants.js";
 
 const isBerzerkerFulfilled = (userName, game) => {
@@ -150,6 +150,23 @@ const isHueMasterFulfilled = () => {
   return hasNoRatingClass ? 1 : 0;
 }
 
+const isHotStreakFulfilled = async () => {
+  const winningStreak = await getWinningStreak();
+
+  let bonus = 0;
+
+  if (winningStreak === 1) {
+      bonus = Math.floor(Math.random() * (3 - 2 + 1)) + 2;
+  } else if (winningStreak === 2) {
+      bonus = Math.floor(Math.random() * (5 - 4 + 1)) + 4;
+  } else if (winningStreak >= 3) {
+      bonus = Math.floor(Math.random() * (7 - 6 + 1)) + 6;
+  }
+
+  console.log(`Hot Streak bonus points: ${bonus}`);
+  return bonus;
+}
+
 const calculateMaterialFromFEN = (fen) => {
   const pieceCount = { white: 0, black: 0 };
   const pieces = fen.split(' ')[0].split('');
@@ -215,26 +232,20 @@ export const calculatePerkBonuses = async () => {
     if (activePerks.includes('gladiator')) {
       bonus += isGladiatorFulfilled();
     }
-    if (activePerks.includes('speedrun')) {
-      bonus += isSpeedrunFulfilled();
-    }
     if (activePerks.includes('bongcloud')) {
       bonus += isBongcloudFulfilled(userName, game);
     }
     if (activePerks.includes('gambiteer')) {
       bonus += isGambiteerFulfilled(game);
     }
-    if (activePerks.includes('analysis')) {
-      bonus += isAnalysisFulfilled();
-    }
-    if (activePerks.includes('revenge')) {
-      bonus += isRevengeFulfilled();
-    }
     if (activePerks.includes('hue-master')) {
       bonus += isHueMasterFulfilled();
     }
     if (activePerks.includes('endgame-specialist')) {
       bonus += isEndgameSpecialistFulfilled(game);
+    }
+    if (activePerks.includes('hot-streak')) {
+      bonus += await isHotStreakFulfilled();
     }
   } catch (error) {
     console.error("Error fetching game data from Lichess API:", error);
