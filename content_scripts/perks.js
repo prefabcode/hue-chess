@@ -162,7 +162,6 @@ const calculateMaterialFromFEN = (fen) => {
       }
   });
 
-  console.log(`Material count from FEN: White = ${pieceCount.white}, Black = ${pieceCount.black}`);
   return pieceCount;
 };
 

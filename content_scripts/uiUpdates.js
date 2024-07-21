@@ -186,12 +186,17 @@ export const openSettingsModal = () => {
 window.openSettingsModal = openSettingsModal;
 
 export const updateModalContent = () => {
-  chrome.storage.local.get(['completedBoards', 'currentHue'], (result) => {
+  chrome.storage.local.get(['completedBoards', 'currentHue', 'activePerks'], (result) => {
     const level = (result.completedBoards !== null ? result.completedBoards : 0) + 1;
     const huePoints = `${result.currentHue || 0}/100`;
-
     document.getElementById('current-level').innerText = level;
     document.getElementById('hue-points').innerText = huePoints;
+    
+    const perkCheckboxes = document.querySelectorAll('.perks input[type="checkbox"]');
+    perkCheckboxes.forEach(checkbox => {
+      const perk = checkbox.id.replace('-perk', '');
+      checkbox.checked = result.activePerks.includes(perk);
+    });
   });
 };
 
