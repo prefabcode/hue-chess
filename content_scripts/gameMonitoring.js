@@ -1,5 +1,5 @@
 import { incrementHue } from "./rewardCalculation.js";
-import { setPlayingId } from "./storageManagement.js";
+import { getActivePerks, setPlayingId, setWinningStreak, getWinningStreak } from "./storageManagement.js";
 
 export const getUserColor = () => {
     console.log("Attempting to get user color...");
@@ -25,12 +25,12 @@ export const getUserColor = () => {
     return null;
 };
 
-export const checkForWin = (userColor) => {
-    console.log("Checking for win...");
+export const checkForWinOrLoss = (userColor) => {
+    console.log("Checking for win or loss...");
     const status = document.querySelector('section.status');
     if (!status) {
         console.log("Status element not found");
-        return false;
+        return { win: false, loss: false };
     }
 
     const statusText = status.innerText;
@@ -38,24 +38,22 @@ export const checkForWin = (userColor) => {
 
     if (userColor === 'white' && statusText.includes('White is victorious')) {
         console.log("User (white) has won");
-        return true;
+        return { win: true, loss: false };
     } else if (userColor === 'black' && statusText.includes('Black is victorious')) {
         console.log("User (black) has won");
-        return true;
+        return { win: true, loss: false };
+    } else if (userColor === 'white' && statusText.includes('Black is victorious')) {
+        console.log("User (white) has lost");
+        return { win: false, loss: true };
+    } else if (userColor === 'black' && statusText.includes('White is victorious')) {
+        console.log("User (black) has lost");
+        return { win: false, loss: true };
     }
-    console.log("No win detected");
-    return false;
+
+    console.log("No win or loss detected");
+    return { win: false, loss: false };
 };
 
-export const checkTimeElement = () => {
-    const timeElement = document.querySelector('.game__meta .header time.set');
-    if (timeElement && timeElement.innerText === 'right now') {
-        console.log("Game is ongoing (time element shows 'right now')");
-        return true;
-    }
-    console.log("Game is not ongoing (time element does not show 'right now')");
-    return false;
-};
 
 export const isPlayingGame = () => {
     return new Promise((resolve, reject) => {
@@ -107,14 +105,25 @@ export const monitorGame = () => {
     const userColor = getUserColor();
     if (!userColor) return;
 
-    const intervalId = setInterval(() => {
-        if (checkForWin(userColor)) {
+    const intervalId = setInterval(async () => {
+        const result = checkForWinOrLoss(userColor);
+        if (result.win) {
+            const activePerks = await getActivePerks(); 
+            if (activePerks.includes('hot-streak')) {
+                const winningStreak = await getWinningStreak();
+                await setWinningStreak(winningStreak + 1);
+            }
             incrementHue();
             clearInterval(intervalId);  // Stop checking after a win is detected
             console.log("Win detected, stopped checking");
+        } else if (result.loss) {
+            setWinningStreak(0); // Reset the winning streak on a loss
+            clearInterval(intervalId);  // Stop checking after a loss is detected
+            console.log("Loss detected, stopped checking");
         }
     }, 1000);
 };
+
 
 export const checkUrlAndStartMonitoring = () => {
     const url = window.location.href;
