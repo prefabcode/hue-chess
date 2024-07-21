@@ -152,18 +152,19 @@ const isHueMasterFulfilled = () => {
 
 const isHotStreakFulfilled = async () => {
   const winningStreak = await getWinningStreak();
-    let bonus = 0;
 
-    if (winningStreak === 0) {
-        bonus = Math.floor(Math.random() * (3 - 2 + 1)) + 2;
-    } else if (winningStreak === 1) {
-        bonus = Math.floor(Math.random() * (5 - 4 + 1)) + 4;
-    } else if (winningStreak >= 2) {
-        bonus = Math.floor(Math.random() * (7 - 6 + 1)) + 6;
-    }
+  let bonus = 0;
 
-    console.log(`Hot Streak bonus points: ${bonus}`);
-    return bonus;
+  if (winningStreak === 1) {
+      bonus = Math.floor(Math.random() * (3 - 2 + 1)) + 2;
+  } else if (winningStreak === 2) {
+      bonus = Math.floor(Math.random() * (5 - 4 + 1)) + 4;
+  } else if (winningStreak >= 3) {
+      bonus = Math.floor(Math.random() * (7 - 6 + 1)) + 6;
+  }
+
+  console.log(`Hot Streak bonus points: ${bonus}`);
+  return bonus;
 }
 
 const calculateMaterialFromFEN = (fen) => {
