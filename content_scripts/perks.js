@@ -1,5 +1,7 @@
-import { getActivePerks, getPlayingId } from "./storageManagement.js";
 import * as pgnParser from '@mliebelt/pgn-parser';
+import { Chess } from 'chess.js'
+import { getActivePerks, getPlayingId } from "./storageManagement.js";
+import { materialValues } from "./constants.js";
 
 const isBerzerkerFulfilled = (userName, game) => {
   const whitePlayer = game.tags.White;
@@ -132,23 +134,52 @@ const isGambiteerFulfilled = (game) => {
   return 0;
 };
 
-const isAnalysisFulfilled = () => {
+const isEndgameSpecialistFulfilled = (game) => {
+  const moves = game.moves;
+  if (containsEndgame(moves)) {
+   const bonus = Math.floor(Math.random() * (4 - 3 + 1)) + 3;
+   console.log(`Endgame bonus points: ${bonus}`);
+   return bonus;
+  }
   return 0;
-}
-
-const isSpeedrunFulfilled = () => {
-  return 0;
-}
-
-const isRevengeFulfilled = () => {
-  return 0;
-}
+};
 
 const isHueMasterFulfilled = () => {
   const hasNoRatingClass = document.body.classList.contains('no-rating');
   if (hasNoRatingClass) console.log('body has no-rating class, adding 1 hue point to bonus');
   return hasNoRatingClass ? 1 : 0;
 }
+
+const calculateMaterialFromFEN = (fen) => {
+  const pieceCount = { white: 0, black: 0 };
+  const pieces = fen.split(' ')[0].split('');
+  
+  pieces.forEach(piece => {
+      if (/[rnbq]/.test(piece)) {
+          pieceCount.black += materialValues[piece.toUpperCase()];
+      } else if (/[RNBQ]/.test(piece)) {
+          pieceCount.white += materialValues[piece];
+      }
+  });
+
+  console.log(`Material count from FEN: White = ${pieceCount.white}, Black = ${pieceCount.black}`);
+  return pieceCount;
+};
+
+const containsEndgame = (moves) => {
+  const chess = new Chess();
+  
+  console.log("Checking endgame condition for moves:");
+  return moves.some((move, index) => {
+      chess.move(move.notation.notation);
+      const fen = chess.fen();
+      const material = calculateMaterialFromFEN(fen);
+      if (material.white <= 13 && material.black <= 13) {
+          console.log("Endgame condition met.");
+          return true;
+      }
+  });
+};
 
 export const calculatePerkBonuses = async () => {
   let bonus = 0;
@@ -202,6 +233,9 @@ export const calculatePerkBonuses = async () => {
     }
     if (activePerks.includes('hue-master')) {
       bonus += isHueMasterFulfilled();
+    }
+    if (activePerks.includes('endgame-specialist')) {
+      bonus += isEndgameSpecialistFulfilled(game);
     }
   } catch (error) {
     console.error("Error fetching game data from Lichess API:", error);
