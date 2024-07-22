@@ -144,3 +144,19 @@ export const setGladiatorLossBuffer = (value) => {
 export const resetGladiatorLossBuffer = () => {
   return setGladiatorLossBuffer(1); // Reset to 1 loss allowed when taking perk / applying penalty / level up
 };
+
+export const getAllowGladiatorPerkRemoval = () => {
+  return new Promise((resolve) => {
+      chrome.storage.local.get(['allowGladiatorPerkRemoval'], (result) => {
+          resolve(result.allowGladiatorPerkRemoval || false);
+      });
+  });
+};
+
+export const setAllowGladiatorPerkRemoval = (value) => {
+  return new Promise((resolve) => {
+      chrome.storage.local.set({ allowGladiatorPerkRemoval: value }, () => {
+          resolve();
+      });
+  });
+};
