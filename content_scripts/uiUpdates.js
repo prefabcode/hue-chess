@@ -1,4 +1,4 @@
-import { exportExtensionState, importExtensionState, confirmResetProgress, updateActivePerks, setWinningStreak } from './storageManagement.js';
+import { exportExtensionState, importExtensionState, confirmResetProgress, updateActivePerks, setWinningStreak, resetGladiatorLossBuffer, setAllowGladiatorPerkRemoval, getAllowGladiatorPerkRemoval } from './storageManagement.js';
 import { levelNames } from './constants.js';
 
 export const updateProgressBar = (completedBoards = null, hueValue = null) => {
@@ -161,13 +161,33 @@ export const openSettingsModal = () => {
       // Add event listeners for perks checkboxes
       const perkCheckboxes = document.querySelectorAll('.perks input[type="checkbox"]');
       perkCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', (event) => {
+        checkbox.addEventListener('change', async (event) => {
           const perk = event.target.id.replace('-perk', '');
           const isChecked = event.target.checked;
 
           if (perk === 'hot-streak') {
             console.log(`hot-streak perk toggled with value:${isChecked}, resetting win streak`);
             setWinningStreak(0);
+          }
+
+          if (perk === 'gladiator') {
+            if (isChecked) {
+              const confirmSelection = confirm("Warning: You will not be able to remove the Gladiator perk until you level up or suffer a 20% hue point penalty. Do you want to proceed?");
+              if (!confirmSelection) {
+                event.target.checked = false; // Uncheck the checkbox
+                return;
+              } else {
+                await resetGladiatorLossBuffer();
+                await setAllowGladiatorPerkRemoval(false);
+              }
+            } else {
+              const canRemove = await getAllowGladiatorPerkRemoval();
+              if (!canRemove) {
+                alert("You cannot remove the Gladiator perk until you level up or suffer a 20% hue point penalty.");
+                event.target.checked = true; // Recheck the checkbox
+                return;
+              }
+            }
           }
 
           // Check the number of active perks
