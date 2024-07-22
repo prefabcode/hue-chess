@@ -128,7 +128,7 @@ export const setWinningStreak = (streak) => {
 export const getGladiatorLossBuffer = () => {
   return new Promise((resolve) => {
     chrome.storage.local.get(['gladiatorLossBuffer'], (result) => {
-      resolve(result.gladiatorLosses || 0);
+      resolve(result.gladiatorLossBuffer || 0);
     });
   });
 };

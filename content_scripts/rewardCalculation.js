@@ -146,7 +146,7 @@ export const applyGladiatorPenalty = async () => {
 
         // Get the current hue value
         let currentHue = parseInt(hueSlider.value, 10);
-        let newHue = Math.max(0, Math.floor(currentHue * 0.8));
+        let newHue = currentHue - 20 >= 0 ? currentHue - 20 : 0;
         chrome.storage.local.set({ currentHue: newHue }, () => {
           updateProgressBar(null, newHue);
         });
