@@ -1,5 +1,5 @@
 import { updateProgressBar, waitForElm } from './uiUpdates.js';
-import { isSpeedrunModeEnabled, getActivePerks, setAllowGladiatorPerkRemoval } from './storageManagement.js';
+import { isSpeedrunModeEnabled, getActivePerks, setAllowGladiatorPerkRemoval, resetGladiatorLossBuffer } from './storageManagement.js';
 import { calculatePerkBonuses } from './perks.js';
 import { timeControlIncrements } from './constants.js';
 
@@ -97,6 +97,7 @@ export const incrementHue = async () => {
           // allow removal of gladiator perk on level up.
           const activePerks = await getActivePerks();
           if (activePerks.includes('gladiator')) {
+            await resetGladiatorLossBuffer();
             await setAllowGladiatorPerkRemoval(true);
           }
         } else {
