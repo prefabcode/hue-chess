@@ -46,36 +46,27 @@ export const checkForWinOrLoss = async (userColor) => {
     return { win: false, loss: false };
   }
   console.log(`Playing ID found: ${playingId}`);
-
   const apiUrl = `https://lichess.org/game/export/${playingId}?pgnInJson=true`;
   try {
     const response = await fetch(apiUrl);
     if (!response.ok) {
       throw new Error(`API request failed with status ${response.status}`);
     }
-    console.log(`API request successful: ${response.status}`);
 
     const data = await response.text();
-    console.log("Received PGN data:", data);
 
     const parsedGames = pgnParser.parse(data);
-    console.log("Parsed games:", parsedGames);
 
     const game = parsedGames[0];
-    console.log("Parsed game:", game);
 
     const result = { win: false, loss: false };
 
-    if ((userColor === 'white' && game.result === '1-0') || 
-        (userColor === 'black' && game.result === '0-1')) {
-      console.log(`User (${userColor}) has won`);
+    if ((userColor === 'white' && game.tags.Result === '1-0') || 
+        (userColor === 'black' && game.tags.Result === '0-1')) {
       result.win = true;
-    } else if ((userColor === 'white' && game.result === '0-1') || 
-               (userColor === 'black' && game.result === '1-0')) {
-      console.log(`User (${userColor}) has lost`);
+    } else if ((userColor === 'white' && game.tags.Result === '0-1') || 
+               (userColor === 'black' && game.tags.Result === '1-0')) {
       result.loss = true;
-    } else {
-      console.log("No win or loss detected in PGN data.");
     }
 
     console.log("Returning result:", result);
@@ -130,7 +121,7 @@ const fetchGameStream = async (streamId, playingId, userColor) => {
               console.log(`[${new Date().toISOString()}] Received data:`, data);
 
               // Handle the data (e.g., check if the game has finished)
-              if (data.status && data.status !== 'started') {
+              if (data.statusName && data.statusName !== 'started') {
                 console.log('The game has finished.');
                 const result = await checkForWinOrLoss(userColor);
                 const activePerks = await getActivePerks();
