@@ -37,15 +37,31 @@ export const getUserColor = () => {
   return null;
 };
 
-export const checkForWinOrLoss = async (userColor) => {
+export const checkForWinOrLoss = async (userColor, game) => {
   console.log("Checking for win or loss using PGN data...");
 
+  const result = { win: false, loss: false };
+
+  if ((userColor === 'white' && game.tags.Result === '1-0') || 
+      (userColor === 'black' && game.tags.Result === '0-1')) {
+    result.win = true;
+  } else if ((userColor === 'white' && game.tags.Result === '0-1') || 
+              (userColor === 'black' && game.tags.Result === '1-0')) {
+    result.loss = true;
+  }
+
+  console.log("Returning result:", result);
+  return result;
+};
+
+export const fetchParsedGame = async () => {
   const playingId = await getPlayingId();
   if (!playingId) {
     console.log("No playing ID found");
-    return { win: false, loss: false };
+    return null;
   }
   console.log(`Playing ID found: ${playingId}`);
+
   const apiUrl = `https://lichess.org/game/export/${playingId}?pgnInJson=true`;
   try {
     const response = await fetch(apiUrl);
@@ -54,36 +70,22 @@ export const checkForWinOrLoss = async (userColor) => {
     }
 
     const data = await response.text();
-
     const parsedGames = pgnParser.parse(data);
-
     const game = parsedGames[0];
 
-    const result = { win: false, loss: false };
-
-    if ((userColor === 'white' && game.tags.Result === '1-0') || 
-        (userColor === 'black' && game.tags.Result === '0-1')) {
-      result.win = true;
-    } else if ((userColor === 'white' && game.tags.Result === '0-1') || 
-               (userColor === 'black' && game.tags.Result === '1-0')) {
-      result.loss = true;
-    }
-
-    console.log("Returning result:", result);
-    return result;
+    return game;
 
   } catch (error) {
     console.error("Error fetching game data from Lichess API:", error);
-    return { win: false, loss: false };
+    return null;
   }
 };
-
 
 function generateStreamId() {
   return Math.random().toString(36).substring(2, 12);
 }
 
-const fetchGameStream = async (streamId, playingId, userColor) => {
+export const fetchGameStream = async (streamId, playingId, userColor) => {
   const apiUrl = `https://lichess.org/api/stream/games/${streamId}`;
   try {
     const response = await fetch(apiUrl, {
@@ -114,7 +116,7 @@ const fetchGameStream = async (streamId, playingId, userColor) => {
         let lines = ndjsonBuffer.split('\n');
         ndjsonBuffer = lines.pop(); // Keep the last incomplete line in the buffer
 
-        lines.forEach(async (line) => {
+        for (const line of lines) {
           if (line.trim()) {
             try {
               const data = JSON.parse(line);
@@ -123,38 +125,41 @@ const fetchGameStream = async (streamId, playingId, userColor) => {
               // Handle the data (e.g., check if the game has finished)
               if (data.statusName && data.statusName !== 'started') {
                 console.log('The game has finished.');
-                const result = await checkForWinOrLoss(userColor);
-                const activePerks = await getActivePerks();
-                if (result.win) {
-                  if (activePerks.includes('hot-streak')) {
-                    const winningStreak = await getWinningStreak();
-                    await setWinningStreak(winningStreak + 1);
-                  }
-                  if (activePerks.includes('gladiator')) {
-                    const gladiatorLossBuffer = await getGladiatorLossBuffer();
-                    await setGladiatorLossBuffer(gladiatorLossBuffer + 1);
-                  }
-                  incrementHue();
-                } else if (result.loss) {
-                  setWinningStreak(0); // Reset the winning streak on a loss
-                  if (activePerks.includes('gladiator')) {
-                    const gladiatorLossBuffer = await getGladiatorLossBuffer();
-                    if (gladiatorLossBuffer > 0) {
-                      await setGladiatorLossBuffer(gladiatorLossBuffer - 1);
-                    } else {
-                      await resetGladiatorLossBuffer();
-                      await applyGladiatorPenalty();
-                      await setAllowGladiatorPerkRemoval(true);
+                const game = await fetchParsedGame();
+                if (game) {
+                  const result = checkForWinOrLoss(userColor, game);
+                  const activePerks = await getActivePerks();
+                  if (result.win) {
+                    if (activePerks.includes('hot-streak')) {
+                      const winningStreak = await getWinningStreak();
+                      await setWinningStreak(winningStreak + 1);
+                    }
+                    if (activePerks.includes('gladiator')) {
+                      const gladiatorLossBuffer = await getGladiatorLossBuffer();
+                      await setGladiatorLossBuffer(gladiatorLossBuffer + 1);
+                    }
+                    incrementHue(game);
+                  } else if (result.loss) {
+                    setWinningStreak(0); // Reset the winning streak on a loss
+                    if (activePerks.includes('gladiator')) {
+                      const gladiatorLossBuffer = await getGladiatorLossBuffer();
+                      if (gladiatorLossBuffer > 0) {
+                        await setGladiatorLossBuffer(gladiatorLossBuffer - 1);
+                      } else {
+                        await resetGladiatorLossBuffer();
+                        await applyGladiatorPenalty();
+                        await setAllowGladiatorPerkRemoval(true);
+                      }
                     }
                   }
+                  reader.cancel();
                 }
-                reader.cancel();
               }
             } catch (error) {
               console.error('Error parsing NDJSON line:', error);
             }
           }
-        });
+        }
 
         read(); // Continue reading
       } catch (error) {
