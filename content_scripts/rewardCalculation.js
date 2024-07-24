@@ -25,7 +25,7 @@ export const getInitialRewardValue = () => {
   });
 };
 
-export const incrementHue = async () => {
+export const incrementHue = async (game) => {
   let { incrementValue, gameType } = await getInitialRewardValue();
   console.log(`initial increment value ${incrementValue}`);
 
@@ -36,7 +36,7 @@ export const incrementHue = async () => {
     console.log(`Speedrun mode enabled, new increment value: ${incrementValue}`);
   }
 
-  const perkBonus = await calculatePerkBonuses(incrementValue, gameType);
+  const perkBonus = await calculatePerkBonuses(incrementValue, gameType, game);
   console.log(`Perk bonus: ${perkBonus}`);
 
   incrementValue += perkBonus;

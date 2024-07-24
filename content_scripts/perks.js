@@ -215,7 +215,7 @@ const containsEndgame = (moves) => {
   });
 };
 
-export const calculatePerkBonuses = async (initialIncrementValue, gameType) => {
+export const calculatePerkBonuses = async (initialIncrementValue, gameType, game) => {
   let bonus = 0;
   // code that retrieves username.
   const userTag = document.getElementById('user_tag');
@@ -227,47 +227,27 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType) => {
   const userName = userTag.innerText.trim();
   const activePerks = await getActivePerks(); // Function to get active perks from storage
 
-  const playingId = await getPlayingId();
-  if (!playingId) {
-    return bonus;
+  if (activePerks.includes('berzerker')) {
+    bonus += isBerzerkerFulfilled(userName, game);
   }
-
-  const apiUrl = `https://lichess.org/game/export/${playingId}?pgnInJson=true`;
-
-  try {
-    const response = await fetch(apiUrl);
-    if (!response.ok) {
-      throw new Error(`API request failed with status ${response.status}`);
-    }
-
-    const data = await response.text();
-    const parsedGames = pgnParser.parse(data);
-    const game = parsedGames[0];
-
-    if (activePerks.includes('berzerker')) {
-      bonus += isBerzerkerFulfilled(userName, game);
-    }
-    if (activePerks.includes('gladiator')) {
-      bonus += isGladiatorFulfilled(initialIncrementValue, gameType);
-    }
-    if (activePerks.includes('bongcloud')) {
-      bonus += isBongcloudFulfilled(userName, game);
-    }
-    if (activePerks.includes('gambiteer')) {
-      bonus += isGambiteerFulfilled(game);
-    }
-    if (activePerks.includes('hue-master')) {
-      bonus += isHueMasterFulfilled();
-    }
-    if (activePerks.includes('endgame-specialist')) {
-      bonus += isEndgameSpecialistFulfilled(game);
-    }
-    if (activePerks.includes('hot-streak')) {
-      bonus += await isHotStreakFulfilled();
-    }
-  } catch (error) {
-    console.error("Error fetching game data from Lichess API:", error);
+  if (activePerks.includes('gladiator')) {
+    bonus += isGladiatorFulfilled(initialIncrementValue, gameType);
   }
-
+  if (activePerks.includes('bongcloud')) {
+    bonus += isBongcloudFulfilled(userName, game);
+  }
+  if (activePerks.includes('gambiteer')) {
+    bonus += isGambiteerFulfilled(game);
+  }
+  if (activePerks.includes('hue-master')) {
+    bonus += isHueMasterFulfilled();
+  }
+  if (activePerks.includes('endgame-specialist')) {
+    bonus += isEndgameSpecialistFulfilled(game);
+  }
+  if (activePerks.includes('hot-streak')) {
+    bonus += await isHotStreakFulfilled();
+  }
+  
   return bonus;
 };
