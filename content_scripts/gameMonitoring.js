@@ -37,7 +37,7 @@ export const getUserColor = () => {
   return null;
 };
 
-export const checkForWinOrLoss = async (userColor, game) => {
+export const checkForWinOrLoss = (userColor, game) => {
   console.log("Checking for win or loss using PGN data...");
 
   const result = { win: false, loss: false };
@@ -138,7 +138,7 @@ export const fetchGameStream = async (streamId, playingId, userColor) => {
                       const gladiatorLossBuffer = await getGladiatorLossBuffer();
                       await setGladiatorLossBuffer(gladiatorLossBuffer + 1);
                     }
-                    incrementHue(game);
+                    await incrementHue(game);
                   } else if (result.loss) {
                     setWinningStreak(0); // Reset the winning streak on a loss
                     if (activePerks.includes('gladiator')) {
