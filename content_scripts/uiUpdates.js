@@ -146,18 +146,6 @@ export const openSettingsModal = () => {
       document.getElementById('import-progress').addEventListener('click', importExtensionState);
       document.getElementById('reset-progress').addEventListener('click', confirmResetProgress);
 
-      // Add event listener for Speedrun mode toggle
-      const speedrunToggle = document.getElementById('toggle-speedrun-mode');
-      chrome.storage.local.get(['speedrunMode'], (result) => {
-        speedrunToggle.checked = result.speedrunMode || false;
-      });
-      speedrunToggle.addEventListener('change', (event) => {
-        const isEnabled = event.target.checked;
-        chrome.storage.local.set({ speedrunMode: isEnabled }, () => {
-          console.log(`Speedrun mode set to ${isEnabled}`);
-        });
-      });
-
       // Add event listeners for perks checkboxes
       const perkCheckboxes = document.querySelectorAll('.perks input[type="checkbox"]');
       perkCheckboxes.forEach(checkbox => {
