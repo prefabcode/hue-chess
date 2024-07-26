@@ -1,5 +1,5 @@
 import { updateProgressBar, waitForElm } from './uiUpdates.js';
-import { isSpeedrunModeEnabled, getActivePerks, setAllowGladiatorPerkRemoval, resetGladiatorLossBuffer } from './storageManagement.js';
+import { getActivePerks, setAllowGladiatorPerkRemoval, resetGladiatorLossBuffer } from './storageManagement.js';
 import { calculatePerkBonuses } from './perks.js';
 import { timeControlIncrements } from './constants.js';
 
@@ -28,13 +28,6 @@ export const getInitialRewardValue = () => {
 export const incrementHue = async (game) => {
   let { incrementValue, gameType } = await getInitialRewardValue();
   console.log(`initial increment value ${incrementValue}`);
-
-  // Check if Speedrun mode is enabled
-  const speedrunMode = await isSpeedrunModeEnabled();
-  if (speedrunMode) {
-    incrementValue *= 4;
-    console.log(`Speedrun mode enabled, new increment value: ${incrementValue}`);
-  }
 
   const perkBonus = await calculatePerkBonuses(incrementValue, gameType, game);
   console.log(`Perk bonus: ${perkBonus}`);
