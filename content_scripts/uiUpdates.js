@@ -1,7 +1,6 @@
 import { exportExtensionState, importExtensionState, confirmResetProgress, updateActivePerks, setWinningStreak, resetGladiatorLossBuffer, setAllowGladiatorPerkRemoval, getAllowGladiatorPerkRemoval, getActivePerks } from './storageManagement.js';
 import { levelNames, MAX_PERKS } from './constants.js';
 import tippy from 'tippy.js';
-import 'tippy.js/dist/tippy.css';
 
 export const updateProgressBar = (completedBoards = null, hueValue = null) => {
   chrome.storage.local.get(['completedBoards'], (result) => {
@@ -152,7 +151,9 @@ export const openSettingsModal = async () => {
       theme: theme,
       appendTo: () => document.querySelector('#hue-chess-settings-modal'),
       placement: 'bottom-start',
-      animation: 'scale'
+      maxWidth: 200,
+      arrow: true,
+      hideOnClick: false,
     });
 
     // Add event listeners for modal buttons

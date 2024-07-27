@@ -78,20 +78,113 @@
     font-size: 0.9em;
   }
 
-  .tippy-box[data-theme~='light'] {
+  .tippy-box {
+    padding: 10px;
+    font-family: 'Roboto', 'Noto Sans', sans-serif;
+    font-size: 16px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    opacity: 1;
+    line-height: 1.4;
+}
+
+.tippy-box[data-theme~='light'] {
     background-color: hsl(37, 10%, 92%);
     color: black;
     border: 1px solid hsl(37, 12%, 84%);
-  }
-  
-  .tippy-box[data-theme~='dark'] {
+}
+
+.tippy-box[data-theme~='dark'], .tippy-box[data-theme~='transp'] {
     background-color: hsl(37, 10%, 8%);
     color: white;
     border: 1px solid hsl(37, 12%, 16%);
+}
+
+.tippy-box[data-animation=fade][data-state=hidden] {
+    opacity: 0
   }
   
-  .tippy-box[data-theme~='transp'] {
-    background-color: rgba(255, 255, 255, 0.8);
-    color: black;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+  [data-tippy-root] {
+    max-width: calc(100vw - 10px)
+  }
+  
+  .tippy-box {
+    position: relative;
+    background-color: #333;
+    color: #fff;
+    border-radius: 4px;
+    font-size: 14px;
+    line-height: 1.4;
+    white-space: normal;
+    outline: 0;
+    transition-property: transform, visibility, opacity
+  }
+  
+  .tippy-box[data-placement^=top]>.tippy-arrow {
+    bottom: 0
+  }
+  
+  .tippy-box[data-placement^=top]>.tippy-arrow:before {
+    bottom: -7px;
+    left: 0;
+    border-width: 8px 8px 0;
+    border-top-color: initial;
+    transform-origin: center top
+  }
+  
+  .tippy-box[data-placement^=bottom]>.tippy-arrow {
+    top: 0
+  }
+  
+  .tippy-box[data-placement^=bottom]>.tippy-arrow:before {
+    top: -7px;
+    left: 0;
+    border-width: 0 8px 8px;
+    border-bottom-color: initial;
+    transform-origin: center bottom
+  }
+  
+  .tippy-box[data-placement^=left]>.tippy-arrow {
+    right: 0
+  }
+  
+  .tippy-box[data-placement^=left]>.tippy-arrow:before {
+    border-width: 8px 0 8px 8px;
+    border-left-color: initial;
+    right: -7px;
+    transform-origin: center left
+  }
+  
+  .tippy-box[data-placement^=right]>.tippy-arrow {
+    left: 0
+  }
+  
+  .tippy-box[data-placement^=right]>.tippy-arrow:before {
+    left: -7px;
+    border-width: 8px 8px 8px 0;
+    border-right-color: initial;
+    transform-origin: center right
+  }
+  
+  .tippy-box[data-inertia][data-state=visible] {
+    transition-timing-function: cubic-bezier(.54, 1.5, .38, 1.11)
+  }
+  
+  .tippy-arrow {
+    width: 16px;
+    height: 16px;
+    color: #333
+  }
+  
+  .tippy-arrow:before {
+    content: "";
+    position: absolute;
+    border-color: transparent;
+    border-style: solid
+  }
+  
+  .tippy-content {
+    position: relative;
+    padding: 5px 9px;
+    z-index: 1
   }
