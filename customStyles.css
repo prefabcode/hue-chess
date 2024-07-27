@@ -5,3 +5,75 @@
     display: none !important;
 }
 
+.perk-box {
+    width: 150px;
+    height: 100px;
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .perk-box i {
+    margin-right: 10px;
+    font-size: 1.5em;
+  }
+
+  .perk-box.active {
+    color: white;
+  }
+
+  .perk-box:not(.active) {
+    background: #ccc;
+    color: #666;
+  }
+
+  #berzerker-perk.active {
+    background: linear-gradient(to right, #8b0000, #ff0000);
+  }
+
+  #bongcloud-perk.active {
+    background: linear-gradient(to right, #a18cd1, #fbc2eb);
+  }
+
+  #hue-master-perk.active {
+    background: linear-gradient(to right, #43cea2, #185a9d);
+  }
+
+  #gambiteer-perk.active {
+    background: linear-gradient(to right, #4b0082, #800080);
+  }
+
+  #endgame-specialist-perk.active {
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+  }
+
+  #hot-streak-perk.active {
+    background: linear-gradient(to right, #f12711, #f5af19);
+  }
+
+  #gladiator-perk.active {
+    background: linear-gradient(to right, #434343, #000000);
+  }
+
+  #comeback-king-perk.active {
+    background: linear-gradient(to right, #006400, #228B22);
+  }
+
+  .perks {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .perk-box span {
+    font-size: 0.9em;
+  }

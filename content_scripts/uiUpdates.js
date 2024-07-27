@@ -1,5 +1,7 @@
 import { exportExtensionState, importExtensionState, confirmResetProgress, updateActivePerks, setWinningStreak, resetGladiatorLossBuffer, setAllowGladiatorPerkRemoval, getAllowGladiatorPerkRemoval } from './storageManagement.js';
 import { levelNames } from './constants.js';
+import tippy from 'tippy.js';
+import 'tippy.js/dist/tippy.css';
 
 export const updateProgressBar = (completedBoards = null, hueValue = null) => {
   chrome.storage.local.get(['completedBoards'], (result) => {
@@ -136,6 +138,11 @@ export const openSettingsModal = () => {
       document.body.style.overflowY = 'hidden';
       modal.showModal();
 
+      // Initialize Tippy.js tooltips
+      tippy('.perk-box', {
+        theme: 'custom',
+      });
+
       // Add event listeners for modal buttons
       document.getElementById('close-settings-modal').addEventListener('click', () => {
         document.body.style.overflowY = 'scroll';
@@ -146,23 +153,22 @@ export const openSettingsModal = () => {
       document.getElementById('import-progress').addEventListener('click', importExtensionState);
       document.getElementById('reset-progress').addEventListener('click', confirmResetProgress);
 
-      // Add event listeners for perks checkboxes
-      const perkCheckboxes = document.querySelectorAll('.perks input[type="checkbox"]');
-      perkCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', async (event) => {
-          const perk = event.target.id.replace('-perk', '');
-          const isChecked = event.target.checked;
+      // Add event listeners for perks
+      const perkBoxes = document.querySelectorAll('.perks .perk-box');
+      perkBoxes.forEach(box => {
+        box.addEventListener('click', async () => {
+          const perk = box.id.replace('-perk', '');
+          const isActive = box.classList.contains('active');
 
           if (perk === 'hot-streak') {
-            console.log(`hot-streak perk toggled with value:${isChecked}, resetting win streak`);
+            console.log(`hot-streak perk toggled with value:${!isActive}, resetting win streak`);
             setWinningStreak(0);
           }
 
           if (perk === 'gladiator') {
-            if (isChecked) {
+            if (!isActive) {
               const confirmSelection = confirm("Warning: You will not be able to remove the Gladiator perk until you level up or suffer a 20% hue point penalty. Do you want to proceed?");
               if (!confirmSelection) {
-                event.target.checked = false; // Uncheck the checkbox
                 return;
               } else {
                 await resetGladiatorLossBuffer();
@@ -172,20 +178,19 @@ export const openSettingsModal = () => {
               const canRemove = await getAllowGladiatorPerkRemoval();
               if (!canRemove) {
                 alert("You cannot remove the Gladiator perk until you level up or suffer a 20% hue point penalty.");
-                event.target.checked = true; // Recheck the checkbox
                 return;
               }
             }
           }
 
           // Check the number of active perks
-          chrome.storage.local.get(['activePerks'], (result) => {
+          chrome.storage.local.get(['activePerks'], async (result) => {
             const activePerks = result.activePerks || [];
-            if (isChecked && activePerks.length >= 3) {
-              alert('You can only select up to 3 perks.');
-              event.target.checked = false; // Uncheck the checkbox
+            if (!isActive && activePerks.length >= 2) {
+              alert('You can only select up to 2 perks.');
             } else {
-              updateActivePerks(perk, isChecked);
+              await updateActivePerks(perk, !isActive);
+              box.classList.toggle('active');
             }
           });
         });
@@ -195,23 +200,31 @@ export const openSettingsModal = () => {
       updateModalContent();
     });
 }
-// expose settings modal to extension button
-window.openSettingsModal = openSettingsModal;
 
 export const updateModalContent = () => {
   chrome.storage.local.get(['completedBoards', 'currentHue', 'activePerks'], (result) => {
     const level = (result.completedBoards !== null ? result.completedBoards : 0) + 1;
     const huePoints = `${result.currentHue || 0}/100`;
+
     document.getElementById('current-level').innerText = level;
     document.getElementById('hue-points').innerText = huePoints;
-    
-    const perkCheckboxes = document.querySelectorAll('.perks input[type="checkbox"]');
-    perkCheckboxes.forEach(checkbox => {
-      const perk = checkbox.id.replace('-perk', '');
-      checkbox.checked = result.activePerks.includes(perk);
+
+    // Set active perks
+    const activePerks = result.activePerks || [];
+    const perkBoxes = document.querySelectorAll('.perks .perk-box');
+    perkBoxes.forEach(box => {
+      const perk = box.id.replace('-perk', '');
+      if (activePerks.includes(perk)) {
+        box.classList.add('active');
+      } else {
+        box.classList.remove('active');
+      }
     });
   });
-};
+}
+
+// expose settings modal to extension button
+window.openSettingsModal = openSettingsModal;
 
 export const waitForElm = (selector) => {
   return new Promise(resolve => {

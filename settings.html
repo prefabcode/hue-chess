@@ -1,7 +1,6 @@
 <dialog id="hue-chess-settings-modal">
   <div class="close-button-anchor">
-    <button id="close-settings-modal" class="close-button" data-icon="" aria-label="Close">
-    </button>
+    <button id="close-settings-modal" class="close-button" data-icon="" aria-label="Close"></button>
   </div>
   <div class="scrollable">
     <div class="dialog-content">
@@ -21,35 +20,29 @@
       <!-- Perks -->
       <div class="perks">
         <h3>Select Perks</h3>
-        <div>
-          <input type="checkbox" id="berzerker-perk" name="berzerker-perk">
-          <label for="berzerker-perk">Berzerker: Extra an additional 5 to 7 hue points for winning while using half your alotted time or less.</label>
+        <div class="perk-box" id="berzerker-perk" data-tippy-content="Extra an additional 5 to 7 hue points for winning while using half your allotted time or less.">
+          <i class="fa fa-bolt"></i><span>Berzerker</span>
         </div>
-        <div>
-          <input type="checkbox" id="bongcloud-perk" name="bongcloud-perk">
-          <label for="bongcloud-perk">Bongcloud: Earn an additional 3 to 5 hue points for moving your king on move 2.</label>
+        <div class="perk-box" id="bongcloud-perk" data-tippy-content="Earn an additional 3 to 5 hue points for moving your king on move 2.">
+          <i class="fa fa-cloud"></i><span>Bongcloud</span>
         </div>
-        <div>
-          <input type="checkbox" id="hue-master-perk" name="hue-master-perk">
-          <label for="hue-master-perk">Hue Master: Earn 1 extra hue point per win, as long as you have "Show player
-            ratings" turned off within Lichess -> preferences -> display settings.</label>
+        <div class="perk-box" id="hue-master-perk" data-tippy-content="Earn 1 extra hue point per win, as long as you have 'Show player ratings' turned off within Lichess -> preferences -> display settings.">
+          <i class="fa fa-palette"></i><span>Hue Master</span>
         </div>
-        <div>
-          <input type="checkbox" id="gambiteer-perk" name="gambiteer-perk">
-          <label for="gambiteer-perk">Gambiteer: Earn an additional 2 to 3 hue points for each win when playing a known gambit or countergambit opening.</label>
+        <div class="perk-box" id="gambiteer-perk" data-tippy-content="Earn an additional 2 to 3 hue points for each win when playing a known gambit or countergambit opening.">
+          <i class="fa fa-chess-knight"></i><span>Gambiteer</span>
         </div>
-        <div>
-          <input type="checkbox" id="endgame-specialist-perk" name="endgame-specialist-perk">
-          <label for="endgame-specialist-perk">Endgame Specialist: Earn an additional 3 to 4 hue points for winning a game that reaches the endgame phase.</label>
+        <div class="perk-box" id="endgame-specialist-perk" data-tippy-content="Earn an additional 3 to 4 hue points for winning a game that reaches the endgame phase.">
+          <i class="fa fa-hourglass-end"></i><span>Endgame Specialist</span>
         </div>
-        <div>
-          <input type="checkbox" id="hot-streak-perk" name="hot-streak-perk">
-          <label for="hot-streak-perk">Hot Streak: Earn additional hue points for consecutive wins. 2-3 points for the first win, 4-5 points for the second, and 6-7 points for the third and subsequent wins in a streak.</label>
+        <div class="perk-box" id="hot-streak-perk" data-tippy-content="Earn additional hue points for consecutive wins. 2-3 points for the first win, 4-5 points for the second, and 6-7 points for the third and subsequent wins in a streak.">
+          <i class="fa fa-fire"></i><span>Hot Streak</span>
         </div>
-        <div>
-          <input type="checkbox" id="gladiator-perk" name="gladiator-perk">
-          <label for="gladiator-perk">Gladiator: Earn significant hue points for each win in exchange for a loss buffer of 1. If you exhaust all the allowed losses in your buffer, you will lose 20 accumulated hue points for the level. Each win within your current level adds to your buffer of allowed losses. Warning: If you take this perk, you can only remove it if you level up or if you take the 20 hue point penalty.
-          </label>
+        <div class="perk-box" id="gladiator-perk" data-tippy-content="Earn significant hue points for each win in exchange for a loss buffer of 1. If you exhaust all the allowed losses in your buffer, you will lose 20 accumulated hue points for the level. Each win within your current level adds to your buffer of allowed losses. Warning: If you take this perk, you can only remove it if you level up or if you take the 20 hue point penalty.">
+          <i class="fa fa-shield-alt"></i><span>Gladiator</span>
+        </div>
+        <div class="perk-box" id="comeback-king-perk" data-tippy-content="Earn additional hue points for winning a game after being down in material for more than one move.">
+          <i class="fa fa-chess-king"></i><span>Comeback King</span>
         </div>
       </div>
 
