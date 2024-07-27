@@ -77,3 +77,21 @@
   .perk-box span {
     font-size: 0.9em;
   }
+
+  .tippy-box[data-theme~='light'] {
+    background-color: hsl(37, 10%, 92%);
+    color: black;
+    border: 1px solid hsl(37, 12%, 84%);
+  }
+  
+  .tippy-box[data-theme~='dark'] {
+    background-color: hsl(37, 10%, 8%);
+    color: white;
+    border: 1px solid hsl(37, 12%, 16%);
+  }
+  
+  .tippy-box[data-theme~='transp'] {
+    background-color: rgba(255, 255, 255, 0.8);
+    color: black;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }

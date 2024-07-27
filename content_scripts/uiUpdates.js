@@ -138,10 +138,21 @@ export const openSettingsModal = () => {
       document.body.style.overflowY = 'hidden';
       modal.showModal();
 
+      const bodyClass = document.body.classList;
+      let theme = 'light';
+      if (bodyClass.contains('dark')) {
+        theme = 'dark';
+      } else if (bodyClass.contains('transp')) {
+        theme = 'transp';
+      }
+
       // Initialize Tippy.js tooltips
       tippy('.perk-box', {
-        theme: 'custom',
+        theme: theme,
+        appendTo: () => document.querySelector('#hue-chess-settings-modal'),
+        placement: 'bottom',
       });
+
 
       // Add event listeners for modal buttons
       document.getElementById('close-settings-modal').addEventListener('click', () => {
