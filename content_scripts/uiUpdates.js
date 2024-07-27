@@ -1,5 +1,5 @@
-import { exportExtensionState, importExtensionState, confirmResetProgress, updateActivePerks, setWinningStreak, resetGladiatorLossBuffer, setAllowGladiatorPerkRemoval, getAllowGladiatorPerkRemoval } from './storageManagement.js';
-import { levelNames } from './constants.js';
+import { exportExtensionState, importExtensionState, confirmResetProgress, updateActivePerks, setWinningStreak, resetGladiatorLossBuffer, setAllowGladiatorPerkRemoval, getAllowGladiatorPerkRemoval, getActivePerks } from './storageManagement.js';
+import { levelNames, MAX_PERKS } from './constants.js';
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 
@@ -112,107 +112,109 @@ export const injectDiv = (boardDiv) => {
   console.log('Injected div added to .sub .board');
 };
 
-export const openSettingsModal = () => {
-  // Check if the modal already exists
-  let modal = document.querySelector('#hue-chess-settings-modal');
-  if (modal) {
-    document.body.style.overflowY = 'hidden';
-    modal.showModal();
-    updateModalContent();
-    return;
-  }
-
-  fetch(chrome.runtime.getURL('settings.html'))
-    .then(response => response.text())
-    .then(data => {
-      // Create a temporary div to hold the fetched HTML
-      const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = data;
-
-      // Extract the modal element from the fetched HTML
-      modal = tempDiv.querySelector('#hue-chess-settings-modal');
-
-      // Append the modal to the body
-      document.body.appendChild(modal);
-
+export const openSettingsModal = async () => {
+  try {
+    // Check if the modal already exists
+    let modal = document.querySelector('#hue-chess-settings-modal');
+    if (modal) {
       document.body.style.overflowY = 'hidden';
       modal.showModal();
+      await updateModalContent();
+      return;
+    }
 
-      const bodyClass = document.body.classList;
-      let theme = 'light';
-      if (bodyClass.contains('dark')) {
-        theme = 'dark';
-      } else if (bodyClass.contains('transp')) {
-        theme = 'transp';
-      }
+    const response = await fetch(chrome.runtime.getURL('settings.html'));
+    const data = await response.text();
 
-      // Initialize Tippy.js tooltips
-      tippy('.perk-box', {
-        theme: theme,
-        appendTo: () => document.querySelector('#hue-chess-settings-modal'),
-        placement: 'bottom',
-      });
+    // Create a temporary div to hold the fetched HTML
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = data;
 
+    // Extract the modal element from the fetched HTML
+    modal = tempDiv.querySelector('#hue-chess-settings-modal');
 
-      // Add event listeners for modal buttons
-      document.getElementById('close-settings-modal').addEventListener('click', () => {
-        document.body.style.overflowY = 'scroll';
-        modal.close();
-      });
+    // Append the modal to the body
+    document.body.appendChild(modal);
 
-      document.getElementById('export-progress').addEventListener('click', exportExtensionState);
-      document.getElementById('import-progress').addEventListener('click', importExtensionState);
-      document.getElementById('reset-progress').addEventListener('click', confirmResetProgress);
+    document.body.style.overflowY = 'hidden';
+    modal.showModal();
 
-      // Add event listeners for perks
-      const perkBoxes = document.querySelectorAll('.perks .perk-box');
-      perkBoxes.forEach(box => {
-        box.addEventListener('click', async () => {
-          const perk = box.id.replace('-perk', '');
-          const isActive = box.classList.contains('active');
+    const bodyClass = document.body.classList;
+    let theme = 'light';
+    if (bodyClass.contains('dark')) {
+      theme = 'dark';
+    } else if (bodyClass.contains('transp')) {
+      theme = 'transp';
+    }
 
-          if (perk === 'hot-streak') {
-            console.log(`hot-streak perk toggled with value:${!isActive}, resetting win streak`);
-            setWinningStreak(0);
-          }
-
-          if (perk === 'gladiator') {
-            if (!isActive) {
-              const confirmSelection = confirm("Warning: You will not be able to remove the Gladiator perk until you level up or suffer a 20% hue point penalty. Do you want to proceed?");
-              if (!confirmSelection) {
-                return;
-              } else {
-                await resetGladiatorLossBuffer();
-                await setAllowGladiatorPerkRemoval(false);
-              }
-            } else {
-              const canRemove = await getAllowGladiatorPerkRemoval();
-              if (!canRemove) {
-                alert("You cannot remove the Gladiator perk until you level up or suffer a 20% hue point penalty.");
-                return;
-              }
-            }
-          }
-
-          // Check the number of active perks
-          chrome.storage.local.get(['activePerks'], async (result) => {
-            const activePerks = result.activePerks || [];
-            if (!isActive && activePerks.length >= 2) {
-              alert('You can only select up to 2 perks.');
-            } else {
-              await updateActivePerks(perk, !isActive);
-              box.classList.toggle('active');
-            }
-          });
-        });
-      });
-
-      // Update the modal content with current level and hue progress
-      updateModalContent();
+    // Initialize Tippy.js tooltips
+    tippy('.perk-box', {
+      theme: theme,
+      appendTo: () => document.querySelector('#hue-chess-settings-modal'),
+      placement: 'bottom-start',
+      animation: 'scale'
     });
+
+    // Add event listeners for modal buttons
+    document.getElementById('close-settings-modal').addEventListener('click', () => {
+      document.body.style.overflowY = 'scroll';
+      modal.close();
+    });
+
+    document.getElementById('export-progress').addEventListener('click', exportExtensionState);
+    document.getElementById('import-progress').addEventListener('click', importExtensionState);
+    document.getElementById('reset-progress').addEventListener('click', confirmResetProgress);
+
+    // Add event listeners for perks
+    const perkBoxes = document.querySelectorAll('.perks .perk-box');
+    perkBoxes.forEach(box => {
+      box.addEventListener('click', async () => {
+        const perk = box.id.replace('-perk', '');
+        const isActive = box.classList.contains('active');
+
+        if (perk === 'hot-streak') {
+          console.log(`hot-streak perk toggled with value:${!isActive}, resetting win streak`);
+          setWinningStreak(0);
+        }
+
+        if (perk === 'gladiator') {
+          if (!isActive) {
+            const confirmSelection = confirm("Warning: You will not be able to remove the Gladiator perk until you level up or suffer a 20% hue point penalty. Do you want to proceed?");
+            if (!confirmSelection) {
+              return;
+            } else {
+              await resetGladiatorLossBuffer();
+              await setAllowGladiatorPerkRemoval(false);
+            }
+          } else {
+            const canRemove = await getAllowGladiatorPerkRemoval();
+            if (!canRemove) {
+              alert("You cannot remove the Gladiator perk until you level up or suffer a 20% hue point penalty.");
+              return;
+            }
+          }
+        }
+
+        const activePerks = await getActivePerks();
+        if (!isActive && activePerks.length >= MAX_PERKS) {
+          alert(`You can only select up to ${MAX_PERKS} perks.`);
+        } else {
+          await updateActivePerks(perk, !isActive);
+          box.classList.toggle('active');
+        }
+      });
+    });
+
+    // Update the modal content with current level and hue progress
+    await updateModalContent();
+    await updatePerksHeader();
+  } catch (error) {
+    console.error("Error opening settings modal:", error);
+  }
 }
 
-export const updateModalContent = () => {
+
+export const updateModalContent = async () => {
   chrome.storage.local.get(['completedBoards', 'currentHue', 'activePerks'], (result) => {
     const level = (result.completedBoards !== null ? result.completedBoards : 0) + 1;
     const huePoints = `${result.currentHue || 0}/100`;
@@ -232,6 +234,12 @@ export const updateModalContent = () => {
       }
     });
   });
+}
+
+export const updatePerksHeader = async () => {
+  const activePerks = await getActivePerks();
+  const perksHeader = document.getElementById('perks-header');
+  perksHeader.textContent = `Select Perks: (${activePerks.length}/${MAX_PERKS})`;
 }
 
 // expose settings modal to extension button

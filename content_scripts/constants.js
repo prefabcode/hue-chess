@@ -18,3 +18,5 @@ export const timeControlIncrements = {
     'Rapid': [6, 10],
     'Classical': [10, 15]
 };
+
+export const MAX_PERKS = 2;
