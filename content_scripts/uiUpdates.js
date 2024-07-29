@@ -111,6 +111,24 @@ export const injectDiv = (boardDiv) => {
   console.log('Injected div added to .sub .board');
 };
 
+async function setImageSources() {
+  const images = [
+    'berzerker-icon',
+    'bongcloud-icon',
+    'hue-master-icon',
+    'gambiteer-icon',
+    'endgame-specialist-icon',
+    'hotstreak-icon',
+    'gladiator-icon',
+    'equalizer-icon',
+    'rivalry-icon'
+  ];
+
+  images.forEach(imageId => {
+    document.getElementById(imageId).src = chrome.runtime.getURL(`imgs/${imageId.replace('-icon', '')}.svg`);
+  });
+}
+
 export const openSettingsModal = async () => {
   try {
     // Check if the modal already exists
@@ -207,6 +225,7 @@ export const openSettingsModal = async () => {
     });
 
     // Update the modal content with current level and hue progress
+    await setImageSources();
     await updateModalContent();
     await updatePerksHeader();
   } catch (error) {

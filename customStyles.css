@@ -10,6 +10,7 @@
     height: 100px;
     margin: 10px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     color: white;
@@ -20,65 +21,70 @@
     position: relative;
     cursor: pointer;
     transition: background 0.3s ease;
-  }
+}
 
-  .perk-box i {
-    margin-right: 10px;
-    font-size: 1.5em;
-  }
+.perk-box img {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 10px;
+}
 
-  .perk-box.active {
+.perk-box.active {
     color: white;
-  }
+}
 
-  .perk-box:not(.active) {
+.perk-box:not(.active) {
     background: #ccc;
     color: #666;
-  }
+}
 
-  #berzerker-perk.active {
+#berzerker-perk.active {
     background: linear-gradient(to right, #8b0000, #ff0000);
-  }
+}
 
-  #bongcloud-perk.active {
+#bongcloud-perk.active {
     background: linear-gradient(to right, #a18cd1, #fbc2eb);
-  }
+}
 
-  #hue-master-perk.active {
+#hue-master-perk.active {
     background: linear-gradient(to right, #43cea2, #185a9d);
-  }
+}
 
-  #gambiteer-perk.active {
+#gambiteer-perk.active {
     background: linear-gradient(to right, #4b0082, #800080);
-  }
+}
 
-  #endgame-specialist-perk.active {
+#endgame-specialist-perk.active {
     background: linear-gradient(to right, #00c6ff, #0072ff);
-  }
+}
 
-  #hot-streak-perk.active {
+#hot-streak-perk.active {
     background: linear-gradient(to right, #f12711, #f5af19);
-  }
+}
 
-  #gladiator-perk.active {
+#gladiator-perk.active {
     background: linear-gradient(to right, #434343, #000000);
-  }
+}
 
-  #comeback-king-perk.active {
+#equalizer-perk.active {
     background: linear-gradient(to right, #006400, #228B22);
-  }
+}
 
-  .perks {
+#rivalry-perk.active {
+    background: linear-gradient(to right, #ff7e5f, #feb47b);
+}
+
+.perks {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-  }
+}
 
-  .perk-box span {
+.perk-box span {
     font-size: 0.9em;
-  }
+}
 
-  .tippy-box {
+.tippy-box {
     padding: 10px;
     font-family: 'Roboto', 'Noto Sans', sans-serif;
     font-size: 16px;
@@ -101,14 +107,14 @@
 }
 
 .tippy-box[data-animation=fade][data-state=hidden] {
-    opacity: 0
-  }
+    opacity: 0;
+}
   
-  [data-tippy-root] {
-    max-width: calc(100vw - 10px)
-  }
+[data-tippy-root] {
+    max-width: calc(100vw - 10px);
+}
   
-  .tippy-box {
+.tippy-box {
     position: relative;
     background-color: #333;
     color: #fff;
@@ -117,74 +123,74 @@
     line-height: 1.4;
     white-space: normal;
     outline: 0;
-    transition-property: transform, visibility, opacity
-  }
+    transition-property: transform, visibility, opacity;
+}
   
-  .tippy-box[data-placement^=top]>.tippy-arrow {
-    bottom: 0
-  }
+.tippy-box[data-placement^=top]>.tippy-arrow {
+    bottom: 0;
+}
   
-  .tippy-box[data-placement^=top]>.tippy-arrow:before {
+.tippy-box[data-placement^=top]>.tippy-arrow:before {
     bottom: -7px;
     left: 0;
     border-width: 8px 8px 0;
     border-top-color: initial;
-    transform-origin: center top
-  }
+    transform-origin: center top;
+}
   
-  .tippy-box[data-placement^=bottom]>.tippy-arrow {
-    top: 0
-  }
+.tippy-box[data-placement^=bottom]>.tippy-arrow {
+    top: 0;
+}
   
-  .tippy-box[data-placement^=bottom]>.tippy-arrow:before {
+.tippy-box[data-placement^=bottom]>.tippy-arrow:before {
     top: -7px;
     left: 0;
     border-width: 0 8px 8px;
     border-bottom-color: initial;
-    transform-origin: center bottom
-  }
+    transform-origin: center bottom;
+}
   
-  .tippy-box[data-placement^=left]>.tippy-arrow {
-    right: 0
-  }
+.tippy-box[data-placement^=left]>.tippy-arrow {
+    right: 0;
+}
   
-  .tippy-box[data-placement^=left]>.tippy-arrow:before {
+.tippy-box[data-placement^=left]>.tippy-arrow:before {
     border-width: 8px 0 8px 8px;
     border-left-color: initial;
     right: -7px;
-    transform-origin: center left
-  }
+    transform-origin: center left;
+}
   
-  .tippy-box[data-placement^=right]>.tippy-arrow {
-    left: 0
-  }
+.tippy-box[data-placement^=right]>.tippy-arrow {
+    left: 0;
+}
   
-  .tippy-box[data-placement^=right]>.tippy-arrow:before {
+.tippy-box[data-placement^=right]>.tippy-arrow:before {
     left: -7px;
     border-width: 8px 8px 8px 0;
     border-right-color: initial;
-    transform-origin: center right
-  }
+    transform-origin: center right;
+}
   
-  .tippy-box[data-inertia][data-state=visible] {
-    transition-timing-function: cubic-bezier(.54, 1.5, .38, 1.11)
-  }
+.tippy-box[data-inertia][data-state=visible] {
+    transition-timing-function: cubic-bezier(.54, 1.5, .38, 1.11);
+}
   
-  .tippy-arrow {
+.tippy-arrow {
     width: 16px;
     height: 16px;
-    color: #333
-  }
+    color: #333;
+}
   
-  .tippy-arrow:before {
+.tippy-arrow:before {
     content: "";
     position: absolute;
     border-color: transparent;
-    border-style: solid
-  }
+    border-style: solid;
+}
   
-  .tippy-content {
+.tippy-content {
     position: relative;
     padding: 5px 9px;
-    z-index: 1
-  }
+    z-index: 1;
+}

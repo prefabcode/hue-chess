@@ -16,6 +16,30 @@ function copyFileSync(source, target) {
   fs.writeFileSync(targetFile, fs.readFileSync(source));
 }
 
+// Helper function to copy a folder
+function copyFolderRecursiveSync(source, target) {
+  let files = [];
+
+  // Check if folder needs to be created or integrated
+  if (!fs.existsSync(target)) {
+    fs.mkdirSync(target);
+  }
+
+  // Copy
+  if (fs.lstatSync(source).isDirectory()) {
+    files = fs.readdirSync(source);
+    files.forEach(function (file) {
+      const curSource = path.join(source, file);
+      const curTarget = path.join(target, file);
+      if (fs.lstatSync(curSource).isDirectory()) {
+        copyFolderRecursiveSync(curSource, curTarget);
+      } else {
+        copyFileSync(curSource, curTarget);
+      }
+    });
+  }
+}
+
 // Build content.js
 esbuild.build({
   entryPoints: ['content.js'],
@@ -58,5 +82,17 @@ try {
   console.log('manifest.json copied to build directory');
 } catch (err) {
   console.error('Error copying manifest.json:', err);
+  process.exit(1);
+}
+
+// Copy imgs folder
+const sourceImgs = path.join(__dirname, 'imgs');
+const targetImgs = path.join(__dirname, 'build', 'imgs');
+
+try {
+  copyFolderRecursiveSync(sourceImgs, targetImgs);
+  console.log('imgs folder copied to build directory');
+} catch (err) {
+  console.error('Error copying imgs folder:', err);
   process.exit(1);
 }
