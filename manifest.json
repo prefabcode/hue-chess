@@ -20,9 +20,8 @@
     ],
     "web_accessible_resources": [
         {
-            "resources":  ["settings.html"],
+            "resources":  ["settings.html", "imgs/*"],
             "matches": ["<all_urls>"]
         }
     ]
 }
-  
