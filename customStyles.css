@@ -1,196 +1,202 @@
-.sub.board .selector, 
-.sub.board .reset, 
+.sub.board .selector,
+.sub.board .reset,
 .sub.board .list,
 .sub.board .board-hue {
-    display: none !important;
+  display: none !important;
 }
 
 .perk-box {
-    width: 150px;
-    height: 100px;
-    margin: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    font-weight: bold;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    position: relative;
-    cursor: pointer;
-    transition: background 0.3s ease;
+  width: 150px;
+  height: 100px;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: bold;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
 .perk-box img {
-    width: 40px;
-    height: 40px;
-    margin-bottom: 10px;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 10px;
+  filter: invert(.5);
 }
 
 .perk-box.active {
-    color: white;
+  color: white;
+}
+
+.perk-box.active img {
+  filter: none;
 }
 
 .perk-box:not(.active) {
-    background: #ccc;
-    color: #666;
+  background: #ccc;
+  color: #666;
 }
 
 #berzerker-perk.active {
-    background: linear-gradient(to right, #8b0000, #ff0000);
+  background: linear-gradient(to right, #8b0000, #ff0000);
 }
 
 #bongcloud-perk.active {
-    background: linear-gradient(to right, #a18cd1, #fbc2eb);
+  background: linear-gradient(to right, #a18cd1, #fbc2eb);
 }
 
 #hue-master-perk.active {
-    background: linear-gradient(to right, #43cea2, #185a9d);
+  background: linear-gradient(to right, #43cea2, #185a9d);
 }
 
 #gambiteer-perk.active {
-    background: linear-gradient(to right, #4b0082, #800080);
+  background: linear-gradient(to right, #4b0082, #800080);
 }
 
 #endgame-specialist-perk.active {
-    background: linear-gradient(to right, #00c6ff, #0072ff);
+  background: linear-gradient(to right, #00c6ff, #0072ff);
 }
 
 #hot-streak-perk.active {
-    background: linear-gradient(to right, #f12711, #f5af19);
+  background: linear-gradient(to right, #f12711, #f5af19);
 }
 
 #gladiator-perk.active {
-    background: linear-gradient(to right, #434343, #000000);
+  background: linear-gradient(to right, #434343, #000000);
 }
 
 #equalizer-perk.active {
-    background: linear-gradient(to right, #006400, #228B22);
+  background: linear-gradient(to right, #006400, #228B22);
 }
 
 #rivalry-perk.active {
-    background: linear-gradient(to right, #ff7e5f, #feb47b);
+  background: linear-gradient(to right, #ff7e5f, #feb47b);
 }
 
 .perks {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .perk-box span {
-    font-size: 0.9em;
+  font-size: 0.9em;
 }
 
 .tippy-box {
-    padding: 10px;
-    font-family: 'Roboto', 'Noto Sans', sans-serif;
-    font-size: 16px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
-    opacity: 1;
-    line-height: 1.4;
+  padding: 10px;
+  font-family: 'Roboto', 'Noto Sans', sans-serif;
+  font-size: 16px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  opacity: 1;
+  line-height: 1.4;
 }
 
 .tippy-box[data-theme~='light'] {
-    background-color: hsl(37, 10%, 92%);
-    color: black;
-    border: 1px solid hsl(37, 12%, 84%);
+  background-color: hsl(37, 10%, 92%);
+  color: black;
+  border: 1px solid hsl(37, 12%, 84%);
 }
 
-.tippy-box[data-theme~='dark'], .tippy-box[data-theme~='transp'] {
-    background-color: hsl(37, 10%, 8%);
-    color: white;
-    border: 1px solid hsl(37, 12%, 16%);
+.tippy-box[data-theme~='dark'],
+.tippy-box[data-theme~='transp'] {
+  background-color: hsl(37, 10%, 8%);
+  color: white;
+  border: 1px solid hsl(37, 12%, 16%);
 }
 
 .tippy-box[data-animation=fade][data-state=hidden] {
-    opacity: 0;
+  opacity: 0;
 }
-  
+
 [data-tippy-root] {
-    max-width: calc(100vw - 10px);
+  max-width: calc(100vw - 10px);
 }
-  
+
 .tippy-box {
-    position: relative;
-    background-color: #333;
-    color: #fff;
-    border-radius: 4px;
-    font-size: 14px;
-    line-height: 1.4;
-    white-space: normal;
-    outline: 0;
-    transition-property: transform, visibility, opacity;
+  position: relative;
+  background-color: #333;
+  color: #fff;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.4;
+  white-space: normal;
+  outline: 0;
+  transition-property: transform, visibility, opacity;
 }
-  
+
 .tippy-box[data-placement^=top]>.tippy-arrow {
-    bottom: 0;
+  bottom: 0;
 }
-  
+
 .tippy-box[data-placement^=top]>.tippy-arrow:before {
-    bottom: -7px;
-    left: 0;
-    border-width: 8px 8px 0;
-    border-top-color: initial;
-    transform-origin: center top;
+  bottom: -7px;
+  left: 0;
+  border-width: 8px 8px 0;
+  border-top-color: initial;
+  transform-origin: center top;
 }
-  
+
 .tippy-box[data-placement^=bottom]>.tippy-arrow {
-    top: 0;
+  top: 0;
 }
-  
+
 .tippy-box[data-placement^=bottom]>.tippy-arrow:before {
-    top: -7px;
-    left: 0;
-    border-width: 0 8px 8px;
-    border-bottom-color: initial;
-    transform-origin: center bottom;
+  top: -7px;
+  left: 0;
+  border-width: 0 8px 8px;
+  border-bottom-color: initial;
+  transform-origin: center bottom;
 }
-  
+
 .tippy-box[data-placement^=left]>.tippy-arrow {
-    right: 0;
+  right: 0;
 }
-  
+
 .tippy-box[data-placement^=left]>.tippy-arrow:before {
-    border-width: 8px 0 8px 8px;
-    border-left-color: initial;
-    right: -7px;
-    transform-origin: center left;
+  border-width: 8px 0 8px 8px;
+  border-left-color: initial;
+  right: -7px;
+  transform-origin: center left;
 }
-  
+
 .tippy-box[data-placement^=right]>.tippy-arrow {
-    left: 0;
+  left: 0;
 }
-  
+
 .tippy-box[data-placement^=right]>.tippy-arrow:before {
-    left: -7px;
-    border-width: 8px 8px 8px 0;
-    border-right-color: initial;
-    transform-origin: center right;
+  left: -7px;
+  border-width: 8px 8px 8px 0;
+  border-right-color: initial;
+  transform-origin: center right;
 }
-  
+
 .tippy-box[data-inertia][data-state=visible] {
-    transition-timing-function: cubic-bezier(.54, 1.5, .38, 1.11);
+  transition-timing-function: cubic-bezier(.54, 1.5, .38, 1.11);
 }
-  
+
 .tippy-arrow {
-    width: 16px;
-    height: 16px;
-    color: #333;
+  width: 16px;
+  height: 16px;
+  color: #333;
 }
-  
+
 .tippy-arrow:before {
-    content: "";
-    position: absolute;
-    border-color: transparent;
-    border-style: solid;
+  content: "";
+  position: absolute;
+  border-color: transparent;
+  border-style: solid;
 }
-  
+
 .tippy-content {
-    position: relative;
-    padding: 5px 9px;
-    z-index: 1;
+  position: relative;
+  padding: 5px 9px;
+  z-index: 1;
 }
