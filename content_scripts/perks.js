@@ -14,17 +14,18 @@ function showToast(perkId, points) {
     'gladiator': 'linear-gradient(to right, #434343, #000000)',
     'equalizer': 'linear-gradient(to right, #006400, #228B22)',
     'rivalry': 'linear-gradient(to right, #ff7e5f, #feb47b)',
+    'total-earned': 'linear-gradient(to right, #232526, #414345)'
   };
 
   const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
   const perkName = perkId.split('-').map(capitalize).join(' ');
 
   const gradient = gradientMap[perkId];
-  const imageUrl = chrome.runtime.getURL(`imgs/${perkId}.svg`);
+  const imageUrl = perkId !== 'total-earned' ? chrome.runtime.getURL(`imgs/${perkId}.svg`) : '';
 
   Toastify({
-    text: `${perkName} Bonus: ${points} points`,
-    duration: 5000,
+    text: `${perkName}: ${points} points`,
+    duration: 6000,
     close: true,
     gravity: "top", // `top` or `bottom`
     position: "right", // `left`, `center` or `right`
@@ -289,5 +290,6 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
     bonus += await isHotStreakFulfilled();
   }
   
+  showToast('total-earned', initialIncrementValue + bonus);
   return bonus;
 };
