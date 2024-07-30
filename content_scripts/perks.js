@@ -1,7 +1,39 @@
-import * as pgnParser from '@mliebelt/pgn-parser';
 import { Chess } from 'chess.js'
-import { getActivePerks, getPlayingId, getWinningStreak } from "./storageManagement.js";
+import { getActivePerks, getWinningStreak } from "./storageManagement.js";
 import { materialValues } from "./constants.js";
+import Toastify from 'toastify-js';
+
+function showToast(perkId, points) {
+  const gradientMap = {
+    'berzerker': 'linear-gradient(to right, #8b0000, #ff0000)',
+    'bongcloud': 'linear-gradient(to right, #a18cd1, #fbc2eb)',
+    'hue-master': 'linear-gradient(to right, #43cea2, #185a9d)',
+    'gambiteer': 'linear-gradient(to right, #4b0082, #800080)',
+    'endgame-specialist': 'linear-gradient(to right, #00c6ff, #0072ff)',
+    'hot-streak': 'linear-gradient(to right, #f12711, #f5af19)',
+    'gladiator': 'linear-gradient(to right, #434343, #000000)',
+    'equalizer': 'linear-gradient(to right, #006400, #228B22)',
+    'rivalry': 'linear-gradient(to right, #ff7e5f, #feb47b)',
+    'total-earned': 'linear-gradient(to right, #0f2027, #2c5364)'
+  };
+
+  const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+  const perkName = perkId.split('-').map(capitalize).join(' ');
+
+  const gradient = gradientMap[perkId];
+  const imageUrl = perkId !== 'total-earned' ? chrome.runtime.getURL(`imgs/${perkId}.svg`) : '';
+
+  Toastify({
+    text: `${perkName}: ${points} points`,
+    duration: 6000,
+    close: true,
+    gravity: "top", // `top` or `bottom`
+    position: "right", // `left`, `center` or `right`
+    backgroundColor: gradient,
+    stopOnFocus: true, // Prevents dismissing of toast on hover
+    avatar: imageUrl,
+  }).showToast();
+}
 
 const isBerzerkerFulfilled = (userName, game) => {
   const whitePlayer = game.tags.White;
@@ -69,6 +101,7 @@ const isBerzerkerFulfilled = (userName, game) => {
   if (remainingTimeInSeconds >= totalTimeAllowed / 2) {
     const bonus = Math.floor(Math.random() * (8 - 6 + 1)) + 6;
     console.log(`Berzerker bonus applied: ${bonus}`);
+    showToast('berzerker', bonus);
     return bonus;
   } 
   return 0;
@@ -93,6 +126,7 @@ const isGladiatorFulfilled = (initialIncrementValue, gameType) => {
       bonus = (8 - initialIncrementValue) + Math.floor(Math.random() * 3); // Ensure total is 8-10, for variants
       break;
   }
+  showToast('gladiator', bonus);
   return bonus;
 }
 
@@ -131,6 +165,7 @@ const isBongcloudFulfilled = (userName, game) => {
     console.log('King move detected on move 2. Bongcloud bonus applied');
     const bonus = Math.floor(Math.random() * (5 - 3 + 1)) + 3;
     console.log(`Bongcloud bonus points: ${bonus}`);
+    showToast('bongcloud', bonus);
     return bonus;
   } else {
     console.log('Player did not play a King move on move 2.');
@@ -145,6 +180,7 @@ const isGambiteerFulfilled = (game) => {
     console.log('Gambit detected. Gambiteer bonus applied');
     const bonus = Math.floor(Math.random() * (3 - 2 + 1)) + 2; // Random number between 2 and 3
     console.log(`Gambiteer bonus points: ${bonus}`);
+    showToast('gambiteer', bonus);
     return bonus;
   } else {
     console.log('Player did not play a known gambit or countergambit.');
@@ -157,6 +193,7 @@ const isEndgameSpecialistFulfilled = (game) => {
   if (containsEndgame(moves)) {
    const bonus = Math.floor(Math.random() * (4 - 3 + 1)) + 3;
    console.log(`Endgame bonus points: ${bonus}`);
+   showToast('endgame-specialist', bonus);
    return bonus;
   }
   return 0;
@@ -164,8 +201,12 @@ const isEndgameSpecialistFulfilled = (game) => {
 
 const isHueMasterFulfilled = () => {
   const hasNoRatingClass = document.body.classList.contains('no-rating');
-  if (hasNoRatingClass) console.log('body has no-rating class, adding 1 hue point to bonus');
-  return hasNoRatingClass ? 1 : 0;
+  if (hasNoRatingClass) { 
+    showToast('hue-master', 1);
+    console.log('body has no-rating class, adding 1 hue point to bonus'); 
+    return 1;
+  }
+  return 0;
 }
 
 const isHotStreakFulfilled = async () => {
@@ -180,7 +221,7 @@ const isHotStreakFulfilled = async () => {
   } else if (winningStreak >= 3) {
       bonus = Math.floor(Math.random() * (7 - 6 + 1)) + 6;
   }
-
+  showToast('hot-streak', bonus);
   console.log(`Hot Streak bonus points: ${bonus}`);
   return bonus;
 }
@@ -249,5 +290,6 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
     bonus += await isHotStreakFulfilled();
   }
   
+  showToast('total-earned', initialIncrementValue + bonus);
   return bonus;
 };

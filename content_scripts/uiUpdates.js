@@ -118,7 +118,7 @@ async function setImageSources() {
     'hue-master-icon',
     'gambiteer-icon',
     'endgame-specialist-icon',
-    'hotstreak-icon',
+    'hot-streak-icon',
     'gladiator-icon',
     'equalizer-icon',
     'rivalry-icon'
