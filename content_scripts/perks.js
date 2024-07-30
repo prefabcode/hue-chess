@@ -14,7 +14,7 @@ function showToast(perkId, points) {
     'gladiator': 'linear-gradient(to right, #434343, #000000)',
     'equalizer': 'linear-gradient(to right, #006400, #228B22)',
     'rivalry': 'linear-gradient(to right, #ff7e5f, #feb47b)',
-    'total-earned': 'linear-gradient(to right, #232526, #414345)'
+    'total-earned': 'linear-gradient(to right, #0f2027, #2c5364)'
   };
 
   const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
