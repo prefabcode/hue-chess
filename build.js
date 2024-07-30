@@ -96,3 +96,15 @@ try {
   console.error('Error copying imgs folder:', err);
   process.exit(1);
 }
+
+// Copy Toastify CSS file
+const sourceToastifyCss = path.join(__dirname, 'node_modules', 'toastify-js', 'src', 'toastify.css');
+const targetToastifyCss = path.join(__dirname, 'build', 'toastify.css');
+
+try {
+  copyFileSync(sourceToastifyCss, targetToastifyCss);
+  console.log('toastify.css copied to build directory');
+} catch (err) {
+  console.error('Error copying toastify.css:', err);
+  process.exit(1);
+}

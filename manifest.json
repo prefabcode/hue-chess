@@ -15,7 +15,7 @@
         {
         "matches": ["*://lichess.org/*"],
         "js": ["content-bundle.js"],
-        "css": ["customStyles.css"]
+        "css": ["customStyles.css", "toastify.css"]
         }
     ],
     "web_accessible_resources": [

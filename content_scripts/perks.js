@@ -1,7 +1,35 @@
-import * as pgnParser from '@mliebelt/pgn-parser';
 import { Chess } from 'chess.js'
-import { getActivePerks, getPlayingId, getWinningStreak } from "./storageManagement.js";
+import { getActivePerks, getWinningStreak } from "./storageManagement.js";
 import { materialValues } from "./constants.js";
+import Toastify from 'toastify-js';
+
+function showToast(perkId, perkName, points) {
+  const gradientMap = {
+    'berzerker': 'linear-gradient(to right, #8b0000, #ff0000)',
+    'bongcloud': 'linear-gradient(to right, #a18cd1, #fbc2eb)',
+    'hue-master': 'linear-gradient(to right, #43cea2, #185a9d)',
+    'gambiteer': 'linear-gradient(to right, #4b0082, #800080)',
+    'endgame-specialist': 'linear-gradient(to right, #00c6ff, #0072ff)',
+    'hotstreak': 'linear-gradient(to right, #f12711, #f5af19)',
+    'gladiator': 'linear-gradient(to right, #434343, #000000)',
+    'equalizer': 'linear-gradient(to right, #006400, #228B22)',
+    'rivalry': 'linear-gradient(to right, #ff7e5f, #feb47b)',
+  };
+
+  const gradient = gradientMap[perkId];
+  const imageUrl = chrome.runtime.getURL(`imgs/${perkId}.svg`);
+
+  Toastify({
+    text: `${perkName} Bonus: ${points} points`,
+    duration: 3000,
+    close: true,
+    gravity: "top", // `top` or `bottom`
+    position: "right", // `left`, `center` or `right`
+    backgroundColor: gradient,
+    stopOnFocus: true, // Prevents dismissing of toast on hover
+    avatar: imageUrl,
+  }).showToast();
+}
 
 const isBerzerkerFulfilled = (userName, game) => {
   const whitePlayer = game.tags.White;
@@ -164,8 +192,12 @@ const isEndgameSpecialistFulfilled = (game) => {
 
 const isHueMasterFulfilled = () => {
   const hasNoRatingClass = document.body.classList.contains('no-rating');
-  if (hasNoRatingClass) console.log('body has no-rating class, adding 1 hue point to bonus');
-  return hasNoRatingClass ? 1 : 0;
+  if (hasNoRatingClass) { 
+    showToast('hue-master', 'Hue Master', 1);
+    console.log('body has no-rating class, adding 1 hue point to bonus'); 
+    return 1;
+  }
+  return 0;
 }
 
 const isHotStreakFulfilled = async () => {
