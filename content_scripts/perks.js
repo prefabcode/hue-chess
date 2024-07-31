@@ -1,5 +1,5 @@
 import { Chess } from 'chess.js'
-import { getActivePerks, getWinningStreak } from "./storageManagement.js";
+import { getActivePerks, getWinningStreak, getHasPlayedBefore } from "./storageManagement.js";
 import { materialValues } from "./constants.js";
 import Toastify from 'toastify-js';
 
@@ -266,6 +266,19 @@ const isEqualizerFulfilled = (userName, game) => {
   return 0;
 };
 
+
+const isRivalryFulfilled = async () => {
+  const hasPlayedBefore = await getHasPlayedBefore();
+  if (hasPlayedBefore) {
+    console.log('Rivalry perk fulfilled. Bonus applied.');
+    const bonus = Math.floor(Math.random() * (4 - 2 + 1)) + 2; // Random number between 2 and 4
+    showToast('rivalry', bonus);
+    return bonus;
+  }
+  return 0;
+};
+
+
 const calculateEndgameMaterialFromFEN = (fen) => {
   const pieceCount = { white: 0, black: 0 };
   const pieces = fen.split(' ')[0].split('');
@@ -346,6 +359,9 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
   }
   if (activePerks.includes('equalizer')) {
     bonus += isEqualizerFulfilled(userName, game);
+  }
+  if (activePerks.includes('rivalry')) {
+    bonus += await isRivalryFulfilled();
   }
   
   showToast('total-earned', initialIncrementValue + bonus);
