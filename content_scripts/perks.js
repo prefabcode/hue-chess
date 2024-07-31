@@ -226,7 +226,47 @@ const isHotStreakFulfilled = async () => {
   return bonus;
 }
 
-const calculateMaterialFromFEN = (fen) => {
+const isEqualizerFulfilled = (userName, game) => {
+  const chess = new Chess();
+  let wasDownInMaterial = false;
+
+  const whitePlayer = game.tags.White;
+  const blackPlayer = game.tags.Black;
+
+  let playerColor = null;
+
+  if (whitePlayer === userName) {
+      playerColor = 'white';
+  } else if (blackPlayer === userName) {
+      playerColor = 'black';
+  }
+
+  if (!playerColor) {
+      console.error('Player not found in this game.');
+      return 0;
+  }
+
+  for (let i = 0; i < game.moves.length; i++) {
+    chess.move(game.moves[i].notation.notation);
+    const fen = chess.fen();
+    const materialBalance = calculateMaterialBalanceFromFEN(fen, playerColor);
+
+    if (materialBalance < 0) {
+      if (wasDownInMaterial) {
+        const bonus = Math.floor(Math.random() * (4 - 2 + 1)) + 2; 
+        showToast('equalizer', bonus);
+        return bonus; 
+      }
+      wasDownInMaterial = true;
+    } else {
+      wasDownInMaterial = false;
+    }
+  }
+
+  return 0;
+};
+
+const calculateEndgameMaterialFromFEN = (fen) => {
   const pieceCount = { white: 0, black: 0 };
   const pieces = fen.split(' ')[0].split('');
   
@@ -241,6 +281,21 @@ const calculateMaterialFromFEN = (fen) => {
   return pieceCount;
 };
 
+const calculateMaterialBalanceFromFEN = (fen, playerColor) => {
+  const pieceCount = { white: 0, black: 0 };
+  const pieces = fen.split(' ')[0].split('');
+  
+  pieces.forEach(piece => {
+      if (/[rnbqp]/.test(piece)) {
+          pieceCount.black += materialValues[piece.toUpperCase()];
+      } else if (/[RNBQP]/.test(piece)) {
+          pieceCount.white += materialValues[piece];
+      }
+  });
+
+  return playerColor === 'white' ? pieceCount.white - pieceCount.black : pieceCount.black - pieceCount.white;
+};
+
 const containsEndgame = (moves) => {
   const chess = new Chess();
   
@@ -248,7 +303,7 @@ const containsEndgame = (moves) => {
   return moves.some((move, index) => {
       chess.move(move.notation.notation);
       const fen = chess.fen();
-      const material = calculateMaterialFromFEN(fen);
+      const material = calculateEndgameMaterialFromFEN(fen);
       if (material.white <= 13 && material.black <= 13) {
           console.log("Endgame condition met.");
           return true;
@@ -288,6 +343,9 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
   }
   if (activePerks.includes('hot-streak')) {
     bonus += await isHotStreakFulfilled();
+  }
+  if (activePerks.includes('equalizer')) {
+    bonus += isEqualizerFulfilled(userName, game);
   }
   
   showToast('total-earned', initialIncrementValue + bonus);
