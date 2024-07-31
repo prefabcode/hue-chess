@@ -155,3 +155,22 @@ export const setAllowGladiatorPerkRemoval = (value) => {
       });
   });
 };
+
+// Get the hasPlayedBefore flag
+export const getHasPlayedBefore = () => {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(['hasPlayedBefore'], (result) => {
+      resolve(result.hasPlayedBefore || false);
+    });
+  });
+};
+
+// Set the hasPlayedBefore flag
+export const setHasPlayedBefore = (hasPlayedBefore) => {
+  return new Promise((resolve) => {
+    chrome.storage.local.set({ hasPlayedBefore }, () => {
+      console.log("Has Played Before flag stored:", hasPlayedBefore);
+      resolve();
+    });
+  });
+};

@@ -9,7 +9,8 @@ import {
   getGladiatorLossBuffer,
   resetGladiatorLossBuffer,
   setAllowGladiatorPerkRemoval, 
-  getPlayingId
+  getPlayingId,
+  setHasPlayedBefore
 } from "./storageManagement.js";
 import * as pgnParser from '@mliebelt/pgn-parser';
 
@@ -122,9 +123,25 @@ export const fetchGameStream = async (streamId, playingId, userColor) => {
               const data = JSON.parse(line);
               console.log(`[${new Date().toISOString()}] Received data:`, data);
 
+              // Check if the game has started
+              if (data.statusName === 'started') {
+                const user1 = data.players.white.userId;
+                const user2 = data.players.black.userId;
+
+                // Reset the global variable
+                await setHasPlayedBefore(false);
+
+                // Fetch the crosstable data
+                const crosstableResponse = await fetch(`https://lichess.org/api/crosstable/${user1}/${user2}`);
+                const crosstableData = await crosstableResponse.json();
+                if (crosstableData.nbGames > 0) {
+                  await setHasPlayedBefore(true);
+                }
+              }
+
               // Handle the data (e.g., check if the game has finished)
               if (data.statusName && data.statusName !== 'started') {
-                console.log('The game has finished.');
+                console.log('The game has finished.', data);
                 const game = await fetchParsedGame();
                 if (game) {
                   const result = checkForWinOrLoss(userColor, game);
