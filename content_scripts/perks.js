@@ -269,13 +269,13 @@ const isEqualizerFulfilled = (userName, game) => {
 
 const isRivalryFulfilled = async () => {
   const hasPlayedBefore = await getHasPlayedBefore();
+  let bonus = 1;
   if (hasPlayedBefore) {
     console.log('Rivalry perk fulfilled. Bonus applied.');
-    const bonus = Math.floor(Math.random() * (4 - 2 + 1)) + 2; // Random number between 2 and 4
-    showToast('rivalry', bonus);
-    return bonus;
+    bonus = Math.floor(Math.random() * (4 - 2 + 1)) + 2; // Random number between 2 and 4
   }
-  return 0;
+  showToast('rivalry', bonus);
+  return bonus;
 };
 
 
