@@ -178,7 +178,7 @@ const isGambiteerFulfilled = (game) => {
   const opening = game.tags.Opening || '';
   if (opening.toLowerCase().includes('gambit')) {
     console.log('Gambit detected. Gambiteer bonus applied');
-    const bonus = Math.floor(Math.random() * (3 - 2 + 1)) + 2; // Random number between 2 and 3
+    const bonus = Math.floor(Math.random() * (4 - 2 + 1)) + 2; // Random number between 2 and 4
     console.log(`Gambiteer bonus points: ${bonus}`);
     showToast('gambiteer', bonus);
     return bonus;
@@ -191,7 +191,7 @@ const isGambiteerFulfilled = (game) => {
 const isEndgameSpecialistFulfilled = (game) => {
   const moves = game.moves;
   if (containsEndgame(moves)) {
-   const bonus = Math.floor(Math.random() * (4 - 3 + 1)) + 3;
+   const bonus = Math.floor(Math.random() * (4 - 2 + 1)) + 2;
    console.log(`Endgame bonus points: ${bonus}`);
    showToast('endgame-specialist', bonus);
    return bonus;
@@ -215,11 +215,11 @@ const isHotStreakFulfilled = async () => {
   let bonus = 0;
 
   if (winningStreak === 1) {
-      bonus = Math.floor(Math.random() * (3 - 2 + 1)) + 2;
+      bonus = Math.floor(Math.random() * (2 - 1 + 1)) + 1;
   } else if (winningStreak === 2) {
-      bonus = Math.floor(Math.random() * (5 - 4 + 1)) + 4;
+      bonus = Math.floor(Math.random() * (4 - 3 + 1)) + 3;
   } else if (winningStreak >= 3) {
-      bonus = Math.floor(Math.random() * (7 - 6 + 1)) + 6;
+      bonus = Math.floor(Math.random() * (7 - 5 + 1)) + 5;
   }
   showToast('hot-streak', bonus);
   console.log(`Hot Streak bonus points: ${bonus}`);
@@ -269,10 +269,10 @@ const isEqualizerFulfilled = (userName, game) => {
 
 const isRivalryFulfilled = async () => {
   const hasPlayedBefore = await getHasPlayedBefore();
-  let bonus = 1;
+  let bonus = Math.floor(Math.random() * (2 - 1 + 1)) + 1;
   if (hasPlayedBefore) {
     console.log('Rivalry perk fulfilled. Bonus applied.');
-    bonus = Math.floor(Math.random() * (4 - 2 + 1)) + 2; // Random number between 2 and 4
+    bonus = Math.floor(Math.random() * (4 - 3 + 1)) + 3; // Random number between 2 and 4
   }
   showToast('rivalry', bonus);
   return bonus;
