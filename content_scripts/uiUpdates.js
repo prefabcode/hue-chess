@@ -166,24 +166,6 @@ export const openSettingsModal = async () => {
     document.body.style.overflowY = 'hidden';
     modal.showModal();
 
-    const bodyClass = document.body.classList;
-    let theme = 'light';
-    if (bodyClass.contains('dark')) {
-      theme = 'dark';
-    } else if (bodyClass.contains('transp')) {
-      theme = 'transp';
-    }
-
-    // Initialize Tippy.js tooltips
-    tippy('.perk-box', {
-      theme: theme,
-      appendTo: () => document.querySelector('#hue-chess-settings-modal'),
-      placement: 'bottom-start',
-      maxWidth: 200,
-      arrow: true,
-      hideOnClick: false,
-    });
-
     // Add event listeners for modal buttons
     document.getElementById('close-settings-modal').addEventListener('click', () => {
       document.body.style.overflowY = 'scroll';
@@ -274,6 +256,27 @@ export const updateModalContent = async () => {
       } else {
         box.classList.remove('active');
       }
+    });
+
+    // Destroy existing Tippy instances
+    tippy('.perk-box').forEach(instance => instance.destroy());
+
+    const bodyClass = document.body.classList;
+    let theme = 'light';
+    if (bodyClass.contains('dark')) {
+      theme = 'dark';
+    } else if (bodyClass.contains('transp')) {
+      theme = 'transp';
+    }
+
+    // Initialize Tippy.js tooltips
+    tippy('.perk-box', {
+      theme: theme,
+      appendTo: () => document.querySelector('#hue-chess-settings-modal'),
+      placement: 'bottom-start',
+      maxWidth: 200,
+      arrow: true,
+      hideOnClick: false,
     });
   });
 }
