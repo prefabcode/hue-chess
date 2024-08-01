@@ -50,10 +50,6 @@
   cursor: not-allowed;
 }
 
-.perk-box.locked img {
-  filter: grayscale(100%);
-}
-
 #berzerker-perk.active {
   background: linear-gradient(to right, #8b0000, #ff0000);
 }

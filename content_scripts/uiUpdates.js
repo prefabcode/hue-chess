@@ -180,6 +180,9 @@ export const openSettingsModal = async () => {
     const perkBoxes = document.querySelectorAll('.perks .perk-box');
     perkBoxes.forEach(box => {
       box.addEventListener('click', async () => {
+        if (box.classList.contains('locked')) {
+          return;
+        }
         const perk = box.id.replace('-perk', '');
         const isActive = box.classList.contains('active');
 
@@ -244,9 +247,11 @@ export const updateModalContent = async () => {
       if (playerLevel >= unlockLevel) {
         box.style.display = 'flex';
         imgElement.src = chrome.runtime.getURL(`imgs/${perk}.svg`);
+        box.classList.remove('locked');
         box.setAttribute('data-tippy-content', box.getAttribute('data-tippy-content-original'));
       } else {
         box.style.display = 'flex';
+        box.classList.add('locked');
         imgElement.src = chrome.runtime.getURL('imgs/lock.svg');
         box.setAttribute('data-tippy-content', `Unlocks at Level ${unlockLevel}`);
       }
