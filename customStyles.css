@@ -43,6 +43,13 @@
   color: #666;
 }
 
+
+.perk-box.locked {
+  background: #999;
+  color: #333;
+  cursor: not-allowed;
+}
+
 #berzerker-perk.active {
   background: linear-gradient(to right, #8b0000, #ff0000);
 }

@@ -125,7 +125,17 @@ async function setImageSources() {
   ];
 
   images.forEach(imageId => {
-    document.getElementById(imageId).src = chrome.runtime.getURL(`imgs/${imageId.replace('-icon', '')}.svg`);
+    const imageElement = document.getElementById(imageId);
+    const perkBox = imageElement.closest('.perk-box');
+    const unlockLevel = parseInt(perkBox.getAttribute('data-unlock-level'), 10);
+    chrome.storage.local.get(['completedBoards'], (result) => {
+      const playerLevel = (result.completedBoards !== null ? result.completedBoards : 0) + 1;
+      if (playerLevel >= unlockLevel) {
+        imageElement.src = chrome.runtime.getURL(`imgs/${imageId.replace('-icon', '')}.svg`);
+      } else {
+        imageElement.src = chrome.runtime.getURL('imgs/lock.svg');
+      }
+    });
   });
 }
 
@@ -156,24 +166,6 @@ export const openSettingsModal = async () => {
     document.body.style.overflowY = 'hidden';
     modal.showModal();
 
-    const bodyClass = document.body.classList;
-    let theme = 'light';
-    if (bodyClass.contains('dark')) {
-      theme = 'dark';
-    } else if (bodyClass.contains('transp')) {
-      theme = 'transp';
-    }
-
-    // Initialize Tippy.js tooltips
-    tippy('.perk-box', {
-      theme: theme,
-      appendTo: () => document.querySelector('#hue-chess-settings-modal'),
-      placement: 'bottom-start',
-      maxWidth: 200,
-      arrow: true,
-      hideOnClick: false,
-    });
-
     // Add event listeners for modal buttons
     document.getElementById('close-settings-modal').addEventListener('click', () => {
       document.body.style.overflowY = 'scroll';
@@ -188,6 +180,9 @@ export const openSettingsModal = async () => {
     const perkBoxes = document.querySelectorAll('.perks .perk-box');
     perkBoxes.forEach(box => {
       box.addEventListener('click', async () => {
+        if (box.classList.contains('locked')) {
+          return;
+        }
         const perk = box.id.replace('-perk', '');
         const isActive = box.classList.contains('active');
 
@@ -233,25 +228,60 @@ export const openSettingsModal = async () => {
   }
 }
 
-
 export const updateModalContent = async () => {
   chrome.storage.local.get(['completedBoards', 'currentHue', 'activePerks'], (result) => {
-    const level = (result.completedBoards !== null ? result.completedBoards : 0) + 1;
+    const playerLevel = (result.completedBoards !== null ? result.completedBoards : 0) + 1;
     const huePoints = `${result.currentHue || 0}/100`;
 
-    document.getElementById('current-level').innerText = level;
+    document.getElementById('current-level').innerText = playerLevel;
     document.getElementById('hue-points').innerText = huePoints;
 
-    // Set active perks
+    // Set active perks and handle locked perks
     const activePerks = result.activePerks || [];
     const perkBoxes = document.querySelectorAll('.perks .perk-box');
     perkBoxes.forEach(box => {
+      const unlockLevel = parseInt(box.getAttribute('data-unlock-level'), 10);
       const perk = box.id.replace('-perk', '');
+      const imgElement = box.querySelector('img');
+
+      if (playerLevel >= unlockLevel) {
+        box.style.display = 'flex';
+        imgElement.src = chrome.runtime.getURL(`imgs/${perk}.svg`);
+        box.classList.remove('locked');
+        box.setAttribute('data-tippy-content', box.getAttribute('data-tippy-content-original'));
+      } else {
+        box.style.display = 'flex';
+        box.classList.add('locked');
+        imgElement.src = chrome.runtime.getURL('imgs/lock.svg');
+        box.setAttribute('data-tippy-content', `Unlocks at Level ${unlockLevel}`);
+      }
+
       if (activePerks.includes(perk)) {
         box.classList.add('active');
       } else {
         box.classList.remove('active');
       }
+    });
+
+    // Destroy existing Tippy instances
+    tippy('.perk-box').forEach(instance => instance.destroy());
+
+    const bodyClass = document.body.classList;
+    let theme = 'light';
+    if (bodyClass.contains('dark')) {
+      theme = 'dark';
+    } else if (bodyClass.contains('transp')) {
+      theme = 'transp';
+    }
+
+    // Initialize Tippy.js tooltips
+    tippy('.perk-box', {
+      theme: theme,
+      appendTo: () => document.querySelector('#hue-chess-settings-modal'),
+      placement: 'bottom-start',
+      maxWidth: 200,
+      arrow: true,
+      hideOnClick: false,
     });
   });
 }
