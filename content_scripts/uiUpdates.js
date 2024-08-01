@@ -258,17 +258,14 @@ export const updateModalContent = async () => {
       const unlockLevel = parseInt(box.getAttribute('data-unlock-level'), 10);
       const perk = box.id.replace('-perk', '');
       const imgElement = box.querySelector('img');
-      const spanElement = box.querySelector('span');
 
       if (playerLevel >= unlockLevel) {
         box.style.display = 'flex';
         imgElement.src = chrome.runtime.getURL(`imgs/${perk}.svg`);
-        spanElement.innerText = box.getAttribute('data-perk-name');
         box.setAttribute('data-tippy-content', box.getAttribute('data-tippy-content-original'));
       } else {
         box.style.display = 'flex';
         imgElement.src = chrome.runtime.getURL('imgs/lock.svg');
-        spanElement.innerText = 'Locked';
         box.setAttribute('data-tippy-content', `Unlocks at Level ${unlockLevel}`);
       }
 
