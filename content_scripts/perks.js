@@ -382,7 +382,6 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
   if (activePerks.includes('rivalry')) {
     bonus += await isRivalryFulfilled();
   }
-
   if (activePerks.includes('preparation')) {
     bonus += await isPreparationFulfilled();
   }
