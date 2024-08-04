@@ -21,3 +21,4 @@ export const timeControlIncrements = {
 
 export const MAX_PERKS = 2;
 
+export const PREPARATION_TIME = 300;

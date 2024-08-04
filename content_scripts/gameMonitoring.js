@@ -14,6 +14,7 @@ import {
   setPreparationStatus,
   getPreparationStatus,
 } from "./storageManagement.js";
+import { PREPARATION_TIME } from "./constants.js";
 import { startAnalysisTimer } from "./uiUpdates.js";
 import * as pgnParser from '@mliebelt/pgn-parser';
 
@@ -271,7 +272,7 @@ export const checkUrlAndStartMonitoring = async () => {
     const isPreparationMet = await getPreparationStatus();
     if (document.querySelector('.analyse__board.main-board') && !isPreparationMet) {
       console.log('Preparation perk selected and analysis board detected, starting timer');
-      startAnalysisTimer(30); // change this to 3 to 5 min... 
+      startAnalysisTimer(PREPARATION_TIME);
     }
   } else {
     console.log('No monitoring needed');

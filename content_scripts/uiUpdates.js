@@ -12,7 +12,7 @@ import {
   setPreparationStatus, 
 } from './storageManagement.js';
 import { showPerkToast } from './perks.js';
-import { levelNames, MAX_PERKS } from './constants.js';
+import { levelNames, MAX_PERKS, PREPARATION_TIME } from './constants.js';
 import tippy from 'tippy.js';
 
 export const updateProgressBar = (completedBoards = null, hueValue = null) => {
@@ -227,7 +227,7 @@ export const openSettingsModal = async () => {
           await setPreparationStatus(false);
           const timerElement = document.querySelector('#analysis-timer');
           if (!isActive && document.querySelector('.analyse__board.main-board')) {
-            startAnalysisTimer(10);
+            startAnalysisTimer(PREPARATION_TIME);
           } else if (isActive && timerElement) {
             timerElement.remove();
           }
@@ -481,21 +481,20 @@ export const startAnalysisTimer = async (analysisTimeLeft) => {
 
   const timerElement = document.createElement('div');
   timerElement.id = 'analysis-timer';
+  timerElement.className = 'analyse__clock';
   timerElement.style.position = 'absolute';
-  timerElement.style.left = '0';
   timerElement.style.top = '-20px';
-  timerElement.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-  timerElement.style.color = 'white';
-  timerElement.style.padding = '5px 10px';
-  timerElement.style.borderRadius = '5px';
-  timerElement.style.fontSize = '14px';
-  timerElement.innerText = `Time left: ${formatTime(analysisTimeLeft)}`;
+  timerElement.style.borderTopLeftRadius = '6px';
+  timerElement.style.borderTopRightRadius = '6px';
+  timerElement.style.borderBottomRightRadius = '0';
+  timerElement.style.borderBottomLeftRadius = '0';
+  timerElement.innerText = `Preparation time left: ${formatTime(analysisTimeLeft)}`;
   analysisBoard.appendChild(timerElement);
 
 
   let analysisTimer = setInterval(async () => {
     analysisTimeLeft--;
-    timerElement.innerText = `Time left: ${formatTime(analysisTimeLeft)}`;
+    timerElement.innerText = `Preparation time left: ${formatTime(analysisTimeLeft)}`;
     
     if (analysisTimeLeft <= 0) {
       clearInterval(analysisTimer);
