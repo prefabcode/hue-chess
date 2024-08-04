@@ -11,6 +11,7 @@ import {
   getPreparationStatus,
   setPreparationStatus, 
 } from './storageManagement.js';
+import { showPerkToast } from './perks.js';
 import { levelNames, MAX_PERKS } from './constants.js';
 import tippy from 'tippy.js';
 
@@ -498,10 +499,8 @@ export const startAnalysisTimer = async (analysisTimeLeft) => {
     timerElement.innerText = `Time left: ${formatTime(analysisTimeLeft)}`;
     if (analysisTimeLeft <= 0) {
       clearInterval(analysisTimer);
-      console.log('preparation requirement fulfilled');
       setPreparationStatus(true);
-      // TODO - ADD toast here for prep requirement fulfilled! 
-      // showToast('preparation', 'Preparation requirement fulfilled', 0);
+      showPerkToast('preparation', 'Preparation: requirement fulfilled');
     }
   }, 1000);
 };
