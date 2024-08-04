@@ -385,7 +385,7 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
   if (activePerks.includes('preparation')) {
     bonus += await isPreparationFulfilled();
   }
-  
-  showToast('total-earned', initialIncrementValue + bonus);
+  const message = `Total Hue Earned: ${initialIncrementValue + bonus} points`;
+  showPerkToast('total-earned', message);
   return bonus;
 };
