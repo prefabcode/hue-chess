@@ -1,5 +1,5 @@
 import { Chess } from 'chess.js'
-import { getActivePerks, getWinningStreak, getHasPlayedBefore } from "./storageManagement.js";
+import { getActivePerks, getWinningStreak, getHasPlayedBefore, setPreparationStatus, getPreparationStatus } from "./storageManagement.js";
 import { materialValues } from "./constants.js";
 import Toastify from 'toastify-js';
 
@@ -288,10 +288,13 @@ const isRivalryFulfilled = async () => {
 
 const isPreparationFulfilled = async () => {
   const preparationStatusMet = await getPreparationStatus();
-  const bonus = preparationStatusMet ? Math.floor(Math.random() * (7 - 4 + 1)) + 4 : 0;
-  const message = `Preparation: ${bonus} points`;
-  if (preparationStatusMet) showPerkToast('preparation', message);
-  
+  let bonus = 0;
+  if (preparationStatusMet) {
+    bonus = Math.floor(Math.random() * (7 - 4 + 1)) + 4;
+    const message = `Preparation: ${bonus} points`;
+    showPerkToast('preparation', message);
+    await setPreparationStatus(false);
+  }
   return bonus;
 };
 
