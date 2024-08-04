@@ -225,8 +225,11 @@ export const openSettingsModal = async () => {
 
         if (perk === 'preparation') {
           await setPreparationStatus(false);
+          const timerElement = document.querySelector('#analysis-timer');
           if (!isActive && document.querySelector('.analyse__board.main-board')) {
-            startAnalysisTimer(30);
+            startAnalysisTimer(10);
+          } else if (isActive && timerElement) {
+            timerElement.remove();
           }
         }
 
@@ -465,11 +468,6 @@ export const updatePerksIcon = () => {
 };
 
 export const startAnalysisTimer = async (analysisTimeLeft) => {
-  let activePerks = await getActivePerks();
-  if (!activePerks.includes('preparation')) {
-    return;
-  }
-
   const preparationStatusMet = await getPreparationStatus();
   if (preparationStatusMet) {
     return;
@@ -501,10 +499,12 @@ export const startAnalysisTimer = async (analysisTimeLeft) => {
     
     if (analysisTimeLeft <= 0) {
       clearInterval(analysisTimer);
+      timerElement.remove();
       activePerks = await getActivePerks(); 
       if (activePerks.includes('preparation')) {
         setPreparationStatus(true);
         showPerkToast('preparation', 'Preparation: requirement fulfilled');
+
       }
     }
   }, 1000);
