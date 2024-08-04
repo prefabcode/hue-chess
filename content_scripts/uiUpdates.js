@@ -12,7 +12,7 @@ import {
   setPreparationStatus, 
 } from './storageManagement.js';
 import { showPerkToast } from './perks.js';
-import { levelNames, MAX_PERKS, postGamePattern, analysisPattern } from './constants.js';
+import { levelNames, MAX_PERKS } from './constants.js';
 import tippy from 'tippy.js';
 
 export const updateProgressBar = (completedBoards = null, hueValue = null) => {
@@ -225,11 +225,8 @@ export const openSettingsModal = async () => {
 
         if (perk === 'preparation') {
           await setPreparationStatus(false);
-          if (!isActive) {
-            const url = window.location.href;
-            if (postGamePattern.test(url) || analysisPattern.test(url)) {
-              startAnalysisTimer(30);
-            }
+          if (!isActive && document.querySelector('.analyse__board.main-board')) {
+            startAnalysisTimer(30);
           }
         }
 
