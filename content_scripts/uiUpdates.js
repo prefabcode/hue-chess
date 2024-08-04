@@ -479,7 +479,10 @@ export const startAnalysisTimer = async (analysisTimeLeft) => {
     return;
   }
 
-  const timerElement = document.createElement('div');
+  let timerElement = document.querySelector('#analysis-timer'); 
+  if (timerElement) return;
+
+  timerElement = document.createElement('div');
   timerElement.id = 'analysis-timer';
   timerElement.className = 'analyse__clock';
   timerElement.style.position = 'absolute';
