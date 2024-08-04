@@ -1,4 +1,16 @@
-import { exportExtensionState, importExtensionState, confirmResetProgress, updateActivePerks, setWinningStreak, resetGladiatorLossBuffer, setAllowGladiatorPerkRemoval, getAllowGladiatorPerkRemoval, getActivePerks } from './storageManagement.js';
+import { 
+  exportExtensionState, 
+  importExtensionState, 
+  confirmResetProgress, 
+  updateActivePerks, 
+  setWinningStreak, 
+  resetGladiatorLossBuffer, 
+  setAllowGladiatorPerkRemoval, 
+  getAllowGladiatorPerkRemoval, 
+  getActivePerks,
+  getPreparationStatus,
+  setPreparationStatus, 
+} from './storageManagement.js';
 import { levelNames, MAX_PERKS } from './constants.js';
 import tippy from 'tippy.js';
 
@@ -206,6 +218,12 @@ export const openSettingsModal = async () => {
               alert("You cannot remove the Gladiator perk until you level up or suffer a 20% hue point penalty.");
               return;
             }
+          }
+        }
+
+        if (perk === 'preparation') {
+          if (isActive) {
+            await setPreparationStatus(false);
           }
         }
 

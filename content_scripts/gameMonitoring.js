@@ -10,7 +10,8 @@ import {
   resetGladiatorLossBuffer,
   setAllowGladiatorPerkRemoval, 
   getPlayingId,
-  setHasPlayedBefore
+  setHasPlayedBefore,
+  setPreparationStatus,
 } from "./storageManagement.js";
 import * as pgnParser from '@mliebelt/pgn-parser';
 
@@ -167,6 +168,9 @@ export const fetchGameStream = async (streamId, playingId, userColor) => {
                         await applyGladiatorPenalty();
                         await setAllowGladiatorPerkRemoval(true);
                       }
+                    }
+                    if (activePerks.includes('preparation')) {
+                      await setPreparationStatus(false);
                     }
                   }
                   reader.cancel();
