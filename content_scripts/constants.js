@@ -20,3 +20,7 @@ export const timeControlIncrements = {
 };
 
 export const MAX_PERKS = 2;
+
+export const gameIdPattern = /^https:\/\/lichess\.org\/([a-zA-Z0-9]{9,})/; 
+export const postGamePattern = /^https:\/\/lichess\.org\/([a-zA-Z0-9]{8})(\/(white|black)(#\d+)?)?/; 
+export const analysisPattern = /^https:\/\/lichess\.org\/analysis/;

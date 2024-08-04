@@ -12,7 +12,7 @@ import {
   setPreparationStatus, 
 } from './storageManagement.js';
 import { showPerkToast } from './perks.js';
-import { levelNames, MAX_PERKS } from './constants.js';
+import { levelNames, MAX_PERKS, postGamePattern, analysisPattern } from './constants.js';
 import tippy from 'tippy.js';
 
 export const updateProgressBar = (completedBoards = null, hueValue = null) => {
@@ -224,8 +224,12 @@ export const openSettingsModal = async () => {
         }
 
         if (perk === 'preparation') {
-          if (isActive) {
-            await setPreparationStatus(false);
+          await setPreparationStatus(false);
+          if (!isActive) {
+            const url = window.location.href;
+            if (postGamePattern.test(url) || analysisPattern.test(url)) {
+              startAnalysisTimer(30);
+            }
           }
         }
 
@@ -464,7 +468,7 @@ export const updatePerksIcon = () => {
 };
 
 export const startAnalysisTimer = async (analysisTimeLeft) => {
-  const activePerks = await getActivePerks();
+  let activePerks = await getActivePerks();
   if (!activePerks.includes('preparation')) {
     return;
   }
@@ -494,13 +498,17 @@ export const startAnalysisTimer = async (analysisTimeLeft) => {
   analysisBoard.appendChild(timerElement);
 
 
-  let analysisTimer = setInterval(() => {
+  let analysisTimer = setInterval(async () => {
     analysisTimeLeft--;
     timerElement.innerText = `Time left: ${formatTime(analysisTimeLeft)}`;
+    
     if (analysisTimeLeft <= 0) {
       clearInterval(analysisTimer);
-      setPreparationStatus(true);
-      showPerkToast('preparation', 'Preparation: requirement fulfilled');
+      activePerks = await getActivePerks(); 
+      if (activePerks.includes('preparation')) {
+        setPreparationStatus(true);
+        showPerkToast('preparation', 'Preparation: requirement fulfilled');
+      }
     }
   }, 1000);
 };
