@@ -1,5 +1,18 @@
-import { exportExtensionState, importExtensionState, confirmResetProgress, updateActivePerks, setWinningStreak, resetGladiatorLossBuffer, setAllowGladiatorPerkRemoval, getAllowGladiatorPerkRemoval, getActivePerks } from './storageManagement.js';
-import { levelNames, MAX_PERKS } from './constants.js';
+import { 
+  exportExtensionState, 
+  importExtensionState, 
+  confirmResetProgress, 
+  updateActivePerks, 
+  setWinningStreak, 
+  resetGladiatorLossBuffer, 
+  setAllowGladiatorPerkRemoval, 
+  getAllowGladiatorPerkRemoval, 
+  getActivePerks,
+  getPreparationStatus,
+  setPreparationStatus, 
+} from './storageManagement.js';
+import { showPerkToast } from './perks.js';
+import { levelNames, MAX_PERKS, PREPARATION_TIME } from './constants.js';
 import tippy from 'tippy.js';
 
 export const updateProgressBar = (completedBoards = null, hueValue = null) => {
@@ -121,7 +134,8 @@ async function setImageSources() {
     'hot-streak-icon',
     'gladiator-icon',
     'equalizer-icon',
-    'rivalry-icon'
+    'rivalry-icon',
+    'preparation-icon'
   ];
 
   images.forEach(imageId => {
@@ -206,6 +220,16 @@ export const openSettingsModal = async () => {
               alert("You cannot remove the Gladiator perk until you level up or suffer a 20% hue point penalty.");
               return;
             }
+          }
+        }
+
+        if (perk === 'preparation') {
+          await setPreparationStatus(false);
+          const timerElement = document.querySelector('#analysis-timer');
+          if (!isActive && document.querySelector('.analyse__board.main-board')) {
+            startAnalysisTimer(PREPARATION_TIME);
+          } else if (isActive && timerElement) {
+            timerElement.remove();
           }
         }
 
@@ -441,4 +465,55 @@ export const updatePerksIcon = () => {
     });
 
   });
+};
+
+export const startAnalysisTimer = async (analysisTimeLeft) => {
+  const preparationStatusMet = await getPreparationStatus();
+  if (preparationStatusMet) {
+    return;
+  }
+
+  const analysisBoard = document.querySelector('.analyse__board.main-board');
+  if (!analysisBoard) {
+    console.log('Analysis board not found.');
+    return;
+  }
+
+  let timerElement = document.querySelector('#analysis-timer'); 
+  if (timerElement) return;
+
+  timerElement = document.createElement('div');
+  timerElement.id = 'analysis-timer';
+  timerElement.className = 'analyse__clock';
+  timerElement.style.position = 'absolute';
+  timerElement.style.top = '-20px';
+  timerElement.style.borderTopLeftRadius = '6px';
+  timerElement.style.borderTopRightRadius = '6px';
+  timerElement.style.borderBottomRightRadius = '0';
+  timerElement.style.borderBottomLeftRadius = '0';
+  timerElement.innerText = `Preparation time left: ${formatTime(analysisTimeLeft)}`;
+  analysisBoard.appendChild(timerElement);
+
+
+  let analysisTimer = setInterval(async () => {
+    analysisTimeLeft--;
+    timerElement.innerText = `Preparation time left: ${formatTime(analysisTimeLeft)}`;
+    
+    if (analysisTimeLeft <= 0) {
+      clearInterval(analysisTimer);
+      timerElement.remove();
+      activePerks = await getActivePerks(); 
+      if (activePerks.includes('preparation')) {
+        setPreparationStatus(true);
+        showPerkToast('preparation', 'Preparation: requirement fulfilled');
+
+      }
+    }
+  }, 1000);
+};
+
+const formatTime = (seconds) => {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
 };

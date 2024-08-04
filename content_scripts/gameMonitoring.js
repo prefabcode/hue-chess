@@ -1,17 +1,21 @@
 import { incrementHue } from "./rewardCalculation.js";
 import { applyGladiatorPenalty } from "./rewardCalculation.js";
-import { 
-  getActivePerks, 
-  setPlayingId, 
-  setWinningStreak, 
-  getWinningStreak, 
+import {
+  getActivePerks,
+  setPlayingId,
+  setWinningStreak,
+  getWinningStreak,
   setGladiatorLossBuffer,
   getGladiatorLossBuffer,
   resetGladiatorLossBuffer,
-  setAllowGladiatorPerkRemoval, 
+  setAllowGladiatorPerkRemoval,
   getPlayingId,
-  setHasPlayedBefore
+  setHasPlayedBefore,
+  setPreparationStatus,
+  getPreparationStatus,
 } from "./storageManagement.js";
+import { PREPARATION_TIME } from "./constants.js";
+import { startAnalysisTimer } from "./uiUpdates.js";
 import * as pgnParser from '@mliebelt/pgn-parser';
 
 export const getUserColor = () => {
@@ -43,11 +47,11 @@ export const checkForWinOrLoss = (userColor, game) => {
 
   const result = { win: false, loss: false };
 
-  if ((userColor === 'white' && game.tags.Result === '1-0') || 
-      (userColor === 'black' && game.tags.Result === '0-1')) {
+  if ((userColor === 'white' && game.tags.Result === '1-0') ||
+    (userColor === 'black' && game.tags.Result === '0-1')) {
     result.win = true;
-  } else if ((userColor === 'white' && game.tags.Result === '0-1') || 
-              (userColor === 'black' && game.tags.Result === '1-0')) {
+  } else if ((userColor === 'white' && game.tags.Result === '0-1') ||
+    (userColor === 'black' && game.tags.Result === '1-0')) {
     result.loss = true;
   }
 
@@ -168,6 +172,9 @@ export const fetchGameStream = async (streamId, playingId, userColor) => {
                         await setAllowGladiatorPerkRemoval(true);
                       }
                     }
+                    if (activePerks.includes('preparation')) {
+                      await setPreparationStatus(false);
+                    }
                   }
                   reader.cancel();
                 }
@@ -248,8 +255,9 @@ export const monitorGame = async () => {
   fetchGameStream(streamId, playingId, userColor);
 };
 
-export const checkUrlAndStartMonitoring = () => {
+export const checkUrlAndStartMonitoring = async () => {
   const url = window.location.href;
+  const activePerks = await getActivePerks();
   const gameIdPattern = /https:\/\/lichess\.org\/[a-zA-Z0-9]{8,}/;
   if (gameIdPattern.test(url)) {
     isPlayingGame().then((isPlaying) => {
@@ -259,7 +267,14 @@ export const checkUrlAndStartMonitoring = () => {
         console.log("User is not playing in this game, no monitoring needed");
       }
     });
+  }
+  if (activePerks.includes('preparation')) {
+    const isPreparationMet = await getPreparationStatus();
+    if (document.querySelector('.analyse__board.main-board') && !isPreparationMet) {
+      console.log('Preparation perk selected and analysis board detected, starting timer');
+      startAnalysisTimer(PREPARATION_TIME);
+    }
   } else {
-    console.log("Not a game URL, no monitoring needed");
+    console.log('No monitoring needed');
   }
 };
