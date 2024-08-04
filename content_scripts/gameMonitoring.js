@@ -248,9 +248,12 @@ export const monitorGame = async () => {
   fetchGameStream(streamId, playingId, userColor);
 };
 
-export const checkUrlAndStartMonitoring = () => {
+export const checkUrlAndStartMonitoring = async () => {
   const url = window.location.href;
   const gameIdPattern = /https:\/\/lichess\.org\/[a-zA-Z0-9]{8,}/;
+  const postGamePattern = /https:\/\/lichess\.org\/([a-zA-Z0-9]{8,})\/(white|black)(#\d+)?/;
+  const analysisPattern = /https:\/\/lichess\.org\/analysis/;
+  const activePerks = await getActivePerks();
   if (gameIdPattern.test(url)) {
     isPlayingGame().then((isPlaying) => {
       if (isPlaying) {
@@ -259,7 +262,10 @@ export const checkUrlAndStartMonitoring = () => {
         console.log("User is not playing in this game, no monitoring needed");
       }
     });
+  } else if (activePerks.includes('preparation') 
+    && (postGamePattern.test(url) || analysisPattern.test(url))) {
+      startAnalysisTimer(30); // change this to 3 to 5 min... 
   } else {
-    console.log("Not a game URL, no monitoring needed");
+    console.log("Not a game or analysis URL, no monitoring needed");
   }
 };

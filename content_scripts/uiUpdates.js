@@ -442,3 +442,53 @@ export const updatePerksIcon = () => {
 
   });
 };
+
+export const startAnalysisTimer = async (analysisTimeLeft) => {
+  const activePerks = await getActivePerks();
+  if (!activePerks.includes('preparation')) {
+    return;
+  }
+
+  const preparationStatusMet = await getPreparationStatus();
+  if (preparationStatusMet) {
+    return;
+  }
+
+  const analysisBoard = document.querySelector('.analyse__board.main-board');
+  if (!analysisBoard) {
+    console.log('Analysis board not found.');
+    return;
+  }
+
+  const timerElement = document.createElement('div');
+  timerElement.id = 'analysis-timer';
+  timerElement.style.position = 'absolute';
+  timerElement.style.left = '0';
+  timerElement.style.top = '-20px';
+  timerElement.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+  timerElement.style.color = 'white';
+  timerElement.style.padding = '5px 10px';
+  timerElement.style.borderRadius = '5px';
+  timerElement.style.fontSize = '14px';
+  timerElement.innerText = `Time left: ${formatTime(analysisTimeLeft)}`;
+  analysisBoard.appendChild(timerElement);
+
+
+  let analysisTimer = setInterval(() => {
+    analysisTimeLeft--;
+    timerElement.innerText = `Time left: ${formatTime(analysisTimeLeft)}`;
+    if (analysisTimeLeft <= 0) {
+      clearInterval(analysisTimer);
+      console.log('preparation requirement fulfilled');
+      setPreparationStatus(true);
+      // TODO - ADD toast here for prep requirement fulfilled! 
+      // showToast('preparation', 'Preparation requirement fulfilled', 0);
+    }
+  }, 1000);
+};
+
+const formatTime = (seconds) => {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+};

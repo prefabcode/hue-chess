@@ -174,3 +174,20 @@ export const setHasPlayedBefore = (hasPlayedBefore) => {
     });
   });
 };
+
+export const getPreparationStatus = () => {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(['preparationStatus'], (result) => {
+      resolve(result.preparationStatus || false);
+    });
+  });
+};
+
+export const setPreparationStatus = (status) => {
+  return new Promise((resolve) => {
+    chrome.storage.local.set({ preparationStatus: status }, () => {
+      console.log("Preparation status set to:", status);
+      resolve();
+    });
+  });
+};s

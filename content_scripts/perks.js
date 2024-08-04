@@ -14,7 +14,8 @@ function showToast(perkId, points) {
     'gladiator': 'linear-gradient(to right, #434343, #000000)',
     'equalizer': 'linear-gradient(to right, #006400, #228B22)',
     'rivalry': 'linear-gradient(to right, #ff7e5f, #feb47b)',
-    'total-earned': 'linear-gradient(to right, #0f2027, #2c5364)'
+    'total-earned': 'linear-gradient(to right, #0f2027, #2c5364)',
+    'preparation': 'blue',
   };
 
   const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
@@ -278,6 +279,13 @@ const isRivalryFulfilled = async () => {
   return bonus;
 };
 
+const isPreparationFulfilled = async () => {
+  const preparationStatusMet = await getPreparationStatus();
+  const bonus = preparationStatusMet ? Math.floor(Math.random() * (7 - 4 + 1)) + 4 : 0;
+  if (preparationStatusMet) showToast('preparation', bonus);
+
+  return bonus;
+};
 
 const calculateEndgameMaterialFromFEN = (fen) => {
   const pieceCount = { white: 0, black: 0 };
@@ -362,6 +370,10 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
   }
   if (activePerks.includes('rivalry')) {
     bonus += await isRivalryFulfilled();
+  }
+
+  if (activePerks.includes('preparation')) {
+    bonus += await isPreparationFulfilled();
   }
   
   showToast('total-earned', initialIncrementValue + bonus);
