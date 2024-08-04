@@ -190,4 +190,4 @@ export const setPreparationStatus = (status) => {
       resolve();
     });
   });
-};s
+};

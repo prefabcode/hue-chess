@@ -86,6 +86,11 @@
   background: linear-gradient(to right, #ff7e5f, #feb47b);
 }
 
+#preparation-perk.active {
+  background: linear-gradient(to right, #00B4DB, #0083B0);
+}
+
+
 .perks {
   display: flex;
   flex-wrap: wrap;

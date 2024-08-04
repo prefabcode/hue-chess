@@ -13,6 +13,7 @@ import {
   setHasPlayedBefore,
   setPreparationStatus,
 } from "./storageManagement.js";
+import { startAnalysisTimer } from "./uiUpdates.js";
 import * as pgnParser from '@mliebelt/pgn-parser';
 
 export const getUserColor = () => {
@@ -254,9 +255,9 @@ export const monitorGame = async () => {
 
 export const checkUrlAndStartMonitoring = async () => {
   const url = window.location.href;
-  const gameIdPattern = /https:\/\/lichess\.org\/[a-zA-Z0-9]{8,}/;
-  const postGamePattern = /https:\/\/lichess\.org\/([a-zA-Z0-9]{8,})\/(white|black)(#\d+)?/;
-  const analysisPattern = /https:\/\/lichess\.org\/analysis/;
+  const gameIdPattern = /^https:\/\/lichess\.org\/[a-zA-Z0-9]{8}(?!\/(white|black))/;
+  const postGamePattern = /^https:\/\/lichess\.org\/([a-zA-Z0-9]{8})\/(white|black)(#\d+)?/;
+  const analysisPattern = /^https:\/\/lichess\.org\/analysis/;
   const activePerks = await getActivePerks();
   if (gameIdPattern.test(url)) {
     isPlayingGame().then((isPlaying) => {
