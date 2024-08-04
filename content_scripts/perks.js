@@ -3,7 +3,7 @@ import { getActivePerks, getWinningStreak, getHasPlayedBefore } from "./storageM
 import { materialValues } from "./constants.js";
 import Toastify from 'toastify-js';
 
-function showToast(perkId, points) {
+export function showPerkToast(perkId, message) {
   const gradientMap = {
     'berzerker': 'linear-gradient(to right, #8b0000, #ff0000)',
     'bongcloud': 'linear-gradient(to right, #a18cd1, #fbc2eb)',
@@ -15,17 +15,14 @@ function showToast(perkId, points) {
     'equalizer': 'linear-gradient(to right, #006400, #228B22)',
     'rivalry': 'linear-gradient(to right, #ff7e5f, #feb47b)',
     'total-earned': 'linear-gradient(to right, #0f2027, #2c5364)',
-    'preparation': 'blue',
+    'preparation': 'linear-gradient(to right, #00B4DB, #0083B0)',
   };
-
-  const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
-  const perkName = perkId.split('-').map(capitalize).join(' ');
 
   const gradient = gradientMap[perkId];
   const imageUrl = perkId !== 'total-earned' ? chrome.runtime.getURL(`imgs/${perkId}.svg`) : '';
 
   Toastify({
-    text: `${perkName}: ${points} points`,
+    text: message,
     duration: 6000,
     close: true,
     gravity: "top", // `top` or `bottom`
@@ -102,7 +99,8 @@ const isBerzerkerFulfilled = (userName, game) => {
   if (remainingTimeInSeconds >= totalTimeAllowed / 2) {
     const bonus = Math.floor(Math.random() * (8 - 6 + 1)) + 6;
     console.log(`Berzerker bonus applied: ${bonus}`);
-    showToast('berzerker', bonus);
+    const message = `Berzerker: ${bonus} points`;
+    showPerkToast('berzerker', message);
     return bonus;
   } 
   return 0;
@@ -127,7 +125,8 @@ const isGladiatorFulfilled = (initialIncrementValue, gameType) => {
       bonus = (8 - initialIncrementValue) + Math.floor(Math.random() * 3); // Ensure total is 8-10, for variants
       break;
   }
-  showToast('gladiator', bonus);
+  const message = `Gladiator: ${bonus} points`;
+  showPerkToast('gladiator', message);
   return bonus;
 }
 
@@ -166,7 +165,8 @@ const isBongcloudFulfilled = (userName, game) => {
     console.log('King move detected on move 2. Bongcloud bonus applied');
     const bonus = Math.floor(Math.random() * (5 - 3 + 1)) + 3;
     console.log(`Bongcloud bonus points: ${bonus}`);
-    showToast('bongcloud', bonus);
+    const message = `Bongcloud: ${bonus} points`;
+    showPerkToast('Bongcloud', message);
     return bonus;
   } else {
     console.log('Player did not play a King move on move 2.');
@@ -181,7 +181,8 @@ const isGambiteerFulfilled = (game) => {
     console.log('Gambit detected. Gambiteer bonus applied');
     const bonus = Math.floor(Math.random() * (4 - 2 + 1)) + 2; // Random number between 2 and 4
     console.log(`Gambiteer bonus points: ${bonus}`);
-    showToast('gambiteer', bonus);
+    const message = `Gambiteer: ${bonus} points`;
+    showPerkToast('gambiteer', message);
     return bonus;
   } else {
     console.log('Player did not play a known gambit or countergambit.');
@@ -194,7 +195,8 @@ const isEndgameSpecialistFulfilled = (game) => {
   if (containsEndgame(moves)) {
    const bonus = Math.floor(Math.random() * (4 - 2 + 1)) + 2;
    console.log(`Endgame bonus points: ${bonus}`);
-   showToast('endgame-specialist', bonus);
+   const message = `Endgame Specialist: ${bonus} points`;
+   showPerkToast('endgame-specialist', message);
    return bonus;
   }
   return 0;
@@ -202,10 +204,12 @@ const isEndgameSpecialistFulfilled = (game) => {
 
 const isHueMasterFulfilled = () => {
   const hasNoRatingClass = document.body.classList.contains('no-rating');
-  if (hasNoRatingClass) { 
-    showToast('hue-master', 1);
+  if (hasNoRatingClass) {
+    const bonus = 1;
+    const message = `Hue Master: ${bonus} point`;
+    showPerkToast('hue-master', message); 
     console.log('body has no-rating class, adding 1 hue point to bonus'); 
-    return 1;
+    return bonus;
   }
   return 0;
 }
@@ -222,7 +226,8 @@ const isHotStreakFulfilled = async () => {
   } else if (winningStreak >= 3) {
       bonus = Math.floor(Math.random() * (7 - 5 + 1)) + 5;
   }
-  showToast('hot-streak', bonus);
+  const message = `Hot Streak: ${bonus} points`;
+  showPerkToast('hot-streak', message);
   console.log(`Hot Streak bonus points: ${bonus}`);
   return bonus;
 }
@@ -254,8 +259,9 @@ const isEqualizerFulfilled = (userName, game) => {
 
     if (materialBalance < 0) {
       if (wasDownInMaterial) {
-        const bonus = Math.floor(Math.random() * (4 - 2 + 1)) + 2; 
-        showToast('equalizer', bonus);
+        const bonus = Math.floor(Math.random() * (4 - 2 + 1)) + 2;
+        const message = `Equalizer: ${bonus} points`;
+        showPerkToast('equalizer', message);
         return bonus; 
       }
       wasDownInMaterial = true;
@@ -275,15 +281,17 @@ const isRivalryFulfilled = async () => {
     console.log('Rivalry perk fulfilled. Bonus applied.');
     bonus = Math.floor(Math.random() * (4 - 3 + 1)) + 3; // Random number between 2 and 4
   }
-  showToast('rivalry', bonus);
+  const message = `Rivalry: ${bonus} points`;
+  showPerkToast('rivalry', message);
   return bonus;
 };
 
 const isPreparationFulfilled = async () => {
   const preparationStatusMet = await getPreparationStatus();
   const bonus = preparationStatusMet ? Math.floor(Math.random() * (7 - 4 + 1)) + 4 : 0;
-  if (preparationStatusMet) showToast('preparation', bonus);
-
+  const message = `Preparation: ${bonus} points`;
+  if (preparationStatusMet) showPerkToast('preparation', message);
+  
   return bonus;
 };
 
