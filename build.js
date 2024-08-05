@@ -2,6 +2,13 @@ const esbuild = require('esbuild');
 const fs = require('fs');
 const path = require('path');
 
+// Ensure the build directory exists
+const buildDir = path.join(__dirname, 'build');
+if (!fs.existsSync(buildDir)) {
+  fs.mkdirSync(buildDir, { recursive: true });
+  console.log('build directory created');
+}
+
 // Helper function to copy a file
 function copyFileSync(source, target) {
   let targetFile = target;
