@@ -17,7 +17,7 @@ As you level up your chess boards, you unlock perks that act as modifiers, that 
   - Rapid: 6-10 points
   - Classical: 10-15 points
 - **Progress Tracking**: A progress bar displays your current level and how far you are from reaching the next level.
-- **Perk System (10/13 perks implemented)**: As you level up in Hue Chess, you will unlock new perks that allow you to gain bonus hue points from your wins. At launch, Hue chess will feature 13 perks to unlock spread across 25 levels. 
+- **Perk System (10/13 perks implemented)**: As you level up in Hue Chess, you will unlock new perks that allow you to gain bonus hue points from your wins. At launch, Hue chess will feature 13 perks to unlock spread across 25 levels. Note: current unlock levels for perks are subject to change before launch.
 - **Prestige System (not yet implemented)**: Once you complete your journey and beat level 25, you have the option to prestige, reseting your level to 1 and obtaining a new avatar visible near your Hue Chess Xp bar. Hue Chess is planned to ship with 10 prestige levels at launch. 
 - **Import / Export functionality**: Encode your progress in a BASE64 string, which you can then import on another machine to sync your progress on hue chess across multiple computers.
 
