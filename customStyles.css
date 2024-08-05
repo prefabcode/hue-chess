@@ -127,10 +127,6 @@
 
 #hue-chess-settings-modal {
   width: 500px;
-  padding: 20px;
-  border-radius: 10px;
-  background: #2d2d2d;
-  color: white;
   font-family: 'Roboto', 'Noto Sans', sans-serif;
 }
 
@@ -145,6 +141,10 @@
   margin-bottom: 20px;
 }
 
+#hue-chess-settings-modal h2 {
+  margin-bottom: 20px;
+}
+
 #hue-chess-settings-modal .section h3 {
   margin-bottom: 10px;
   font-size: 1.2em;
@@ -153,7 +153,6 @@
 #hue-chess-settings-modal .section p {
   margin-bottom: 10px;
   font-size: 0.9em;
-  color: #cccccc;
 }
 
 #hue-chess-settings-modal .import-export {
@@ -185,7 +184,4 @@
   border: none;
   border-radius: 5px;
   font-size: 1em;
-  background: #1a1a1a;
-  color: white;
 }
-
