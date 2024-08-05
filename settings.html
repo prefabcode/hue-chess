@@ -5,16 +5,23 @@
   <div class="scrollable">
     <div class="dialog-content">
       <h2>Hue Chess Settings</h2>
-      <!-- Actions -->
-      <div class="actions">
-        <button id="reset-progress">Reset Progress</button>
+      
+      <!-- Reset Progress Section -->
+      <div class="section">
+        <h3>Reset Progress</h3>
+        <p>Clear all your current progress and start from scratch.</p>
+        <button id="reset-progress" class="styled-button">Reset Progress</button>
       </div>
 
-      <!-- Import/Export Options -->
-      <div class="import-export">
-        <button id="export-progress">Export Progress</button>
-        <button id="import-progress">Import Progress</button>
-        <input type="text" id="import-input" placeholder="Paste base64 string here" />
+      <!-- Import/Export Options Section -->
+      <div class="section">
+        <h3>Import/Export Progress</h3>
+        <p>Export your current progress or import a previously saved state.</p>
+        <div class="import-export">
+          <button id="export-progress" class="styled-button">Export Progress</button>
+          <button id="import-progress" class="styled-button">Import Progress</button>
+          <input type="text" id="import-input" placeholder="Paste base64 string here" />
+        </div>
       </div>
     </div>
   </div>
