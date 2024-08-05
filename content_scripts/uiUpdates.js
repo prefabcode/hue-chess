@@ -31,6 +31,7 @@ export const updateProgressBar = (completedBoards = null, hueValue = null) => {
       progressBar.style.margin = '0 10px';
       progressBar.style.flexGrow = '1';
       progressBar.style.justifyContent = 'flex-end';
+      progressBar.style.cursor = 'pointer';
 
       const progressBarContainer = document.createElement('div');
       progressBarContainer.id = 'progress-bar-container';
@@ -60,6 +61,9 @@ export const updateProgressBar = (completedBoards = null, hueValue = null) => {
       const header = document.querySelector('header');
       const siteButtons = header.querySelector('.site-buttons');
       header.insertBefore(progressBar, siteButtons);
+
+      progressBar.addEventListener('click', openSettingsModal);
+
     } else {
       const progressFill = progressBar.querySelector('#progress-fill');
       const levelText = document.getElementById('level-text');
