@@ -115,3 +115,15 @@ try {
   console.error('Error copying toastify.css:', err);
   process.exit(1);
 }
+
+// Copy Tippy CSS file
+const sourceTippyCss = path.join(__dirname, 'node_modules', 'tippy.js', 'dist', 'tippy.css');
+const targetTippyCss = path.join(__dirname, 'build', 'tippy.css');
+
+try {
+  copyFileSync(sourceTippyCss, targetTippyCss);
+  console.log('tippy.css copied to build directory');
+} catch (err) {
+  console.error('Error copying tippy.css:', err);
+  process.exit(1);
+}
