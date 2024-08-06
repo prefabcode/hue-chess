@@ -10,6 +10,7 @@ import {
   getActivePerks,
   getPreparationStatus,
   setPreparationStatus, 
+  getPlayingId
 } from './storageManagement.js';
 import { showPerkToast } from './perks.js';
 import { levelNames, MAX_PERKS, PREPARATION_TIME, TIPS } from './constants.js';
@@ -200,6 +201,12 @@ export const openPerksModal = async () => {
     const perkBoxes = document.querySelectorAll('.perks .perk-box');
     perkBoxes.forEach(box => {
       box.addEventListener('click', async () => {
+        const playingId = await getPlayingId();
+        if (playingId) {
+          alert("You cannot select perks while a game is in progress.");
+          return;
+        }
+        
         if (box.classList.contains('locked')) {
           return;
         }
