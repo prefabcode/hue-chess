@@ -7,7 +7,7 @@ export function showPerkToast(perkId, message) {
   const gradientMap = {
     'berzerker': 'linear-gradient(to right, #8b0000, #ff0000)',
     'bongcloud': 'linear-gradient(to right, #a18cd1, #fbc2eb)',
-    'hue-master': 'linear-gradient(to right, #43cea2, #185a9d)',
+    'hue-focus': 'linear-gradient(to right, #43cea2, #185a9d)',
     'gambiteer': 'linear-gradient(to right, #4b0082, #800080)',
     'endgame-specialist': 'linear-gradient(to right, #00c6ff, #0072ff)',
     'hot-streak': 'linear-gradient(to right, #f12711, #f5af19)',
@@ -202,12 +202,12 @@ const isEndgameSpecialistFulfilled = (game) => {
   return 0;
 };
 
-const isHueMasterFulfilled = () => {
+const isHueFocusFulfilled = () => {
   const hasNoRatingClass = document.body.classList.contains('no-rating');
   if (hasNoRatingClass) {
-    const bonus = 1;
-    const message = `Hue Master: ${bonus} point`;
-    showPerkToast('hue-master', message); 
+    const bonus = Math.floor(Math.random() * (2 - 1 + 1)) + 1;;
+    const message = `Hue Focus: ${bonus} points`;
+    showPerkToast('hue-focus', message); 
     console.log('body has no-rating class, adding 1 hue point to bonus'); 
     return bonus;
   }
@@ -367,9 +367,6 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
   if (activePerks.includes('gambiteer')) {
     bonus += isGambiteerFulfilled(game);
   }
-  if (activePerks.includes('hue-master')) {
-    bonus += isHueMasterFulfilled();
-  }
   if (activePerks.includes('endgame-specialist')) {
     bonus += isEndgameSpecialistFulfilled(game);
   }
@@ -385,6 +382,9 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
   if (activePerks.includes('preparation')) {
     bonus += await isPreparationFulfilled();
   }
+  // no-rating bonus check
+  bonus += isHueFocusFulfilled();
+
   const message = `Total Hue Earned: ${initialIncrementValue + bonus} points`;
   showPerkToast('total-earned', message);
   return bonus;

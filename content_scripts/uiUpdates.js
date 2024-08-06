@@ -138,7 +138,6 @@ async function setImageSources() {
   const images = [
     'berzerker-icon',
     'bongcloud-icon',
-    'hue-master-icon',
     'gambiteer-icon',
     'endgame-specialist-icon',
     'hot-streak-icon',
