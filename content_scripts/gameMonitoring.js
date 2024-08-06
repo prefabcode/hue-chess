@@ -2,13 +2,13 @@ import { incrementHue } from "./rewardCalculation.js";
 import { applyGladiatorPenalty } from "./rewardCalculation.js";
 import {
   getActivePerks,
-  setPlayingId,
   setWinningStreak,
   getWinningStreak,
   setGladiatorLossBuffer,
   getGladiatorLossBuffer,
   resetGladiatorLossBuffer,
   setAllowGladiatorPerkRemoval,
+  setPlayingId,
   getPlayingId,
   setHasPlayedBefore,
   setPreparationStatus,
@@ -176,6 +176,7 @@ export const fetchGameStream = async (streamId, playingId, userColor) => {
                       await setPreparationStatus(false);
                     }
                   }
+                  await setPlayingId(null);
                   reader.cancel();
                 }
               }
