@@ -12,8 +12,14 @@ import {
   setPreparationStatus, 
 } from './storageManagement.js';
 import { showPerkToast } from './perks.js';
-import { levelNames, MAX_PERKS, PREPARATION_TIME } from './constants.js';
+import { levelNames, MAX_PERKS, PREPARATION_TIME, TIPS } from './constants.js';
 import tippy from 'tippy.js';
+
+const showRandomTip = () => {
+  const tipMessage = document.getElementById('tips-message');
+  const randomIndex = Math.floor(Math.random() * TIPS.length);
+  tipMessage.textContent = TIPS[randomIndex];
+}
 
 export const updateProgressBar = (completedBoards = null, hueValue = null) => {
   chrome.storage.local.get(['completedBoards'], (result) => {
@@ -165,6 +171,7 @@ export const openPerksModal = async () => {
       document.body.style.overflowY = 'hidden';
       modal.showModal();
       await updatePerksModalContent();
+      showRandomTip();
       return;
     }
 
@@ -247,6 +254,7 @@ export const openPerksModal = async () => {
     await setImageSources();
     await updatePerksModalContent();
     await updatePerksHeader();
+    showRandomTip();
   } catch (error) {
     console.error("Error opening perks modal:", error);
   }
