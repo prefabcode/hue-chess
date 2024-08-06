@@ -22,3 +22,10 @@ export const timeControlIncrements = {
 export const MAX_PERKS = 2;
 
 export const PREPARATION_TIME = 300;
+
+export const TIPS = [
+    "You can earn a bonus 1-2 hue points per win if you have 'Show Player Ratings' turned off in the lichess settings. This can be configured under Lichess preferences, display settings section.",
+    "At level 15, you will unlock an extra perk slot.",
+    "You can access the Hue Chess settings menu by clicking on your chrome browser hue chess extension icon. The settings menu contains additional options for the hue chess extension.",
+    "Got feedback? Let us know on the Hue Chess discord at: insert-url-here.",
+  ];

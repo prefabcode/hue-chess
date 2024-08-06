@@ -185,3 +185,21 @@
   border-radius: 5px;
   font-size: 1em;
 }
+
+#hue-chess-perks-modal .flash {
+  margin: 1em 0 2em 0;
+  padding: 1em 2em;
+  background: var(--c-good);
+  border-radius: 3px;
+}
+
+#hue-chess-perks-modal .flash-quiet {
+  background: var(--c-bg-zebra);
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12)
+}
+
+#hue-chess-perks-modal .flash p {
+  margin: 0;
+}
+
+
