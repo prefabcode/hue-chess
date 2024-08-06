@@ -5,62 +5,23 @@
   <div class="scrollable">
     <div class="dialog-content">
       <h2>Hue Chess Settings</h2>
-
-      <!-- Mode Description and Status -->
-      <div class="mode-status">
-        <p id="mode-description">Accumulate hue points by winning Bullet, Blitz, Rapid, or Classical games.</p>
+      
+      <!-- Reset Progress Section -->
+      <div class="section">
+        <h3>Reset Progress</h3>
+        <p>Clear all your current progress and start from scratch.</p>
+        <button id="reset-progress" class="styled-button">Reset Progress</button>
       </div>
 
-      <!-- Current Level and Hue Points -->
-      <div class="progress-info">
-        <p>Current Level: <span id="current-level"></span></p>
-        <p>Hue Points: <span id="hue-points"></span></p>
-      </div>
-
-      <h3 id="perks-header">Select Perks: (0/2)</h3>
-      <div class="perks">
-        <div class="perk-box" id="berzerker-perk" data-tippy-content="" data-tippy-content-original="Extra an additional [6-8] hue points for winning while using half your allotted time or less." data-unlock-level="1">
-          <img src="" id="berzerker-icon"><span>Berzerker</span>
+      <!-- Import/Export Options Section -->
+      <div class="section">
+        <h3>Import/Export Progress</h3>
+        <p>Export your current progress or import a previously saved state.</p>
+        <div class="import-export">
+          <button id="export-progress" class="styled-button">Export Progress</button>
+          <button id="import-progress" class="styled-button">Import Progress</button>
+          <input type="text" id="import-input" placeholder="Paste game state string here and press Import Progress" />
         </div>
-        <div class="perk-box" id="bongcloud-perk" data-tippy-content="" data-tippy-content-original="Earn an additional [3-5] hue points for moving your king to any square on move 2." data-unlock-level="1">
-          <img src="" id="bongcloud-icon"><span>Bongcloud</span>
-        </div>
-        <div class="perk-box" id="preparation-perk" data-tippy-content="" data-tippy-content-original="Earn an additional [4-7] hue points for spending 5 minutes in post-game analysis." data-unlock-level="1">
-          <img src="" id="preparation-icon"><span>Preparation</span>
-        </div>        
-        <div class="perk-box" id="hue-master-perk" data-tippy-content="" data-tippy-content-original="Earn 1 extra hue point per win, as long as you have 'Show player ratings' turned off within Lichess -> preferences -> display settings." data-unlock-level="6">
-          <img src="" id="hue-master-icon"><span>Hue Master</span>
-        </div>
-        <div class="perk-box" id="gambiteer-perk" data-tippy-content="" data-tippy-content-original="Earn an additional [2-4] hue points for each win when playing a known gambit or countergambit opening." data-unlock-level="6">
-          <img src="" id="gambiteer-icon"><span>Gambiteer</span>
-        </div>
-        <div class="perk-box" id="endgame-specialist-perk" data-tippy-content="" data-tippy-content-original="Earn an additional [2-4] hue points for winning a game that reaches the endgame phase." data-unlock-level="11">
-          <img src="" id="endgame-specialist-icon"><span>Endgame Specialist</span>
-        </div>
-        <div class="perk-box" id="hot-streak-perk" data-tippy-content="" data-tippy-content-original="Earn additional hue points for consecutive wins. [1-2] points for the first win, [3-4] points for the second, and [5-7] points for the third and subsequent wins in a streak." data-unlock-level="13">
-          <img src="" id="hot-streak-icon"><span>Hot Streak</span>
-        </div>
-        <div class="perk-box" id="gladiator-perk" data-tippy-content="" data-tippy-content-original="Earn significant hue points for each win in exchange for a loss buffer of 1. If you exhaust all the allowed losses in your buffer, you will lose 20 accumulated hue points for the level. Each win within your current level adds to your buffer of allowed losses. Warning: If you take this perk, you can only remove it if you level up or if you take the 20 hue point penalty." data-unlock-level="16">
-          <img src="" id="gladiator-icon"><span>Gladiator</span>
-        </div>
-        <div class="perk-box" id="equalizer-perk" data-tippy-content="" data-tippy-content-original="Earn an additional [2-4] hue points for winning a game after being down in material for more than one move." data-unlock-level="16">
-          <img src="" id="equalizer-icon"><span>Equalizer</span>
-        </div>
-        <div class="perk-box" id="rivalry-perk" data-tippy-content="" data-tippy-content-original="Earn [1-2] additional hue points for beating an opponent for the first time. Earn [3-4] additional hue points for beating an opponent you faced in the past." data-unlock-level="21">
-          <img src="" id="rivalry-icon"><span>Rivalry</span>
-        </div>
-      </div>
-
-      <!-- Actions -->
-      <div class="actions">
-        <button id="reset-progress">Reset Progress</button>
-      </div>
-
-      <!-- Import/Export Options -->
-      <div class="import-export">
-        <button id="export-progress">Export Progress</button>
-        <button id="import-progress">Import Progress</button>
-        <input type="text" id="import-input" placeholder="Paste base64 string here" />
       </div>
     </div>
   </div>

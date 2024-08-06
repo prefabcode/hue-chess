@@ -62,7 +62,7 @@ export const updateProgressBar = (completedBoards = null, hueValue = null) => {
       const siteButtons = header.querySelector('.site-buttons');
       header.insertBefore(progressBar, siteButtons);
 
-      progressBar.addEventListener('click', openSettingsModal);
+      progressBar.addEventListener('click', openPerksModal);
 
     } else {
       const progressFill = progressBar.querySelector('#progress-fill');
@@ -115,7 +115,7 @@ export const injectDiv = (boardDiv) => {
     const backButton = document.querySelector('.sub.board .head');
     if (backButton) backButton.click();
     if (userTag) userTag.click();
-    openSettingsModal();
+    openPerksModal();
   });
 
   // Append the message and button to the injected div
@@ -157,18 +157,18 @@ async function setImageSources() {
   });
 }
 
-export const openSettingsModal = async () => {
+export const openPerksModal = async () => {
   try {
     // Check if the modal already exists
-    let modal = document.querySelector('#hue-chess-settings-modal');
+    let modal = document.querySelector('#hue-chess-perks-modal');
     if (modal) {
       document.body.style.overflowY = 'hidden';
       modal.showModal();
-      await updateModalContent();
+      await updatePerksModalContent();
       return;
     }
 
-    const response = await fetch(chrome.runtime.getURL('settings.html'));
+    const response = await fetch(chrome.runtime.getURL('perks.html'));
     const data = await response.text();
 
     // Create a temporary div to hold the fetched HTML
@@ -176,7 +176,7 @@ export const openSettingsModal = async () => {
     tempDiv.innerHTML = data;
 
     // Extract the modal element from the fetched HTML
-    modal = tempDiv.querySelector('#hue-chess-settings-modal');
+    modal = tempDiv.querySelector('#hue-chess-perks-modal');
 
     // Append the modal to the body
     document.body.appendChild(modal);
@@ -185,14 +185,10 @@ export const openSettingsModal = async () => {
     modal.showModal();
 
     // Add event listeners for modal buttons
-    document.getElementById('close-settings-modal').addEventListener('click', () => {
+    document.getElementById('close-perks-modal').addEventListener('click', () => {
       document.body.style.overflowY = 'scroll';
       modal.close();
     });
-
-    document.getElementById('export-progress').addEventListener('click', exportExtensionState);
-    document.getElementById('import-progress').addEventListener('click', importExtensionState);
-    document.getElementById('reset-progress').addEventListener('click', confirmResetProgress);
 
     // Add event listeners for perks
     const perkBoxes = document.querySelectorAll('.perks .perk-box');
@@ -249,14 +245,14 @@ export const openSettingsModal = async () => {
 
     // Update the modal content with current level and hue progress
     await setImageSources();
-    await updateModalContent();
+    await updatePerksModalContent();
     await updatePerksHeader();
   } catch (error) {
-    console.error("Error opening settings modal:", error);
+    console.error("Error opening perks modal:", error);
   }
 }
 
-export const updateModalContent = async () => {
+export const updatePerksModalContent = async () => {
   chrome.storage.local.get(['completedBoards', 'currentHue', 'activePerks'], (result) => {
     const playerLevel = (result.completedBoards !== null ? result.completedBoards : 0) + 1;
     const huePoints = `${result.currentHue || 0}/100`;
@@ -305,7 +301,7 @@ export const updateModalContent = async () => {
     // Initialize Tippy.js tooltips
     tippy('.perk-box', {
       theme: theme,
-      appendTo: () => document.querySelector('#hue-chess-settings-modal'),
+      appendTo: () => document.querySelector('#hue-chess-perks-modal'),
       placement: 'bottom-start',
       maxWidth: 200,
       arrow: true,
@@ -318,6 +314,49 @@ export const updatePerksHeader = async () => {
   const activePerks = await getActivePerks();
   const perksHeader = document.getElementById('perks-header');
   perksHeader.textContent = `Select Perks: (${activePerks.length}/${MAX_PERKS})`;
+}
+
+const openSettingsModal = async () => {
+  try {
+    let modal = document.querySelector('#hue-chess-settings-modal');
+    if (modal) {
+      document.body.style.overflowY = 'hidden';
+      modal.showModal();
+      return;
+    }
+
+    const response = await fetch(chrome.runtime.getURL('settings.html'));
+    const data = await response.text();
+
+    // Create a temporary div to hold the fetched HTML
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = data;
+
+    // Extract the modal element from the fetched HTML
+    modal = tempDiv.querySelector('#hue-chess-settings-modal');
+
+    // Append the modal to the body
+    document.body.appendChild(modal);
+
+    document.body.style.overflowY = 'hidden';
+    modal.showModal();
+
+    // Add event listeners for modal buttons
+    document.getElementById('close-settings-modal').addEventListener('click', () => {
+      document.body.style.overflowY = 'scroll';
+      modal.close();
+    });
+
+    document.getElementById('export-progress').addEventListener('click', exportExtensionState);
+    document.getElementById('import-progress').addEventListener('click', importExtensionState);
+    document.getElementById('reset-progress').addEventListener('click', confirmResetProgress);
+
+
+  }
+  catch (error) {
+    console.error('Error opening settings modal', err);
+  }
+  // Check if the modal already exists
 }
 
 // expose settings modal to extension button

@@ -69,14 +69,28 @@ esbuild.build({
 }).catch(() => process.exit(1));
 
 // Copy settings.html
-const sourceHtml = path.join(__dirname, 'settings.html');
-const targetHtml = path.join(__dirname, 'build', 'settings.html');
+const sourceSettingsHtml = path.join(__dirname, 'settings.html');
+const targetSettingsHtml = path.join(__dirname, 'build', 'settings.html');
+
 
 try {
-  copyFileSync(sourceHtml, targetHtml);
+  copyFileSync(sourceSettingsHtml, targetSettingsHtml);
   console.log('settings.html copied to build directory');
 } catch (err) {
   console.error('Error copying settings.html:', err);
+  process.exit(1);
+}
+
+
+// Copy perks.html
+const sourcePerksHtml = path.join(__dirname, 'perks.html');
+const targetPerksHtml = path.join(__dirname, 'build', 'perks.html');
+
+try {
+  copyFileSync(sourcePerksHtml, targetPerksHtml);
+  console.log('perks.html copied to build directory');
+} catch (err) {
+  console.error('Error copying perks.html:', err);
   process.exit(1);
 }
 

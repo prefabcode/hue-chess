@@ -1,4 +1,4 @@
-import { updateUIAfterImport, updateModalContent, updatePerksIcon, updatePerksHeader } from './uiUpdates.js';
+import { updateUIAfterImport, updatePerksModalContent, updatePerksIcon, updatePerksHeader } from './uiUpdates.js';
 
 export const exportExtensionState = () => {
   chrome.storage.local.get(['initialized', 'completedBoards', 'currentHue'], (result) => {
@@ -31,7 +31,7 @@ export const importExtensionState = () => {
     chrome.storage.local.set(extensionState, () => {
       alert('Extension state imported successfully.');
       updateUIAfterImport(extensionState);
-      updateModalContent();
+      updatePerksModalContent();
     });
   } catch (error) {
     alert('Invalid base64 string. Please try again.');
@@ -42,7 +42,7 @@ export const confirmResetProgress = () => {
   const confirmReset = confirm('Are you sure you want to reset your progress? This action cannot be undone.');
   if (confirmReset) {
     resetProgress();
-    updateModalContent();
+    updatePerksModalContent();
     updatePerksHeader();
   }
 };
