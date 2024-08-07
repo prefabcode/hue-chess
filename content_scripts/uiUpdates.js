@@ -573,7 +573,7 @@ export const startAnalysisTimer = async (analysisTimeLeft) => {
       if (activePerks.includes('preparation')) {
         setPreparationStatus(true);
         showPerkToast('preparation', 'Preparation: requirement fulfilled');
-
+        updatePerksIcon();
       }
     }
   }, 1000);
