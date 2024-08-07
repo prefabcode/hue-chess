@@ -166,7 +166,7 @@ const isBongcloudFulfilled = (userName, game) => {
     const bonus = Math.floor(Math.random() * (5 - 3 + 1)) + 3;
     console.log(`Bongcloud bonus points: ${bonus}`);
     const message = `Bongcloud: ${bonus} points`;
-    showPerkToast('Bongcloud', message);
+    showPerkToast('bongcloud', message);
     return bonus;
   } else {
     console.log('Player did not play a King move on move 2.');
