@@ -13,7 +13,7 @@ import {
   getPlayingId
 } from './storageManagement.js';
 import { showPerkToast } from './perks.js';
-import { levelNames, MAX_PERKS, PREPARATION_TIME, TIPS } from './constants.js';
+import { levelNames, MAX_PERKS, PREPARATION_TIME, TIPS, PERK_DISPLAY_NAMES } from './constants.js';
 import tippy from 'tippy.js';
 
 const showRandomTip = () => {
@@ -468,18 +468,6 @@ export const updatePerksIcon = () => {
 
     await waitForElm('#hue-progress-bar');
 
-    const perkDisplayNames = {
-      'berzerker': 'Berzerker',
-      'bongcloud': 'Bongcloud',
-      'preparation': 'Preparation',
-      'hot-streak': 'Hot Streak',
-      'gambiteer': 'Gambiteer',
-      'endgame-specialist': 'Endgame Specialist',
-      'gladiator': 'Gladiator',
-      'equalizer': 'Equalizer',
-      'rivalry': 'Rivalry'
-    };
-
     let perksIcon = document.getElementById('perks-icon');
     if (!perksIcon) {
       perksIcon = document.createElement('div');
@@ -504,14 +492,14 @@ export const updatePerksIcon = () => {
       // Create the tooltip content
       let tooltipContent = '<ul>';
       activePerks.forEach(perk => {
-        const displayName = perkDisplayNames[perk] || perk;
+        const displayName = PERK_DISPLAY_NAMES[perk] || perk;
         tooltipContent += `<li>${displayName}`;
         if (perk === 'hot-streak') {
           tooltipContent += ` (Winning Streak: ${winningStreak})`;
         } else if (perk === 'gladiator') {
           tooltipContent += ` (Allowed Losses: ${gladiatorLossBuffer})`;
         } else if (perk === 'preparation') {
-          tooltipContent += ` (Preparation: ${preparationStatus ? 'Fulfilled' : 'Not Fulfilled'})`;
+          tooltipContent += ` (${preparationStatus ? 'Fulfilled' : 'Not Fulfilled'})`;
         }
         tooltipContent += '</li>';
       });
@@ -528,16 +516,16 @@ export const updatePerksIcon = () => {
 
     // Update the tooltip content
     const tooltipContent = '<ul>' + activePerks.map(perk => {
-      const displayName = perkDisplayNames[perk] || perk;
+      const displayName = PERK_DISPLAY_NAMES[perk] || perk;
       let status = '';
       if (perk === 'hot-streak') {
         status = ` (Winning Streak: ${winningStreak})`;
       } else if (perk === 'gladiator') {
         status = ` (Allowed Losses: ${gladiatorLossBuffer})`;
       } else if (perk === 'preparation') {
-        status = ` (Preparation: ${preparationStatus ? 'Fulfilled' : 'Not Fulfilled'})`;
+        status = ` (${preparationStatus ? 'Fulfilled' : 'Not Fulfilled'})`;
       }
-      return `<li>${displayName}${status}</li>`;
+      return `<li>${displayName}:${status}</li>`;
     }).join('') + '</ul>';
 
     const tooltip = perksIcon._tippy;
