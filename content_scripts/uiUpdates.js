@@ -468,6 +468,18 @@ export const updatePerksIcon = () => {
 
     await waitForElm('#hue-progress-bar');
 
+    const perkDisplayNames = {
+      'berzerker': 'Berzerker',
+      'bongcloud': 'Bongcloud',
+      'preparation': 'Preparation',
+      'hot-streak': 'Hot Streak',
+      'gambiteer': 'Gambiteer',
+      'endgame-specialist': 'Endgame Specialist',
+      'gladiator': 'Gladiator',
+      'equalizer': 'Equalizer',
+      'rivalry': 'Rivalry'
+    };
+
     let perksIcon = document.getElementById('perks-icon');
     if (!perksIcon) {
       perksIcon = document.createElement('div');
@@ -492,7 +504,8 @@ export const updatePerksIcon = () => {
       // Create the tooltip content
       let tooltipContent = '<ul>';
       activePerks.forEach(perk => {
-        tooltipContent += `<li>${perk}`;
+        const displayName = perkDisplayNames[perk] || perk;
+        tooltipContent += `<li>${displayName}`;
         if (perk === 'hot-streak') {
           tooltipContent += ` (Winning Streak: ${winningStreak})`;
         } else if (perk === 'gladiator') {
@@ -515,6 +528,7 @@ export const updatePerksIcon = () => {
 
     // Update the tooltip content
     const tooltipContent = '<ul>' + activePerks.map(perk => {
+      const displayName = perkDisplayNames[perk] || perk;
       let status = '';
       if (perk === 'hot-streak') {
         status = ` (Winning Streak: ${winningStreak})`;
@@ -523,7 +537,7 @@ export const updatePerksIcon = () => {
       } else if (perk === 'preparation') {
         status = ` (Preparation: ${preparationStatus ? 'Fulfilled' : 'Not Fulfilled'})`;
       }
-      return `<li>${perk}${status}</li>`;
+      return `<li>${displayName}${status}</li>`;
     }).join('') + '</ul>';
 
     const tooltip = perksIcon._tippy;
