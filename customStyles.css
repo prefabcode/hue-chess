@@ -118,11 +118,33 @@
   border: 1px solid hsl(37, 12%, 84%);
 }
 
-.tippy-box[data-theme~='dark'],
+.tippy-box[data-theme~='dark'], 
 .tippy-box[data-theme~='transp'] {
   background-color: hsl(37, 10%, 8%);
   color: white;
   border: 1px solid hsl(37, 12%, 16%);
+}
+
+
+.tippy-box .perk-icon {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+  
+
+.tippy-box[data-theme~='light'] .perk-icon {
+  filter: invert(1);
+}
+
+.tippy-box[data-theme~='dark'] .perk-icon,
+.tippy-box[data-theme~='transp'] .perk-icon {
+  filter: invert(0);
+}
+
+.tippy-box .progress-perk-tooltip li + li {
+  margin-top: 7px;
 }
 
 #hue-chess-settings-modal {

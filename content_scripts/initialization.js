@@ -1,4 +1,4 @@
-import { updateProgressBar, monitorBoardDiv, waitForElm, updatePerksIcon } from './uiUpdates.js';
+import { updateProgressBar, monitorBoardDiv, waitForElm, updateProgressBarTooltip } from './uiUpdates.js';
 import { checkUrlAndStartMonitoring } from './gameMonitoring.js';
 
 export const initializeExtension = () => {
@@ -114,7 +114,7 @@ export const init = async () => {
     }
   });
 
-  updatePerksIcon();
+  updateProgressBarTooltip();
   monitorBoardDiv();
 
   await checkUrlAndStartMonitoring();

@@ -1,4 +1,4 @@
-import { updateUIAfterImport, updatePerksModalContent, updatePerksIcon, updatePerksHeader } from './uiUpdates.js';
+import { updateUIAfterImport, updatePerksModalContent, updateProgressBarTooltip, updatePerksHeader } from './uiUpdates.js';
 
 export const exportExtensionState = () => {
   chrome.storage.local.get(['initialized', 'completedBoards', 'currentHue'], (result) => {
@@ -73,7 +73,7 @@ export const updateActivePerks = (perk, isChecked) => {
     }
     chrome.storage.local.set({ activePerks }, () => {
       console.log(`Active perks updated: ${activePerks}`);
-      updatePerksIcon();  // Update the tooltip content
+      updateProgressBarTooltip();  // Update the tooltip content
       updatePerksHeader();
     });
   });

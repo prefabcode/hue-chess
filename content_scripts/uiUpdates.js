@@ -1,4 +1,4 @@
-import { 
+import {
   exportExtensionState, 
   importExtensionState, 
   confirmResetProgress, 
@@ -13,7 +13,7 @@ import {
   getPlayingId
 } from './storageManagement.js';
 import { showPerkToast } from './perks.js';
-import { levelNames, MAX_PERKS, PREPARATION_TIME, TIPS } from './constants.js';
+import { levelNames, MAX_PERKS, PREPARATION_TIME, TIPS, PERK_DISPLAY_NAMES } from './constants.js';
 import tippy from 'tippy.js';
 
 const showRandomTip = () => {
@@ -42,10 +42,16 @@ export const updateProgressBar = (completedBoards = null, hueValue = null) => {
 
       const progressBarContainer = document.createElement('div');
       progressBarContainer.id = 'progress-bar-container';
-      progressBarContainer.style.flexBasis = '180px';
-      progressBarContainer.style.height = '10px';
-      progressBarContainer.style.borderRadius = '5px';
-      progressBarContainer.style.backgroundColor = '#8c8c8c';
+      progressBarContainer.style.display = 'flex';
+      progressBarContainer.style.alignItems = 'center';
+      progressBarContainer.style.width = '240px';
+
+      const progressBarOuter = document.createElement('div');
+      progressBarOuter.id = 'progress-bar-outer';
+      progressBarOuter.style.flexBasis = '180px';
+      progressBarOuter.style.height = '10px';
+      progressBarOuter.style.borderRadius = '5px';
+      progressBarOuter.style.backgroundColor = '#8c8c8c';
 
       const progressFill = document.createElement('div');
       progressFill.id = 'progress-fill';
@@ -54,8 +60,8 @@ export const updateProgressBar = (completedBoards = null, hueValue = null) => {
       progressFill.style.backgroundColor = 'hsl(88, 62%, 37%)';
       progressFill.style.width = `${progress}%`;
 
-      progressBarContainer.appendChild(progressFill);
-      progressBar.appendChild(progressBarContainer);
+      progressBarOuter.appendChild(progressFill);
+      progressBarContainer.appendChild(progressBarOuter);
 
       const levelText = document.createElement('span');
       levelText.id = 'level-text';
@@ -63,7 +69,8 @@ export const updateProgressBar = (completedBoards = null, hueValue = null) => {
       levelText.style.marginBottom = '1px';
       levelText.textContent = `Level ${level} - ${levelName}`;
 
-      progressBar.appendChild(levelText);
+      progressBarContainer.appendChild(levelText);
+      progressBar.appendChild(progressBarContainer);
 
       const header = document.querySelector('header');
       const siteButtons = header.querySelector('.site-buttons');
@@ -81,10 +88,10 @@ export const updateProgressBar = (completedBoards = null, hueValue = null) => {
     // Adapt to light and dark modes
     const isDarkMode = document.body.classList.contains('dark') || document.body.classList.contains('transp');
     if (isDarkMode) {
-      const progressBarContainer = progressBar.querySelector('#progress-bar-container');
+      const progressBarOuter = progressBar.querySelector('#progress-bar-outer');
       const progressFill = progressBar.querySelector('#progress-fill');
       progressFill.style.backgroundColor = '#f7f7f7';
-      progressBarContainer.style.backgroundColor = 'hsl(37, 5%, 22%)';
+      progressBarOuter.style.backgroundColor = 'hsl(37, 5%, 22%)';
     }
   });
 };
@@ -445,84 +452,71 @@ export const updateUIAfterImport = (extensionState) => {
 
           // Update the progress bar
           updateProgressBar(completedBoards, currentHue);
+          updateProgressBarTooltip();
         });
       });
     });
   });
 };
 
-export const updatePerksIcon = () => {
-  chrome.storage.local.get(['activePerks'], (result) => {
+let progressBarTooltipInstance = null;
+
+export const updateProgressBarTooltip = () => {
+  chrome.storage.local.get(['activePerks', 'winningStreak', 'gladiatorLossBuffer', 'preparationStatus'], async (result) => {
     const activePerks = result.activePerks || [];
+    const winningStreak = result.winningStreak || 0;
+    const gladiatorLossBuffer = result.gladiatorLossBuffer || 0;
+    const preparationStatus = result.preparationStatus || false;
 
-    // Check if there are any active perks
+    await waitForElm('#hue-progress-bar');
+
+    const progressBarContainer = document.getElementById('progress-bar-container');
+
+    // Create the tooltip content
+    let tooltipContent;
     if (activePerks.length === 0) {
-      const perksIcon = document.getElementById('perks-icon');
-      if (perksIcon) {
-        perksIcon.remove();
-      }
-      return;
+      tooltipContent = '<p>No perks selected. Click the progress bar to select perks!</p>';
+    } else {
+      tooltipContent = '<ul class="progress-perk-tooltip">';
+      activePerks.forEach(perk => {
+        const displayName = PERK_DISPLAY_NAMES[perk] || perk;
+        const svgIcon = chrome.runtime.getURL(`imgs/${perk}.svg`);
+        tooltipContent += `<li><img src="${svgIcon}" class="perk-icon" alt="${displayName} icon"/> ${displayName}`;
+        if (perk === 'hot-streak') {
+          tooltipContent += ` (Winning Streak: ${winningStreak})`;
+        } else if (perk === 'gladiator') {
+          tooltipContent += ` (Allowed Losses: ${gladiatorLossBuffer})`;
+        } else if (perk === 'preparation') {
+          tooltipContent += ` (${preparationStatus ? 'Fulfilled' : 'Not Fulfilled'})`;
+        }
+        tooltipContent += '</li>';
+      });
+      tooltipContent += '</ul>';
     }
-    waitForElm('#hue-progress-bar').then(() => {
-      // Create the perks icon
-      let perksIcon = document.getElementById('perks-icon');
-      if (!perksIcon) {
-        perksIcon = document.createElement('div');
-        perksIcon.id = 'perks-icon';
-        perksIcon.style.position = 'relative';
-        perksIcon.style.display = 'flex';
-        perksIcon.style.alignItems = 'center';
-        perksIcon.style.marginRight = '10px';
-        perksIcon.style.cursor = 'pointer';
+    
+    if (progressBarTooltipInstance) {
+      progressBarTooltipInstance.destroy();
+    }
 
-        const perksIconImg = document.createElement('img');
-        perksIconImg.src = chrome.runtime.getURL('images/perks-icon.png'); // Assuming you have an icon image
-        perksIconImg.alt = 'Active Perks';
-        perksIconImg.style.width = '24px';
-        perksIconImg.style.height = '24px';
-        perksIcon.appendChild(perksIconImg);
+    const bodyClass = document.body.classList;
+    let theme = 'light';
+    if (bodyClass.contains('dark')) {
+      theme = 'dark';
+    } else if (bodyClass.contains('transp')) {
+      theme = 'transp';
+    }
 
-        const header = document.querySelector('header');
-        const progressBar = header.querySelector('#hue-progress-bar');
-        header.insertBefore(perksIcon, progressBar);
-
-        // Create the tooltip
-        const tooltip = document.createElement('div');
-        tooltip.id = 'perks-tooltip';
-        tooltip.style.position = 'absolute';
-        tooltip.style.bottom = '30px';
-        tooltip.style.left = '50%';
-        tooltip.style.transform = 'translateX(-50%)';
-        tooltip.style.padding = '10px';
-        tooltip.style.borderRadius = '5px';
-        tooltip.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-        tooltip.style.color = '#fff';
-        tooltip.style.whiteSpace = 'nowrap';
-        tooltip.style.visibility = 'hidden';
-        tooltip.style.opacity = '0';
-        tooltip.style.transition = 'opacity 0.3s';
-
-        perksIcon.appendChild(tooltip);
-
-        // Add event listeners once
-        perksIcon.addEventListener('mouseenter', () => {
-          tooltip.style.visibility = 'visible';
-          tooltip.style.opacity = '1';
-        });
-
-        perksIcon.addEventListener('mouseleave', () => {
-          tooltip.style.visibility = 'hidden';
-          tooltip.style.opacity = '0';
-        });
-      }
-
-      // Update the tooltip content
-      const tooltip = document.getElementById('perks-tooltip');
-      tooltip.innerHTML = activePerks.length ? `Active Perks: ${activePerks.join(', ')}` : 'No Active Perks';
+    // Initialize tippy.js tooltip
+    progressBarTooltipInstance = tippy(progressBarContainer, {
+      content: tooltipContent,
+      placement: 'bottom',
+      theme: theme,
+      arrow: false,
+      allowHTML: true,
     });
-
   });
 };
+
 
 export const startAnalysisTimer = async (analysisTimeLeft) => {
   const preparationStatusMet = await getPreparationStatus();
@@ -548,6 +542,7 @@ export const startAnalysisTimer = async (analysisTimeLeft) => {
   timerElement.style.borderTopRightRadius = '6px';
   timerElement.style.borderBottomRightRadius = '0';
   timerElement.style.borderBottomLeftRadius = '0';
+  timerElement.style.zIndex = '107';
   timerElement.innerText = `Preparation time left: ${formatTime(analysisTimeLeft)}`;
   analysisBoard.appendChild(timerElement);
 
@@ -563,7 +558,7 @@ export const startAnalysisTimer = async (analysisTimeLeft) => {
       if (activePerks.includes('preparation')) {
         setPreparationStatus(true);
         showPerkToast('preparation', 'Preparation: requirement fulfilled');
-
+        updateProgressBarTooltip();
       }
     }
   }, 1000);
