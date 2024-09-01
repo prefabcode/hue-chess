@@ -42,10 +42,15 @@ export const updateProgressBar = (completedBoards = null, hueValue = null) => {
 
       const progressBarContainer = document.createElement('div');
       progressBarContainer.id = 'progress-bar-container';
-      progressBarContainer.style.flexBasis = '180px';
-      progressBarContainer.style.height = '10px';
-      progressBarContainer.style.borderRadius = '5px';
-      progressBarContainer.style.backgroundColor = '#8c8c8c';
+      progressBarContainer.style.display = 'flex';
+      progressBarContainer.style.alignItems = 'center';
+
+      const progressBarOuter = document.createElement('div');
+      progressBarOuter.id = 'progress-bar-outer';
+      progressBarOuter.style.flexBasis = '180px';
+      progressBarOuter.style.height = '10px';
+      progressBarOuter.style.borderRadius = '5px';
+      progressBarOuter.style.backgroundColor = '#8c8c8c';
 
       const progressFill = document.createElement('div');
       progressFill.id = 'progress-fill';
@@ -54,8 +59,8 @@ export const updateProgressBar = (completedBoards = null, hueValue = null) => {
       progressFill.style.backgroundColor = 'hsl(88, 62%, 37%)';
       progressFill.style.width = `${progress}%`;
 
-      progressBarContainer.appendChild(progressFill);
-      progressBar.appendChild(progressBarContainer);
+      progressBarOuter.appendChild(progressFill);
+      progressBarContainer.appendChild(progressBarOuter);
 
       const levelText = document.createElement('span');
       levelText.id = 'level-text';
@@ -63,7 +68,8 @@ export const updateProgressBar = (completedBoards = null, hueValue = null) => {
       levelText.style.marginBottom = '1px';
       levelText.textContent = `Level ${level} - ${levelName}`;
 
-      progressBar.appendChild(levelText);
+      progressBarContainer.appendChild(levelText);
+      progressBar.appendChild(progressBarContainer);
 
       const header = document.querySelector('header');
       const siteButtons = header.querySelector('.site-buttons');
@@ -81,10 +87,10 @@ export const updateProgressBar = (completedBoards = null, hueValue = null) => {
     // Adapt to light and dark modes
     const isDarkMode = document.body.classList.contains('dark') || document.body.classList.contains('transp');
     if (isDarkMode) {
-      const progressBarContainer = progressBar.querySelector('#progress-bar-container');
+      const progressBarOuter = progressBar.querySelector('#progress-bar-outer');
       const progressFill = progressBar.querySelector('#progress-fill');
       progressFill.style.backgroundColor = '#f7f7f7';
-      progressBarContainer.style.backgroundColor = 'hsl(37, 5%, 22%)';
+      progressBarOuter.style.backgroundColor = 'hsl(37, 5%, 22%)';
     }
   });
 };
@@ -460,7 +466,7 @@ export const updateProgressBarTooltip = () => {
 
     await waitForElm('#hue-progress-bar');
 
-    const progressBar = document.getElementById('hue-progress-bar');
+    const progressBarContainer = document.getElementById('progress-bar-container');
 
     // Create the tooltip content
     let tooltipContent = '<ul>';
@@ -479,7 +485,7 @@ export const updateProgressBarTooltip = () => {
     tooltipContent += '</ul>';
 
     // Initialize tippy.js tooltip
-    tippy(progressBar, {
+    tippy(progressBarContainer, {
       content: tooltipContent,
       placement: 'bottom',
       theme: 'light-border',
