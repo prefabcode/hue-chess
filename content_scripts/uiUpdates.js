@@ -479,7 +479,8 @@ export const updateProgressBarTooltip = () => {
       tooltipContent = '<ul>';
       activePerks.forEach(perk => {
         const displayName = PERK_DISPLAY_NAMES[perk] || perk;
-        tooltipContent += `<li>${displayName}`;
+        const svgIcon = chrome.runtime.getURL(`imgs/${perk}.svg`);
+        tooltipContent += `<li><img src="${svgIcon}" class="perk-icon" alt="${displayName} icon"/> ${displayName}`;
         if (perk === 'hot-streak') {
           tooltipContent += ` (Winning Streak: ${winningStreak})`;
         } else if (perk === 'gladiator') {
