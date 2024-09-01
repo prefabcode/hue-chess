@@ -542,6 +542,7 @@ export const startAnalysisTimer = async (analysisTimeLeft) => {
   timerElement.style.borderTopRightRadius = '6px';
   timerElement.style.borderBottomRightRadius = '0';
   timerElement.style.borderBottomLeftRadius = '0';
+  timerElement.style.zIndex = '107';
   timerElement.innerText = `Preparation time left: ${formatTime(analysisTimeLeft)}`;
   analysisBoard.appendChild(timerElement);
 
