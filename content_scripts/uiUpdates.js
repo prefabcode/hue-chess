@@ -451,87 +451,40 @@ export const updateUIAfterImport = (extensionState) => {
   });
 };
 
-export const updatePerksIcon = () => {
+export const updateProgressBarTooltip = () => {
   chrome.storage.local.get(['activePerks', 'winningStreak', 'gladiatorLossBuffer', 'preparationStatus'], async (result) => {
     const activePerks = result.activePerks || [];
     const winningStreak = result.winningStreak || 0;
     const gladiatorLossBuffer = result.gladiatorLossBuffer || 0;
     const preparationStatus = result.preparationStatus || false;
 
-    if (activePerks.length === 0) {
-      const perksIcon = document.getElementById('perks-icon');
-      if (perksIcon) {
-        perksIcon.remove();
-      }
-      return;
-    }
-
     await waitForElm('#hue-progress-bar');
 
-    let perksIcon = document.getElementById('perks-icon');
-    if (!perksIcon) {
-      perksIcon = document.createElement('div');
-      perksIcon.id = 'perks-icon';
-      perksIcon.style.position = 'relative';
-      perksIcon.style.display = 'flex';
-      perksIcon.style.alignItems = 'center';
-      perksIcon.style.marginRight = '10px';
-      perksIcon.style.cursor = 'pointer';
+    const progressBar = document.getElementById('hue-progress-bar');
 
-      const perksIconImg = document.createElement('img');
-      perksIconImg.src = chrome.runtime.getURL('imgs/dragon.svg'); // Assuming you have an icon image
-      perksIconImg.alt = 'Active Perks';
-      perksIconImg.style.width = '24px';
-      perksIconImg.style.height = '24px';
-      perksIcon.appendChild(perksIconImg);
-
-      const progressBar = document.getElementById('hue-progress-bar');
-      const progressBarContainer = progressBar.querySelector('#progress-bar-container');
-      progressBar.insertBefore(perksIcon, progressBarContainer);
-
-      // Create the tooltip content
-      let tooltipContent = '<ul>';
-      activePerks.forEach(perk => {
-        const displayName = PERK_DISPLAY_NAMES[perk] || perk;
-        tooltipContent += `<li>${displayName}`;
-        if (perk === 'hot-streak') {
-          tooltipContent += ` (Winning Streak: ${winningStreak})`;
-        } else if (perk === 'gladiator') {
-          tooltipContent += ` (Allowed Losses: ${gladiatorLossBuffer})`;
-        } else if (perk === 'preparation') {
-          tooltipContent += ` (${preparationStatus ? 'Fulfilled' : 'Not Fulfilled'})`;
-        }
-        tooltipContent += '</li>';
-      });
-      tooltipContent += '</ul>';
-
-      // Initialize tippy.js tooltip
-      tippy(perksIcon, {
-        content: tooltipContent,
-        placement: 'bottom',
-        theme: 'light-border',
-        allowHTML: true,
-      });
-    }
-
-    // Update the tooltip content
-    const tooltipContent = '<ul>' + activePerks.map(perk => {
+    // Create the tooltip content
+    let tooltipContent = '<ul>';
+    activePerks.forEach(perk => {
       const displayName = PERK_DISPLAY_NAMES[perk] || perk;
-      let status = '';
+      tooltipContent += `<li>${displayName}`;
       if (perk === 'hot-streak') {
-        status = ` (Winning Streak: ${winningStreak})`;
+        tooltipContent += ` (Winning Streak: ${winningStreak})`;
       } else if (perk === 'gladiator') {
-        status = ` (Allowed Losses: ${gladiatorLossBuffer})`;
+        tooltipContent += ` (Allowed Losses: ${gladiatorLossBuffer})`;
       } else if (perk === 'preparation') {
-        status = ` (${preparationStatus ? 'Fulfilled' : 'Not Fulfilled'})`;
+        tooltipContent += ` (${preparationStatus ? 'Fulfilled' : 'Not Fulfilled'})`;
       }
-      return `<li>${displayName}:${status}</li>`;
-    }).join('') + '</ul>';
+      tooltipContent += '</li>';
+    });
+    tooltipContent += '</ul>';
 
-    const tooltip = perksIcon._tippy;
-    if (tooltip) {
-      tooltip.setContent(tooltipContent);
-    }
+    // Initialize tippy.js tooltip
+    tippy(progressBar, {
+      content: tooltipContent,
+      placement: 'bottom',
+      theme: 'light-border',
+      allowHTML: true,
+    });
   });
 };
 
