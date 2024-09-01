@@ -496,11 +496,19 @@ export const updateProgressBarTooltip = () => {
       progressBarTooltipInstance.destroy();
     }
 
+    const bodyClass = document.body.classList;
+    let theme = 'light';
+    if (bodyClass.contains('dark')) {
+      theme = 'dark';
+    } else if (bodyClass.contains('transp')) {
+      theme = 'transp';
+    }
+
     // Initialize tippy.js tooltip
     progressBarTooltipInstance = tippy(progressBarContainer, {
       content: tooltipContent,
       placement: 'bottom',
-      theme: 'light-border',
+      theme: theme,
       allowHTML: true,
     });
   });
