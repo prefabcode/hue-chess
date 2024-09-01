@@ -15,7 +15,7 @@ import {
   getPreparationStatus,
 } from "./storageManagement.js";
 import { PREPARATION_TIME } from "./constants.js";
-import { startAnalysisTimer, updatePerksIcon } from "./uiUpdates.js";
+import { startAnalysisTimer, updateProgressBarTooltip } from "./uiUpdates.js";
 import * as pgnParser from '@mliebelt/pgn-parser';
 
 export const getUserColor = () => {
@@ -177,7 +177,7 @@ export const fetchGameStream = async (streamId, playingId, userColor) => {
                     }
                   }
                   await setPlayingId(null);
-                  updatePerksIcon();
+                  updateProgressBarTooltip();
                   reader.cancel();
                 }
               }

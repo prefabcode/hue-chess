@@ -44,6 +44,7 @@ export const updateProgressBar = (completedBoards = null, hueValue = null) => {
       progressBarContainer.id = 'progress-bar-container';
       progressBarContainer.style.display = 'flex';
       progressBarContainer.style.alignItems = 'center';
+      progressBarContainer.style.width = '240px';
 
       const progressBarOuter = document.createElement('div');
       progressBarOuter.id = 'progress-bar-outer';
