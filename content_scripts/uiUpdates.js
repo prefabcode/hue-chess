@@ -1,4 +1,4 @@
-import { 
+import {
   exportExtensionState, 
   importExtensionState, 
   confirmResetProgress, 
