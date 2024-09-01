@@ -143,6 +143,10 @@
   filter: invert(0);
 }
 
+.tippy-box .progress-perk-tooltip li + li {
+  margin-top: 7px;
+}
+
 #hue-chess-settings-modal {
   width: 500px;
   font-family: 'Roboto', 'Noto Sans', sans-serif;

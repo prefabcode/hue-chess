@@ -476,7 +476,7 @@ export const updateProgressBarTooltip = () => {
     if (activePerks.length === 0) {
       tooltipContent = '<p>No perks selected. Click the progress bar to select perks!</p>';
     } else {
-      tooltipContent = '<ul>';
+      tooltipContent = '<ul class="progress-perk-tooltip">';
       activePerks.forEach(perk => {
         const displayName = PERK_DISPLAY_NAMES[perk] || perk;
         const svgIcon = chrome.runtime.getURL(`imgs/${perk}.svg`);
@@ -510,6 +510,7 @@ export const updateProgressBarTooltip = () => {
       content: tooltipContent,
       placement: 'bottom',
       theme: theme,
+      arrow: false,
       allowHTML: true,
     });
   });
