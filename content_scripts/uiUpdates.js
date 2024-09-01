@@ -458,6 +458,8 @@ export const updateUIAfterImport = (extensionState) => {
   });
 };
 
+let progressBarTooltipInstance = null;
+
 export const updateProgressBarTooltip = () => {
   chrome.storage.local.get(['activePerks', 'winningStreak', 'gladiatorLossBuffer', 'preparationStatus'], async (result) => {
     const activePerks = result.activePerks || [];
@@ -490,10 +492,12 @@ export const updateProgressBarTooltip = () => {
       tooltipContent += '</ul>';
     }
     
-    tippy('#progress-bar-container').forEach(instance => instance.destroy());
+    if (progressBarTooltipInstance) {
+      progressBarTooltipInstance.destroy();
+    }
 
     // Initialize tippy.js tooltip
-    tippy(progressBarContainer, {
+    progressBarTooltipInstance = tippy(progressBarContainer, {
       content: tooltipContent,
       placement: 'bottom',
       theme: 'light-border',
