@@ -452,6 +452,7 @@ export const updateUIAfterImport = (extensionState) => {
 
           // Update the progress bar
           updateProgressBar(completedBoards, currentHue);
+          updateProgressBarTooltip();
         });
       });
     });
