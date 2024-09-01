@@ -470,20 +470,25 @@ export const updateProgressBarTooltip = () => {
     const progressBarContainer = document.getElementById('progress-bar-container');
 
     // Create the tooltip content
-    let tooltipContent = '<ul>';
-    activePerks.forEach(perk => {
-      const displayName = PERK_DISPLAY_NAMES[perk] || perk;
-      tooltipContent += `<li>${displayName}`;
-      if (perk === 'hot-streak') {
-        tooltipContent += ` (Winning Streak: ${winningStreak})`;
-      } else if (perk === 'gladiator') {
-        tooltipContent += ` (Allowed Losses: ${gladiatorLossBuffer})`;
-      } else if (perk === 'preparation') {
-        tooltipContent += ` (${preparationStatus ? 'Fulfilled' : 'Not Fulfilled'})`;
-      }
-      tooltipContent += '</li>';
-    });
-    tooltipContent += '</ul>';
+    let tooltipContent;
+    if (activePerks.length === 0) {
+      tooltipContent = '<p>No perks selected. Click the progress bar to select perks!</p>';
+    } else {
+      tooltipContent = '<ul>';
+      activePerks.forEach(perk => {
+        const displayName = PERK_DISPLAY_NAMES[perk] || perk;
+        tooltipContent += `<li>${displayName}`;
+        if (perk === 'hot-streak') {
+          tooltipContent += ` (Winning Streak: ${winningStreak})`;
+        } else if (perk === 'gladiator') {
+          tooltipContent += ` (Allowed Losses: ${gladiatorLossBuffer})`;
+        } else if (perk === 'preparation') {
+          tooltipContent += ` (${preparationStatus ? 'Fulfilled' : 'Not Fulfilled'})`;
+        }
+        tooltipContent += '</li>';
+      });
+      tooltipContent += '</ul>';
+    }
     
     tippy('#progress-bar-container').forEach(instance => instance.destroy());
 
