@@ -484,6 +484,8 @@ export const updateProgressBarTooltip = () => {
       tooltipContent += '</li>';
     });
     tooltipContent += '</ul>';
+    
+    tippy('#progress-bar-container').forEach(instance => instance.destroy());
 
     // Initialize tippy.js tooltip
     tippy(progressBarContainer, {
