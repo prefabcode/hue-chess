@@ -55,7 +55,7 @@ As you level up your chess boards, you unlock perks that act as modifiers, that 
 
 - **Feats of Strength**: These intend to be passive, large hue point bonuses for feats that occur more rarely, such as winning a minature or playing on lichess for extended periods of time.
 - **More Perks**: While Hue Chess will initially ship with 11 unique perks, I have ideas for introducing more perks after v1.  
-- - **Themed Prestige System**: Once you complete your journey and beat level 25, you have the option to prestige, reseting your level to 1 and obtaining a new avatar visible near your Hue Chess Xp bar. Prestiges will be themed, and certain openings will grant hue point bonuses. The openings that grant hue point bonuses will change with each prestige. 
+- **Themed Prestige System**: Once you complete your journey and beat level 25, you have the option to prestige, reseting your level to 1 and obtaining a new avatar visible near your Hue Chess Xp bar. Prestiges will be themed, and certain openings will grant hue point bonuses. The openings that grant hue point bonuses will change with each prestige. 
 
 ## Contributing
 
