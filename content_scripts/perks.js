@@ -12,7 +12,7 @@ export function showPerkToast(perkId, message) {
     'endgame-specialist': 'linear-gradient(to right, #00c6ff, #0072ff)',
     'hot-streak': 'linear-gradient(to right, #f12711, #f5af19)',
     'gladiator': 'linear-gradient(to right, #434343, #000000)',
-    'equalizer': 'linear-gradient(to right, #006400, #228B22)',
+    'equalizer': 'linear-gradient(to right, #1b5e20, #4a9e4d)',
     'rivalry': 'linear-gradient(to right, #7f1d1d, #c0392b)',
     'total-earned': 'linear-gradient(to right, #0f2027, #2c5364)',
     'preparation': 'linear-gradient(to right, #093a5e, #0077b6)',
