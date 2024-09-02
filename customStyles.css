@@ -91,8 +91,6 @@
 }
 
 #opportunist-perk.active {
-  /* background: linear-gradient(to right, #d6a700, #008080); */
-  /* background: linear-gradient(to right, #b8860b, #ffd700); */
   background: linear-gradient(to right, #daa520, #b8860b);
 }
 
