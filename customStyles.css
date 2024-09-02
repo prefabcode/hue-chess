@@ -63,7 +63,7 @@
 }
 
 #gambiteer-perk.active {
-  background: linear-gradient(to right, #4b0082, #800080);
+  background: linear-gradient(to right, #4a148c, #880e4f); 
 }
 
 #endgame-specialist-perk.active {
@@ -83,11 +83,11 @@
 }
 
 #rivalry-perk.active {
-  background: linear-gradient(to right, #ff7e5f, #feb47b);
+  background: linear-gradient(to right, #7f1d1d, #c0392b);
 }
 
 #preparation-perk.active {
-  background: linear-gradient(to right, #00B4DB, #0083B0);
+  background: linear-gradient(to right, #093a5e, #0077b6);
 }
 
 #opportunist-perk.active {
