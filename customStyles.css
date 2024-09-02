@@ -90,6 +90,10 @@
   background: linear-gradient(to right, #00B4DB, #0083B0);
 }
 
+#opportunist-perk.active {
+  background: linear-gradient(to right, #daa520, #b8860b);
+}
+
 
 .perks {
   display: flex;

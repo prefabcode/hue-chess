@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perk Gradient Preview</title>
+    <style>
+        body {
+            font-family: Roboto, sans-serif;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+            transition: background 0.5s ease;
+        }
+        .perk-box {
+            width: 250px;
+            height: 150px;
+            margin: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+        }
+        .perk-box img {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 10px;
+        }
+        #berzerker {
+            background: linear-gradient(to right, #8b0000, #ff0000);
+        }
+        #bongcloud {
+            background: linear-gradient(to right, #a18cd1, #fbc2eb);
+        }
+        #hue-master {
+            background: linear-gradient(to right, #43cea2, #185a9d);
+        }
+        #gambiteer {
+            background: linear-gradient(to right, #4b0082, #800080);
+        }
+        #endgame-specialist {
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+        }
+        #hot-streak {
+            background: linear-gradient(to right, #f12711, #f5af19);
+        }
+        #gladiator {
+            background: linear-gradient(to right, #434343, #000000);
+        }
+        #equalizer {
+            background: linear-gradient(to right, #006400, #228B22);
+        }
+        #rivalry {
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+        }
+        #opportunist {
+            background: linear-gradient(to right, #daa520, #b8860b);
+        }
+        .mode-switch {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 10;
+            display: flex;
+            gap: 10px;
+        }
+        .mode-switch button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .mode-switch button.light {
+            background-color: #f0f0f0;
+        }
+        .mode-switch button.dark {
+            background-color: #333;
+            color: white;
+        }
+        .mode-switch button.image {
+            background-color: #ff6f61;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="mode-switch">
+        <button class="light" onclick="setLightMode()">Light Mode</button>
+        <button class="dark" onclick="setDarkMode()">Dark Mode</button>
+        <button class="image" onclick="setImageMode()">Background Image</button>
+    </div>
+    <div class="perk-box" id="berzerker"><img src="imgs/berzerker.svg" alt="Berzerker Icon"><span>Berzerker</span></div>
+    <!-- <div class="perk-box" id="bongcloud"><img src="imgs/bongcloud.svg" alt="Bongcloud Icon"><span>Bongcloud</span></div> -->
+    <!-- <div class="perk-box" id="hue-master"><img src="imgs/hue-master.svg" alt="Hue Master Icon"><span>Hue Master</span></div> -->
+    <div class="perk-box" id="gambiteer"><img src="imgs/gambiteer.svg" alt="Gambiteer Icon"><span>Gambiteer</span></div>
+    <div class="perk-box" id="endgame-specialist"><img src="imgs/endgame-specialist.svg" alt="Endgame Specialist Icon"><span>Endgame Specialist</span></div>
+    <div class="perk-box" id="hot-streak"><img src="imgs/hot-streak.svg" alt="Hot Streak Icon"><span>Hot Streak</span></div>
+    <div class="perk-box" id="gladiator"><img src="imgs/gladiator.svg" alt="Gladiator Icon"><span>Gladiator</span></div>
+    <div class="perk-box" id="equalizer"><img src="imgs/equalizer.svg" alt="Equalizer Icon"><span>Equalizer</span></div>
+    <div class="perk-box" id="rivalry"><img src="imgs/rivalry.svg" alt="Rivalry Icon"><span>Rivalry</span></div>
+    <div class="perk-box" id="opportunist"><img src="imgs/opportunist.svg" alt="opportunist icon"><span>Opportunist</span></div>
+    <script>
+        function setLightMode() {
+            document.body.style.background = 'hsl(37, 10%, 92%) linear-gradient(to bottom, hsl(37, 12%, 84%), hsl(37, 10%, 92%) 116px) no-repeat';
+        }
+
+        function setDarkMode() {
+            document.body.style.background = 'hsl(37, 10%, 8%) linear-gradient(to bottom, hsl(37, 12%, 16%), hsl(37, 10%, 8%) 116px) no-repeat';
+        }
+
+        function setImageMode() {
+            document.body.style.background = 'url(https://lichess1.org/assets/lifat/background/gallery/bg24.webp) no-repeat center center fixed';
+            document.body.style.backgroundSize = 'cover';
+        }
+    </script>
+</body>
+</html>

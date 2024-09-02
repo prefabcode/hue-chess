@@ -16,6 +16,7 @@ export function showPerkToast(perkId, message) {
     'rivalry': 'linear-gradient(to right, #ff7e5f, #feb47b)',
     'total-earned': 'linear-gradient(to right, #0f2027, #2c5364)',
     'preparation': 'linear-gradient(to right, #00B4DB, #0083B0)',
+    'opportunist': 'linear-gradient(to right, #daa520, #b8860b)',
   };
 
   const gradient = gradientMap[perkId];
@@ -286,6 +287,47 @@ const isRivalryFulfilled = async () => {
   return bonus;
 };
 
+const isOpportunistFulfilled = (userName, game) => {
+  const chess = new Chess();
+  let wasUpInMaterial = false;
+
+  const whitePlayer = game.tags.White;
+  const blackPlayer = game.tags.Black;
+
+  let playerColor = null;
+
+  if (whitePlayer === userName) {
+      playerColor = 'white';
+  } else if (blackPlayer === userName) {
+      playerColor = 'black';
+  }
+
+  if (!playerColor) {
+      console.error('Player not found in this game.');
+      return 0;
+  }
+
+  for (let i = 0; i < game.moves.length; i++) {
+    chess.move(game.moves[i].notation.notation);
+    const fen = chess.fen();
+    const materialBalance = calculateMaterialBalanceFromFEN(fen, playerColor);
+
+    if (materialBalance > 0) {
+      if (wasUpInMaterial) {
+        const bonus = Math.floor(Math.random() * (3 - 2 + 1)) + 2;
+        const message = `Opportunist: ${bonus} points`;
+        showPerkToast('opportunist', message);
+        return bonus;
+      }
+      wasUpInMaterial = true;
+    } else {
+      wasUpInMaterial = false;
+    }
+  }
+
+  return 0;
+};
+
 const isPreparationFulfilled = async () => {
   const preparationStatusMet = await getPreparationStatus();
   let bonus = 0;
@@ -381,6 +423,9 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
   }
   if (activePerks.includes('preparation')) {
     bonus += await isPreparationFulfilled();
+  }
+  if (activePerks.includes('opportunist')) {
+    bonus += isOpportunistFulfilled(userName, game);
   }
   // no-rating bonus check
   bonus += isHueFocusFulfilled();

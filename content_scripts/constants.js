@@ -39,5 +39,6 @@ export const PERK_DISPLAY_NAMES = {
   'endgame-specialist': 'Endgame Specialist',
   'gladiator': 'Gladiator',
   'equalizer': 'Equalizer',
-  'rivalry': 'Rivalry'
+  'rivalry': 'Rivalry',
+  'opportunist': 'Opportunist'
 };
