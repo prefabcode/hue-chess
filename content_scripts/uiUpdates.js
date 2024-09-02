@@ -470,11 +470,12 @@ export const updateUIAfterImport = (extensionState) => {
 let progressBarTooltipInstance = null;
 
 export const updateProgressBarTooltip = () => {
-  chrome.storage.local.get(['activePerks', 'winningStreak', 'gladiatorLossBuffer', 'preparationStatus'], async (result) => {
+  chrome.storage.local.get(['activePerks', 'winningStreak', 'gladiatorLossBuffer', 'preparationStatus', 'secondWindStatus'], async (result) => {
     const activePerks = result.activePerks || [];
     const winningStreak = result.winningStreak || 0;
     const gladiatorLossBuffer = result.gladiatorLossBuffer || 0;
     const preparationStatus = result.preparationStatus || false;
+    const secondWindStatus = result.secondWindStatus || false;
 
     await waitForElm('#hue-progress-bar');
 
@@ -496,6 +497,8 @@ export const updateProgressBarTooltip = () => {
           tooltipContent += ` (Allowed Losses: ${gladiatorLossBuffer})`;
         } else if (perk === 'preparation') {
           tooltipContent += ` (${preparationStatus ? 'Fulfilled' : 'Not Fulfilled'})`;
+        } else if (perk === 'second-wind') {
+          tooltipContent += ` (${secondWindStatus ? 'Fulfilled' : 'Not Fulfilled'})`;
         }
         tooltipContent += '</li>';
       });
