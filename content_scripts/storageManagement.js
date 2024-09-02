@@ -210,3 +210,20 @@ export const setSecondWindStatus = (status) => {
     });
   });
 };
+
+export const getPlayedOpenings = () => {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(['playedOpenings'], (result) => {
+      resolve(result.playedOpenings || []);
+    });
+  });
+};
+
+export const setPlayedOpenings = (openings) => {
+  return new Promise((resolve) => {
+    chrome.storage.local.set({ playedOpenings: openings }, () => {
+      console.log("Played openings updated:", openings);
+      resolve();
+    });
+  });
+};

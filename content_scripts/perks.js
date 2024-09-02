@@ -7,6 +7,8 @@ import {
   getPreparationStatus, 
   getSecondWindStatus,
   setSecondWindStatus,
+  getPlayedOpenings,
+  setPlayedOpenings,
 } from "./storageManagement.js";
 import { materialValues } from "./constants.js";
 import Toastify from 'toastify-js';
@@ -362,6 +364,33 @@ const isSecondWindFulfilled = async () => {
   return 0;
 }
 
+const isVersatilityFulfilled = async (game) => {
+  const opening = game.tags.Opening || '';
+  let playedOpenings = await getPlayedOpenings();
+
+  if (!playedOpenings.includes(opening)) {
+    playedOpenings.push(opening);
+    await setPlayedOpenings(playedOpenings);
+
+    let bonus = 0;
+    if (playedOpenings.length <= 2) {
+      bonus = Math.floor(Math.random() * (2 - 1 + 1)) + 1; // Random number between 1 and 2
+
+    } else if (playedOpenings.length <= 6) {
+      bonus = Math.floor(Math.random() * (4 - 3 + 1)) + 3; // Random number between 3 and 4
+
+    } else {
+      bonus = Math.floor(Math.random() * (6 - 5 + 1)) + 5; // Random number between 5 and 6
+    }
+
+    const message = `Versatility: ${bonus} points`;
+    showPerkToast('versatility', message);
+    return bonus;
+  }
+
+  return 0;
+};
+
 const calculateEndgameMaterialFromFEN = (fen) => {
   const pieceCount = { white: 0, black: 0 };
   const pieces = fen.split(' ')[0].split('');
@@ -451,6 +480,9 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
   }
   if (activePerks.includes('second-wind')) {
     bonus += await isSecondWindFulfilled();
+  }
+  if (activePerks.includes('versatility')) {
+    bonus += await isVersatilityFulfilled(game);
   }
   // no-rating bonus check
   bonus += isHueFocusFulfilled();
