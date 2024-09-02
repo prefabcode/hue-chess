@@ -15,6 +15,13 @@
             padding: 0;
             transition: background 0.5s ease;
         }
+        .perk-box-container {
+            margin-top: 52px;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
         .perk-box {
             width: 250px;
             height: 150px;
@@ -45,7 +52,7 @@
             background: linear-gradient(to right, #43cea2, #185a9d);
         }
         #gambiteer {
-            background: linear-gradient(to right, #4b0082, #800080);
+            background: linear-gradient(to right, #4a148c, #880e4f);
         }
         #endgame-specialist {
             background: linear-gradient(to right, #00c6ff, #0072ff);
@@ -57,13 +64,19 @@
             background: linear-gradient(to right, #434343, #000000);
         }
         #equalizer {
-            background: linear-gradient(to right, #006400, #228B22);
+            background: linear-gradient(to right, #1b5e20, #4a9e4d);
         }
         #rivalry {
-            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            background: linear-gradient(to right, #7f1d1d, #c0392b);
+        }
+        #preparation {            
+            background: linear-gradient(to right, #093a5e, #0077b6); /* Dark blue to bright blue */
         }
         #opportunist {
             background: linear-gradient(to right, #daa520, #b8860b);
+        }
+        #second-wind {
+            background: linear-gradient(to right, #007a7e, #009688); 
         }
         .mode-switch {
             position: fixed;
@@ -98,16 +111,20 @@
         <button class="dark" onclick="setDarkMode()">Dark Mode</button>
         <button class="image" onclick="setImageMode()">Background Image</button>
     </div>
-    <div class="perk-box" id="berzerker"><img src="imgs/berzerker.svg" alt="Berzerker Icon"><span>Berzerker</span></div>
-    <!-- <div class="perk-box" id="bongcloud"><img src="imgs/bongcloud.svg" alt="Bongcloud Icon"><span>Bongcloud</span></div> -->
-    <!-- <div class="perk-box" id="hue-master"><img src="imgs/hue-master.svg" alt="Hue Master Icon"><span>Hue Master</span></div> -->
-    <div class="perk-box" id="gambiteer"><img src="imgs/gambiteer.svg" alt="Gambiteer Icon"><span>Gambiteer</span></div>
-    <div class="perk-box" id="endgame-specialist"><img src="imgs/endgame-specialist.svg" alt="Endgame Specialist Icon"><span>Endgame Specialist</span></div>
-    <div class="perk-box" id="hot-streak"><img src="imgs/hot-streak.svg" alt="Hot Streak Icon"><span>Hot Streak</span></div>
-    <div class="perk-box" id="gladiator"><img src="imgs/gladiator.svg" alt="Gladiator Icon"><span>Gladiator</span></div>
-    <div class="perk-box" id="equalizer"><img src="imgs/equalizer.svg" alt="Equalizer Icon"><span>Equalizer</span></div>
-    <div class="perk-box" id="rivalry"><img src="imgs/rivalry.svg" alt="Rivalry Icon"><span>Rivalry</span></div>
-    <div class="perk-box" id="opportunist"><img src="imgs/opportunist.svg" alt="opportunist icon"><span>Opportunist</span></div>
+    <div class="perk-box-container">
+        <div class="perk-box" id="berzerker"><img src="imgs/berzerker.svg" alt="Berzerker Icon"><span>Berzerker</span></div>
+        <!-- <div class="perk-box" id="bongcloud"><img src="imgs/bongcloud.svg" alt="Bongcloud Icon"><span>Bongcloud</span></div> -->
+        <!-- <div class="perk-box" id="hue-master"><img src="imgs/hue-master.svg" alt="Hue Master Icon"><span>Hue Master</span></div> -->
+        <div class="perk-box" id="gambiteer"><img src="imgs/gambiteer.svg" alt="Gambiteer Icon"><span>Gambiteer</span></div>
+        <div class="perk-box" id="endgame-specialist"><img src="imgs/endgame-specialist.svg" alt="Endgame Specialist Icon"><span>Endgame Specialist</span></div>
+        <div class="perk-box" id="preparation"><img src="imgs/preparation.svg"><span>Preparation</span></div>
+        <div class="perk-box" id="hot-streak"><img src="imgs/hot-streak.svg" alt="Hot Streak Icon"><span>Hot Streak</span></div>
+        <div class="perk-box" id="gladiator"><img src="imgs/gladiator.svg" alt="Gladiator Icon"><span>Gladiator</span></div>
+        <div class="perk-box" id="equalizer"><img src="imgs/equalizer.svg" alt="Equalizer Icon"><span>Equalizer</span></div>
+        <div class="perk-box" id="rivalry"><img src="imgs/rivalry.svg" alt="Rivalry Icon"><span>Rivalry</span></div>
+        <div class="perk-box" id="opportunist"><img src="imgs/opportunist.svg" alt="opportunist icon"><span>Opportunist</span></div>
+        <div class="perk-box" id="second-wind"><img src="imgs/second-wind.svg" alt="second-wind icon"><span>Second Wind</span></div>
+    </div>
     <script>
         function setLightMode() {
             document.body.style.background = 'hsl(37, 10%, 92%) linear-gradient(to bottom, hsl(37, 12%, 84%), hsl(37, 10%, 92%) 116px) no-repeat';

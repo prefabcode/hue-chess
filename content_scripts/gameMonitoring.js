@@ -13,6 +13,7 @@ import {
   setHasPlayedBefore,
   setPreparationStatus,
   getPreparationStatus,
+  setSecondWindStatus,
 } from "./storageManagement.js";
 import { PREPARATION_TIME } from "./constants.js";
 import { startAnalysisTimer, updateProgressBarTooltip } from "./uiUpdates.js";
@@ -174,6 +175,9 @@ export const fetchGameStream = async (streamId, playingId, userColor) => {
                     }
                     if (activePerks.includes('preparation')) {
                       await setPreparationStatus(false);
+                    }
+                    if (activePerks.includes('second-wind')) {
+                      await setSecondWindStatus(true);
                     }
                   }
                   await setPlayingId(null);

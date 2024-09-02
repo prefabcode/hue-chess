@@ -10,7 +10,8 @@ import {
   getActivePerks,
   getPreparationStatus,
   setPreparationStatus, 
-  getPlayingId
+  getPlayingId,
+  setSecondWindStatus,
 } from './storageManagement.js';
 import { showPerkToast } from './perks.js';
 import { levelNames, MAX_PERKS, PREPARATION_TIME, TIPS, PERK_DISPLAY_NAMES } from './constants.js';
@@ -154,6 +155,7 @@ async function setImageSources() {
     'rivalry-icon',
     'preparation-icon',
     'opportunist-icon',
+    'second-wind-icon',
   ];
 
   images.forEach(imageId => {
@@ -223,7 +225,7 @@ export const openPerksModal = async () => {
 
         if (perk === 'hot-streak') {
           console.log(`hot-streak perk toggled with value:${!isActive}, resetting win streak`);
-          setWinningStreak(0);
+          await setWinningStreak(0);
         }
 
         if (perk === 'gladiator') {
@@ -252,6 +254,11 @@ export const openPerksModal = async () => {
           } else if (isActive && timerElement) {
             timerElement.remove();
           }
+        }
+
+        if (perk === 'second-wind') {
+          console.log('resetting second-wind status');
+          await setSecondWindStatus(false);
         }
 
         const activePerks = await getActivePerks();
@@ -463,11 +470,12 @@ export const updateUIAfterImport = (extensionState) => {
 let progressBarTooltipInstance = null;
 
 export const updateProgressBarTooltip = () => {
-  chrome.storage.local.get(['activePerks', 'winningStreak', 'gladiatorLossBuffer', 'preparationStatus'], async (result) => {
+  chrome.storage.local.get(['activePerks', 'winningStreak', 'gladiatorLossBuffer', 'preparationStatus', 'secondWindStatus'], async (result) => {
     const activePerks = result.activePerks || [];
     const winningStreak = result.winningStreak || 0;
     const gladiatorLossBuffer = result.gladiatorLossBuffer || 0;
     const preparationStatus = result.preparationStatus || false;
+    const secondWindStatus = result.secondWindStatus || false;
 
     await waitForElm('#hue-progress-bar');
 
@@ -489,6 +497,8 @@ export const updateProgressBarTooltip = () => {
           tooltipContent += ` (Allowed Losses: ${gladiatorLossBuffer})`;
         } else if (perk === 'preparation') {
           tooltipContent += ` (${preparationStatus ? 'Fulfilled' : 'Not Fulfilled'})`;
+        } else if (perk === 'second-wind') {
+          tooltipContent += ` (${secondWindStatus ? 'Fulfilled' : 'Not Fulfilled'})`;
         }
         tooltipContent += '</li>';
       });

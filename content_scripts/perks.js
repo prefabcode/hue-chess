@@ -1,5 +1,13 @@
 import { Chess } from 'chess.js'
-import { getActivePerks, getWinningStreak, getHasPlayedBefore, setPreparationStatus, getPreparationStatus } from "./storageManagement.js";
+import { 
+  getActivePerks, 
+  getWinningStreak, 
+  getHasPlayedBefore, 
+  setPreparationStatus, 
+  getPreparationStatus, 
+  getSecondWindStatus,
+  setSecondWindStatus,
+} from "./storageManagement.js";
 import { materialValues } from "./constants.js";
 import Toastify from 'toastify-js';
 
@@ -8,15 +16,16 @@ export function showPerkToast(perkId, message) {
     'berzerker': 'linear-gradient(to right, #8b0000, #ff0000)',
     'bongcloud': 'linear-gradient(to right, #a18cd1, #fbc2eb)',
     'hue-focus': 'linear-gradient(to right, #43cea2, #185a9d)',
-    'gambiteer': 'linear-gradient(to right, #4b0082, #800080)',
+    'gambiteer': 'linear-gradient(to right, #4a148c, #880e4f)',
     'endgame-specialist': 'linear-gradient(to right, #00c6ff, #0072ff)',
     'hot-streak': 'linear-gradient(to right, #f12711, #f5af19)',
     'gladiator': 'linear-gradient(to right, #434343, #000000)',
-    'equalizer': 'linear-gradient(to right, #006400, #228B22)',
-    'rivalry': 'linear-gradient(to right, #ff7e5f, #feb47b)',
+    'equalizer': 'linear-gradient(to right, #1b5e20, #4a9e4d)',
+    'rivalry': 'linear-gradient(to right, #7f1d1d, #c0392b)',
     'total-earned': 'linear-gradient(to right, #0f2027, #2c5364)',
-    'preparation': 'linear-gradient(to right, #00B4DB, #0083B0)',
+    'preparation': 'linear-gradient(to right, #093a5e, #0077b6)',
     'opportunist': 'linear-gradient(to right, #daa520, #b8860b)',
+    'second-wind': 'linear-gradient(to right, #007a7e, #009688)',
   };
 
   const gradient = gradientMap[perkId];
@@ -340,6 +349,18 @@ const isPreparationFulfilled = async () => {
   return bonus;
 };
 
+const isSecondWindFulfilled = async () => {
+  const secondWindStatus = await getSecondWindStatus();
+  if (secondWindStatus) {
+    await setSecondWindStatus(false);
+    let bonus = Math.floor(Math.random() * (2 - 1 + 1)) + 1;
+    const message = `Second Wind: ${bonus} points`;
+    showPerkToast('second-wind', message);
+    return bonus;
+  }
+  return 0;
+}
+
 const calculateEndgameMaterialFromFEN = (fen) => {
   const pieceCount = { white: 0, black: 0 };
   const pieces = fen.split(' ')[0].split('');
@@ -426,6 +447,9 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
   }
   if (activePerks.includes('opportunist')) {
     bonus += isOpportunistFulfilled(userName, game);
+  }
+  if (activePerks.includes('second-wind')) {
+    bonus += await isSecondWindFulfilled();
   }
   // no-rating bonus check
   bonus += isHueFocusFulfilled();
