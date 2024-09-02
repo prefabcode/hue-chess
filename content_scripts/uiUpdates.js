@@ -10,7 +10,8 @@ import {
   getActivePerks,
   getPreparationStatus,
   setPreparationStatus, 
-  getPlayingId
+  getPlayingId,
+  setSecondWindStatus,
 } from './storageManagement.js';
 import { showPerkToast } from './perks.js';
 import { levelNames, MAX_PERKS, PREPARATION_TIME, TIPS, PERK_DISPLAY_NAMES } from './constants.js';
@@ -224,7 +225,7 @@ export const openPerksModal = async () => {
 
         if (perk === 'hot-streak') {
           console.log(`hot-streak perk toggled with value:${!isActive}, resetting win streak`);
-          setWinningStreak(0);
+          await setWinningStreak(0);
         }
 
         if (perk === 'gladiator') {
@@ -253,6 +254,11 @@ export const openPerksModal = async () => {
           } else if (isActive && timerElement) {
             timerElement.remove();
           }
+        }
+
+        if (perk === 'second-wind') {
+          console.log('resetting second-wind status');
+          await setSecondWindStatus(false);
         }
 
         const activePerks = await getActivePerks();

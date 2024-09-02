@@ -40,5 +40,6 @@ export const PERK_DISPLAY_NAMES = {
   'gladiator': 'Gladiator',
   'equalizer': 'Equalizer',
   'rivalry': 'Rivalry',
-  'opportunist': 'Opportunist'
+  'opportunist': 'Opportunist',
+  'second-wind': 'Second Wind',
 };

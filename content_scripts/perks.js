@@ -1,5 +1,13 @@
 import { Chess } from 'chess.js'
-import { getActivePerks, getWinningStreak, getHasPlayedBefore, setPreparationStatus, getPreparationStatus } from "./storageManagement.js";
+import { 
+  getActivePerks, 
+  getWinningStreak, 
+  getHasPlayedBefore, 
+  setPreparationStatus, 
+  getPreparationStatus, 
+  getSecondWindStatus,
+  setSecondWindStatus,
+} from "./storageManagement.js";
 import { materialValues } from "./constants.js";
 import Toastify from 'toastify-js';
 
@@ -341,6 +349,18 @@ const isPreparationFulfilled = async () => {
   return bonus;
 };
 
+const isSecondWindFulfilled = async () => {
+  const secondWindStatus = await getSecondWindStatus();
+  if (secondWindStatus) {
+    await setSecondWindStatus(false);
+    let bonus = Math.floor(Math.random() * (2 - 1 + 1)) + 1;
+    const message = `Second Wind: ${bonus} points`;
+    showPerkToast('second-wind', message);
+    return bonus;
+  }
+  return 0;
+}
+
 const calculateEndgameMaterialFromFEN = (fen) => {
   const pieceCount = { white: 0, black: 0 };
   const pieces = fen.split(' ')[0].split('');
@@ -427,6 +447,9 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
   }
   if (activePerks.includes('opportunist')) {
     bonus += isOpportunistFulfilled(userName, game);
+  }
+  if (activePerks.includes('second-wind')) {
+    bonus += await isSecondWindFulfilled();
   }
   // no-rating bonus check
   bonus += isHueFocusFulfilled();
