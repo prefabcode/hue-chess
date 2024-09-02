@@ -42,4 +42,5 @@ export const PERK_DISPLAY_NAMES = {
   'rivalry': 'Rivalry',
   'opportunist': 'Opportunist',
   'second-wind': 'Second Wind',
+  'versatility': 'Versatility',
 };

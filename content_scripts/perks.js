@@ -1,5 +1,5 @@
 import { Chess } from 'chess.js'
-import { 
+import {
   getActivePerks, 
   getWinningStreak, 
   getHasPlayedBefore, 
@@ -26,6 +26,7 @@ export function showPerkToast(perkId, message) {
     'preparation': 'linear-gradient(to right, #093a5e, #0077b6)',
     'opportunist': 'linear-gradient(to right, #daa520, #b8860b)',
     'second-wind': 'linear-gradient(to right, #007a7e, #009688)',
+    'versatility': 'linear-gradient(to right, #8e44ad, #f39c12)',
   };
 
   const gradient = gradientMap[perkId];
