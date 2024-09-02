@@ -1,5 +1,5 @@
-import { updateProgressBar, waitForElm } from './uiUpdates.js';
-import { getActivePerks, setAllowGladiatorPerkRemoval, resetGladiatorLossBuffer } from './storageManagement.js';
+import { updateProgressBar, waitForElm, updateProgressBarTooltip } from './uiUpdates.js';
+import { getActivePerks, setAllowGladiatorPerkRemoval, resetGladiatorLossBuffer, setPlayedOpenings } from './storageManagement.js';
 import { calculatePerkBonuses } from './perks.js';
 import { timeControlIncrements } from './constants.js';
 
@@ -69,6 +69,11 @@ export const incrementHue = async (game) => {
         if (newValue >= 100) {
           let carryOverValue = newValue - 100;
           console.log("Max hue reached, resetting to 0 and changing board");
+
+          // Reset playedOpenings array
+          await setPlayedOpenings([]);
+          updateProgressBarTooltip();
+          console.log("Played openings reset for new level");
 
           // Change to the next board
           const boardList = dasherApp.querySelector('.list');
