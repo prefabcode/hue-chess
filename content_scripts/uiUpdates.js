@@ -471,12 +471,13 @@ export const updateUIAfterImport = (extensionState) => {
 let progressBarTooltipInstance = null;
 
 export const updateProgressBarTooltip = () => {
-  chrome.storage.local.get(['activePerks', 'winningStreak', 'gladiatorLossBuffer', 'preparationStatus', 'secondWindStatus'], async (result) => {
+  chrome.storage.local.get(['activePerks', 'winningStreak', 'gladiatorLossBuffer', 'preparationStatus', 'secondWindStatus', 'playedOpenings'], async (result) => {
     const activePerks = result.activePerks || [];
     const winningStreak = result.winningStreak || 0;
     const gladiatorLossBuffer = result.gladiatorLossBuffer || 0;
     const preparationStatus = result.preparationStatus || false;
     const secondWindStatus = result.secondWindStatus || false;
+    const playedOpenings = result.playedOpenings || [];
 
     await waitForElm('#hue-progress-bar');
 
@@ -500,10 +501,21 @@ export const updateProgressBarTooltip = () => {
           tooltipContent += ` (${preparationStatus ? 'Fulfilled' : 'Not Fulfilled'})`;
         } else if (perk === 'second-wind') {
           tooltipContent += ` (${secondWindStatus ? 'Fulfilled' : 'Not Fulfilled'})`;
+        } else if (perk === 'versatility') {
+          tooltipContent += ` (Unique Openings: ${playedOpenings.length})`;
         }
         tooltipContent += '</li>';
       });
       tooltipContent += '</ul>';
+
+      // If Versatility is active, add the playedOpenings list
+      if (activePerks.includes('versatility') && playedOpenings.length) {
+        tooltipContent += '<br><p>Played Openings:</p><ul>';
+        playedOpenings.forEach(opening => {
+          tooltipContent += `<li>${opening}</li>`;
+        });
+        tooltipContent += '</ul>';
+      }
     }
     
     if (progressBarTooltipInstance) {

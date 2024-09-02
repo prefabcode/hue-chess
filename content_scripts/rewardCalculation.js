@@ -1,4 +1,4 @@
-import { updateProgressBar, waitForElm } from './uiUpdates.js';
+import { updateProgressBar, waitForElm, updateProgressBarTooltip } from './uiUpdates.js';
 import { getActivePerks, setAllowGladiatorPerkRemoval, resetGladiatorLossBuffer, setPlayedOpenings } from './storageManagement.js';
 import { calculatePerkBonuses } from './perks.js';
 import { timeControlIncrements } from './constants.js';
@@ -72,6 +72,7 @@ export const incrementHue = async (game) => {
 
           // Reset playedOpenings array
           await setPlayedOpenings([]);
+          updateProgressBarTooltip();
           console.log("Played openings reset for new level");
 
           // Change to the next board
