@@ -154,6 +154,7 @@ async function setImageSources() {
     'rivalry-icon',
     'preparation-icon',
     'opportunist-icon',
+    'second-wind-icon',
   ];
 
   images.forEach(imageId => {

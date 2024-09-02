@@ -94,6 +94,10 @@
   background: linear-gradient(to right, #daa520, #b8860b);
 }
 
+#second-wind-perk.active {
+  background: linear-gradient(to right, #007a7e, #009688); 
+}
+
 
 .perks {
   display: flex;
