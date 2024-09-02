@@ -10,16 +10,16 @@ As you level up your chess boards, you unlock perks that act as modifiers, that 
 
 ## Features
 
-- **Hue Points System**: Accumulate hue points by winning chess games. The hue of your chess board changes as you earn more points. Progress through 25 unique levels. 
-- **Time Control-Based Rewards**: Different time controls grant varying ranges of hue points:
+- **Hue Points System (Implemented)**: Accumulate hue points by winning chess games. The hue of your chess board changes as you earn more points. Progress through 25 unique levels. 
+- **Time Control-Based Rewards (implemented)** : Different time controls grant varying ranges of hue points:
   - Bullet: 1-3 points
   - Blitz: 3-6 points
   - Rapid: 6-10 points
   - Classical: 10-15 points
-- **Progress Tracking**: A progress bar displays your current level and how far you are from reaching the next level.
-- **Perk System (10/13 perks implemented)**: As you level up in Hue Chess, you will unlock new perks that allow you to gain bonus hue points from your wins. At launch, Hue chess will feature 13 perks to unlock spread across 25 levels. Note: current unlock levels for perks are subject to change before launch.
-- **Prestige System (not yet implemented)**: Once you complete your journey and beat level 25, you have the option to prestige, reseting your level to 1 and obtaining a new avatar visible near your Hue Chess Xp bar. Hue Chess is planned to ship with 10 prestige levels at launch. 
-- **Import / Export functionality**: Encode your progress in a BASE64 string, which you can then import on another machine to sync your progress on hue chess across multiple computers.
+- **Progress Tracking (implemented)**: A progress bar displays your current level and how far you are from reaching the next level.
+- **Perk System (11/11 perks implemented)**: As you level up in Hue Chess, you will unlock new perks that allow you to gain bonus hue points from your wins. At launch, Hue chess will feature 11 perks to unlock spread across 25 levels. Note: current unlock levels for perks are subject to change before launch.
+- **Easter Egg Perks (WIP)**: Hue Chess will ship with a few easter eggs. 
+- **Import / Export functionality (Implemented)**: Encode your progress in a BASE64 string, which you can then import on another machine to sync your progress on hue chess across multiple computers.
 
 ## Installation
 
@@ -54,7 +54,8 @@ As you level up your chess boards, you unlock perks that act as modifiers, that 
 ## Future Features
 
 - **Feats of Strength**: These intend to be passive, large hue point bonuses for feats that occur more rarely, such as winning a minature or playing on lichess for extended periods of time.
-- **More Perks**: While Hue Chess will initially ship with 13 unique perks, I have ideas for introducing more perks after v1.  
+- **More Perks**: While Hue Chess will initially ship with 11 unique perks, I have ideas for introducing more perks after v1.  
+- - **Themed Prestige System**: Once you complete your journey and beat level 25, you have the option to prestige, reseting your level to 1 and obtaining a new avatar visible near your Hue Chess Xp bar. Prestiges will be themed, and certain openings will grant hue point bonuses. The openings that grant hue point bonuses will change with each prestige. 
 
 ## Contributing
 
