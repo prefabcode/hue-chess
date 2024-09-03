@@ -542,7 +542,7 @@ export const updateProgressBarTooltip = () => {
 };
 
 
-export const startAnalysisTimer = async (analysisTimeLeft) => {
+export const startAnalysisTimer = async (analysisTimeInSeconds) => {
   const preparationStatusMet = await getPreparationStatus();
   if (preparationStatusMet) {
     return;
@@ -567,17 +567,23 @@ export const startAnalysisTimer = async (analysisTimeLeft) => {
   timerElement.style.borderBottomRightRadius = '0';
   timerElement.style.borderBottomLeftRadius = '0';
   timerElement.style.zIndex = '107';
-  timerElement.innerText = `Preparation time left: ${formatTime(analysisTimeLeft)}`;
+  timerElement.innerText = `Preparation time left: ${formatTime(analysisTimeInSeconds)}`;
   analysisBoard.appendChild(timerElement);
 
+  const end = Date.now() + analysisTimeInSeconds * 1000;
 
   let analysisTimer = setInterval(async () => {
-    analysisTimeLeft--;
-    timerElement.innerText = `Preparation time left: ${formatTime(analysisTimeLeft)}`;
+    const timeLeft = Math.floor((end - Date.now()) / 1000);
     
-    if (analysisTimeLeft <= 0) {
+    const formattedTime = formatTime(timeLeft);
+    timerElement.innerText = `Preparation time left: ${formattedTime}`;
+
+    document.title = `Preparation: ${formattedTime}`;
+    
+    if (timeLeft <= 0) {
       clearInterval(analysisTimer);
       timerElement.remove();
+      document.title = 'Preparation: done';
       activePerks = await getActivePerks(); 
       if (activePerks.includes('preparation')) {
         setPreparationStatus(true);
@@ -585,7 +591,7 @@ export const startAnalysisTimer = async (analysisTimeLeft) => {
         updateProgressBarTooltip();
       }
     }
-  }, 1000);
+  }, 200);
 };
 
 const formatTime = (seconds) => {
