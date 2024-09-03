@@ -176,7 +176,7 @@ const isBongcloudFulfilled = (userName, game) => {
 
   if (secondMove.startsWith('K')) {
     console.log('King move detected on move 2. Bongcloud bonus applied');
-    const bonus = Math.floor(Math.random() * (5 - 3 + 1)) + 3;
+    const bonus = Math.floor(Math.random() * (2 - 1 + 1)) + 1;
     console.log(`Bongcloud bonus points: ${bonus}`);
     const message = `Bongcloud: ${bonus} points`;
     showPerkToast('bongcloud', message);
@@ -454,9 +454,6 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
   if (activePerks.includes('gladiator')) {
     bonus += isGladiatorFulfilled(initialIncrementValue, gameType);
   }
-  if (activePerks.includes('bongcloud')) {
-    bonus += isBongcloudFulfilled(userName, game);
-  }
   if (activePerks.includes('gambiteer')) {
     bonus += isGambiteerFulfilled(game);
   }
@@ -486,6 +483,7 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
   }
   // no-rating bonus check
   bonus += isHueFocusFulfilled();
+  bonus += isBongcloudFulfilled(userName, game);
 
   const message = `Total Hue Earned: ${initialIncrementValue + bonus} points`;
   showPerkToast('total-earned', message);
