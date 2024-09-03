@@ -1,32 +1,47 @@
 import { updateProgressBar, waitForElm, updateProgressBarTooltip } from './uiUpdates.js';
 import { getActivePerks, setAllowGladiatorPerkRemoval, resetGladiatorLossBuffer, setPlayedOpenings } from './storageManagement.js';
 import { calculatePerkBonuses } from './perks.js';
-import { timeControlIncrements } from './constants.js';
 
-export const getInitialRewardValue = () => {
+
+export const getInitialRewardValue = (game) => {
   return new Promise((resolve) => {
-    waitForElm('.game__meta .header .setup').then((setupElement) => {
-      const setupText = setupElement.innerText;
+    const timeControl = game.tags.TimeControl.value;
+    const [initialTime, increment] = timeControl.split('+').map(Number);
 
-      for (const [key, value] of Object.entries(timeControlIncrements)) {
-        if (setupText.includes(key)) {
-          const [min, max] = value;
-          const incrementValue = Math.floor(Math.random() * (max - min + 1)) + min;
-          console.log(`Detected game type: ${key}, setting increment value to ${incrementValue}`);
-          resolve({ incrementValue, gameType: key });
-          return;
-        }
-      }
+    // Calculate estimated game duration
+    const estimatedDuration = initialTime + (40 * increment);
 
-      // Default to 1 if no game type is detected
-      console.log("No game type detected, defaulting increment value to 1");
-      resolve({ incrementValue: 1, gameType: 'Unknown' });
-    });
+    let gameType;
+    let rewardRange;
+
+    if (estimatedDuration < 29) {
+      gameType = 'UltraBullet';
+      rewardRange = [1, 3];
+    } else if (estimatedDuration < 179) {
+      gameType = 'Bullet';
+      rewardRange = [1, 3];
+    } else if (estimatedDuration < 479) {
+      gameType = 'Blitz';
+      rewardRange = [3, 6];
+    } else if (estimatedDuration < 1499) {
+      gameType = 'Rapid';
+      rewardRange = [6, 10];
+    } else {
+      gameType = 'Classical';
+      rewardRange = [10, 15];
+    }
+
+    const [min, max] = rewardRange;
+    const incrementValue = Math.floor(Math.random() * (max - min + 1)) + min;
+    console.log(`Detected game type: ${gameType}, setting increment value to
+${incrementValue}`);
+    resolve({ incrementValue, gameType });
   });
 };
 
 export const incrementHue = async (game) => {
-  let { incrementValue, gameType } = await getInitialRewardValue();
+  console.log('game obj', game);
+  let { incrementValue, gameType } = await getInitialRewardValue(game);
   console.log(`initial increment value ${incrementValue}`);
 
   const perkBonus = await calculatePerkBonuses(incrementValue, gameType, game);
