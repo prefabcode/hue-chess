@@ -28,6 +28,7 @@ export const TIPS = [
   "At level 15, you will unlock an extra perk slot.",
   "You can access the Hue Chess settings menu by clicking on your chrome browser hue chess extension icon. The settings menu contains additional options for the hue chess extension.",
   "Got feedback? Let us know on the Hue Chess discord at: insert-url-here.",
+  "In the medieval era, it was not uncommon for kings to actively participate in battles and lead their armies into war."
 ];
 
 export const PERK_DISPLAY_NAMES = {
