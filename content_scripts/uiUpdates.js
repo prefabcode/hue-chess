@@ -146,7 +146,6 @@ export const injectDiv = (boardDiv) => {
 async function setImageSources() {
   const images = [
     'berzerker-icon',
-    'bongcloud-icon',
     'gambiteer-icon',
     'endgame-specialist-icon',
     'hot-streak-icon',

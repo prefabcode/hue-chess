@@ -33,7 +33,6 @@ export const TIPS = [
 
 export const PERK_DISPLAY_NAMES = {
   'berzerker': 'Berzerker',
-  'bongcloud': 'Bongcloud',
   'preparation': 'Preparation',
   'hot-streak': 'Hot Streak',
   'gambiteer': 'Gambiteer',
