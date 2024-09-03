@@ -45,7 +45,6 @@ export const getUserColor = () => {
 
 export const checkForWinOrLoss = (userColor, game) => {
   console.log("Checking for win or loss using PGN data...");
-
   const result = { win: false, loss: false };
 
   if ((userColor === 'white' && game.tags.Result === '1-0') ||
@@ -176,7 +175,7 @@ export const fetchGameStream = async (streamId, playingId, userColor) => {
                     if (activePerks.includes('preparation')) {
                       await setPreparationStatus(false);
                     }
-                    if (activePerks.includes('second-wind')) {
+                    if (activePerks.includes('second-wind') && game.moves?.length >= 19) {
                       await setSecondWindStatus(true);
                     }
                   }
