@@ -1,8 +1,47 @@
 import { updateProgressBar, monitorBoardDiv, waitForElm, updateProgressBarTooltip } from './uiUpdates.js';
 import { checkUrlAndStartMonitoring } from './gameMonitoring.js';
 
+
+function createOnboardingModal() {
+  // Create the dialog element
+  const dialog = document.createElement('dialog');
+  dialog.id = 'onboarding-modal';
+  dialog.classList.add('scrollable', 'dialog-content');
+  dialog.style.width = '400px';
+  dialog.style.border = 'none';
+  dialog.style.borderRadius = '8px';
+  dialog.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
+  dialog.style.zIndex = '1000';
+
+  // Create the content for the dialog
+  const content = document.createElement('div');
+  content.innerHTML = `
+    <h2>Welcome to Hue Chess!</h2>
+    <p>Here you can add your onboarding text explaining the features and purpose of th
+extension.</p>
+    <button id="close-onboarding-modal" class="button" style="margin-top: 20px;">Get
+Started</button>
+  `;
+
+  // Append the content to the dialog
+  dialog.appendChild(content);
+  document.body.appendChild(dialog);
+
+  // Show the dialog
+  dialog.showModal();
+
+  // Add event listener to close the dialog
+  document.getElementById('close-onboarding-modal').addEventListener('click', () => {
+    dialog.close();
+    dialog.remove();
+  });
+}
+
+
 export const initializeExtension = () => {
   console.log("Initializing extension for the first time...");
+
+  createOnboardingModal();
 
   // Click the user tag to open the menu
   const userTag = document.getElementById('user_tag');
