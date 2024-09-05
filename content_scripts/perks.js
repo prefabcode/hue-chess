@@ -144,7 +144,7 @@ const isGladiatorFulfilled = (initialIncrementValue, gameType) => {
 }
 
 const isBongcloudFulfilled = (userName, game) => {
-  if (game.tags.Variant !== 'Standard' || game.tags.Variant !== 'Chess960') {
+  if (game.tags.Variant !== 'Standard' && game.tags.Variant !== 'Chess960') {
     console.log('Standard or Chess960 not detected. Bongcloud disabled.')
     return 0;
   }
@@ -208,7 +208,7 @@ const isGambiteerFulfilled = (game) => {
 };
 
 const isEndgameSpecialistFulfilled = (game) => {
-  if (game.tags.Variant !== 'Standard' || game.tags.Variant !== 'Chess960') {
+  if (game.tags.Variant !== 'Standard' && game.tags.Variant !== 'Chess960') {
     console.log('Standard or Chess960 not detected. Endgame Specialist disabled.')
     return 0;
   }
@@ -254,7 +254,7 @@ const isHotStreakFulfilled = async () => {
 }
 
 const isEqualizerFulfilled = (userName, game) => {
-  if (game.tags.Variant !== 'Standard' || game.tags.Variant !== 'Chess960') {
+  if (game.tags.Variant !== 'Standard' && game.tags.Variant !== 'Chess960') {
     console.log('Standard or Chess960 not detected. Equalizer disabled.')
     return 0;
   }
@@ -312,7 +312,7 @@ const isRivalryFulfilled = async () => {
 };
 
 const isOpportunistFulfilled = (userName, game) => {
-  if (game.tags.Variant !== 'Standard' || game.tags.Variant !== 'Chess960') {
+  if (game.tags.Variant !== 'Standard' && game.tags.Variant !== 'Chess960') {
     console.log('Standard or Chess960 not detected. Opportunist disabled.')
     return 0;
   }
