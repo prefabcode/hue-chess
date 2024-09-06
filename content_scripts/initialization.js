@@ -16,11 +16,12 @@ export const initializeExtension = () => {
 
   waitForElm('.subs').then((subsDiv) => {
     console.log('Subs div detected');
-    const boardButton = Array.from(subsDiv.querySelectorAll('button')).find(button => button.textContent === 'Board');
-    if (!boardButton) {
-      console.log("Board button not found");
-      return;
+    const subButtons = subsDiv.querySelectorAll('button.sub');
+    if (subButtons.length < 5) {
+      console.error(`Error: expected at least 5 buttons in menu container, but found ${subButtons.length}`);
+      return; 
     }
+    const boardButton = subButtons[3]; // currently binded to Board Button
 
     boardButton.click();
     console.log("Clicked board button");
