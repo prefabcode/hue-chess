@@ -28,6 +28,8 @@ export const initializeExtension = async () => {
     console.log("Clicked board button");
 
     const boardSettingsDiv = await waitForElm('.board');
+    const boardBackButton = await waitForElm('.head');
+
     const dimensionSelector = boardSettingsDiv.querySelector('.selector');
     if (!dimensionSelector) {
       console.error('Dimension selector element not detected, initialization failed');
@@ -84,6 +86,7 @@ export const initializeExtension = async () => {
     hueSlider.value = 0;
     hueSlider.dispatchEvent(new Event('input'));
     console.log("Set hue slider to 0");
+    boardBackButton.click(); // return to default profile view
     userTag.click(); // Close the user menu
 
     // Mark the initialization as done
