@@ -94,22 +94,37 @@ export const incrementHue = async (game) => {
       updateProgressBarTooltip();
       console.log('Played openings reset for new level');
 
-      // Change to the next board
-      const boardList = dasherApp.querySelector('.list');
-      const activeButton = boardList.querySelector('button.active');
-      const nextButton = activeButton.nextElementSibling;
-      if (nextButton) {
-        nextButton.click();
-        console.log('Clicked next board button');
-      }
-
       // Increment completedBoards
       const result = await new Promise((resolve) => {
-        chrome.storage.local.get(['completedBoards'], resolve);
+        chrome.storage.local.get(['completedBoards', 'prestige'], resolve);
       });
-      const completedBoards = (result.completedBoards || 0) + 1;
+      let completedBoards = (result.completedBoards || 0) + 1;
+      let prestige = result.prestige || 0;
+
+      if (completedBoards >= 25) {
+        completedBoards = 0;
+        prestige += 1;
+        
+        console.log(`Prestige level increased to: ${prestige}`);
+        // reset to brown board theme
+        const brownBoardButton = boardList.querySelector('button[title="brown"]');
+        if (!brownBoardButton) {
+          console.log("Brown board button not found");
+          return;
+        }
+        brownBoardButton.click();
+      } else {
+        // Change to the next board
+        const boardList = dasherApp.querySelector('.list');
+        const activeButton = boardList.querySelector('button.active');
+        const nextButton = activeButton.nextElementSibling;
+        if (nextButton) {
+          nextButton.click();
+          console.log('Clicked next board button');
+        }
+      }
       await new Promise((resolve) => {
-        chrome.storage.local.set({ completedBoards, currentHue: carryOverValue },
+        chrome.storage.local.set({ completedBoards, currentHue: carryOverValue, prestige },
 resolve);
       });
       console.log(`Completed boards incremented, now: ${completedBoards}`);

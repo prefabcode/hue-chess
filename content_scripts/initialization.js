@@ -139,7 +139,7 @@ export const initializeExtension = async () => {
     userTag.click(); // Close the user menu
 
     // Mark the initialization as done
-    chrome.storage.local.set({ initialized: true, completedBoards: 0 }, () => {
+    chrome.storage.local.set({ initialized: true, completedBoards: 0, prestige: 0 }, () => {
       console.log("Initialization complete, flag set in storage");
       // TODO: Understand how this works, wouldn't passing 0 in this method break updateProgressBar? 
       updateProgressBar(0, 0);
