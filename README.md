@@ -2,13 +2,13 @@
 
 Hue Chess is a chrome extension that adds gamification elements to Lichess. With this extension enabled, you'll earn **Hue Points** every time you win a game. These points slightly change the color of your chessboard and are also used to track your progress throughout each level.
 
-## Discover Perks
+### Discover Perks
 Hue Chess features a **Perk System** that boosts the number of Hue Points you earn for every win in exchange for completing specific challenges on Lichess. As you progress and gain levels in Hue Chess, you'll unlock new perks that provide different ways to accumulate even more Hue Points for your victories.
 
-## Level Up with Hue Points
+### Level Up with Hue Points
 Each level requires 100 Hue Points, and every level features a unique chessboard theme. Journey through 25 distinct levels, discover 11 unique perks, complete the Hue Chess Challenge, and earn a special trophy for your profile! (The trophy will only be visible to you.)
 
-## Get Started
+### Get Started
 To choose your perks, simply click on the **Hue Progress Bar** in the top right corner of your navigation bar.
 
 ## Features
@@ -37,9 +37,7 @@ To choose your perks, simply click on the **Hue Progress Bar** in the top right 
 
 ## Usage
 
-1. Once installed, navigate to Lichess. You will want to open the hue chess settings menu, which will allow you to select perks. At level 1, there will be 2 perks that you can select. You will unlock more perks as you level. 
-
-> The hue chess menu can be accessed via the hue-chess extension icon within the chrome extensions menu. It can also be accessed by going through Username -> Board -> click "Open Hue Chess Settings" button. (Soon this will be accessible by simply clicking on the Hue Chess xp bar that is drawn next to your username on lichess). 
+1. Once installed, navigate to Lichess. You will want to open the hue chess perk selection menu, which will allow you to select perks. You can select perks by clicking on the **Hue Progress Bar** in the top right corner of your navigation bar. At level 1, there will be 2 perks that you can select. You will unlock more perks as you level up in Hue Chess. 
 
 2. Once you have selected your perks, go play some games! When you win, you'll now earn hue points! 
 
