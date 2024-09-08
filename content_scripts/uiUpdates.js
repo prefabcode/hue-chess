@@ -598,3 +598,27 @@ const formatTime = (seconds) => {
   const remainingSeconds = seconds % 60;
   return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
 };
+
+export const resetUserMenuState = async () => {
+  try {
+    const userTag = await waitForElm('#user_tag');
+    userTag.click();
+
+    const dasherApp = document.getElementById('dasher_app');
+    if (!dasherApp) {
+      console.log("Dasher app not found");
+      return;
+    }
+
+    const backButton = dasherApp.querySelector('.head');
+    if (backButton) {
+      backButton.click();
+      console.log('Menu was not in default state, clicked back button to reset');
+    } else {
+      console.log('Menu is already in default state');
+    }
+    userTag.click();
+  } catch (error) {
+    console.error('An error occurred while resetting the user menu state:', error);
+  }
+};
