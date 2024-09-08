@@ -236,4 +236,19 @@
   margin: 0;
 }
 
+#onboarding-modal {
+  width: 600px;
+  z-index: 1000;
+  top: 40%;
+}
+
+#onboarding-modal h3 {
+  font-size: 22px;
+  margin-bottom: 7px;
+}
+
+#onboarding-modal h2 {
+  margin-bottom: 10px;
+}
+
 

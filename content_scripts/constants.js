@@ -18,11 +18,12 @@ export const PREPARATION_TIME = 300;
 
 export const TIPS = [
   "You can earn a bonus 1-2 hue points per win if you have 'Show Player Ratings' turned off in the lichess settings. This can be configured under Lichess preferences, display settings section.",
-  "At level 15, you will unlock an extra perk slot.",
+  "At level 12, you will unlock an extra perk slot.",
   "You can access the Hue Chess settings menu by clicking on your chrome browser hue chess extension icon. The settings menu contains additional options for the hue chess extension.",
   "Got feedback? Let us know on the Hue Chess discord at: insert-url-here.",
   "In the medieval era, it was not uncommon for kings to actively participate in battles and lead their armies into war.",
-  "Some perks may not function with Lichess variants due to incompatibilities. The following perks are affected: Opportunist, Equalizer, Endgame Specialist. These perks will work in the Chess960 variant, as it is similar to standard chess."
+  "Some perks may not function with Lichess variants due to incompatibilities. The following perks are affected: Opportunist, Equalizer, Endgame Specialist. These perks will work in the Chess960 variant, as it is similar to standard chess.",
+  "Wins in slower time controls award more hue points than wins in shorter time controls."
 ];
 
 export const PERK_DISPLAY_NAMES = {
