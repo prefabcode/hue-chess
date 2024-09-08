@@ -236,18 +236,18 @@
   margin: 0;
 }
 
-#onboarding-modal {
+#hue-onboarding-modal {
   width: 600px;
   z-index: 1000;
   top: 40%;
 }
 
-#onboarding-modal h3 {
+#hue-onboarding-modal h3 {
   font-size: 22px;
   margin-bottom: 7px;
 }
 
-#onboarding-modal h2 {
+#hue-onboarding-modal h2 {
   margin-bottom: 10px;
 }
 

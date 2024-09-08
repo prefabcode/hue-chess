@@ -5,15 +5,13 @@ import { checkUrlAndStartMonitoring } from './gameMonitoring.js';
 function createOnboardingModal() {
   // Create the dialog element
   const dialog = document.createElement('dialog');
-  dialog.id = 'onboarding-modal';
-  //dialog.classList.add('scrollable', 'dialog-content');
- 
-
+  dialog.id = 'hue-onboarding-modal';
+  
   // Create the content for the dialog
   const content = document.createElement('div');
   content.innerHTML = `
     <div class="close-button-anchor">
-      <button id="close-onboarding-modal-x" class="close-button" data-icon="" aria-label="Close"></button>
+      <button id="close-hue-onboarding-modal-x" class="close-button" data-icon="" aria-label="Close"></button>
     </div>
     <div class="scrollable dialog-content">
       <h2>Welcome to Hue Chess!</h2>
@@ -28,7 +26,7 @@ function createOnboardingModal() {
       <h3>Get Started</h3>
       <p>To choose your perks, simply click on the <strong>Hue Progress Bar</strong> in the top right corner of your navigation bar.</p>
       
-      <button id="close-onboarding-modal" class="button" style="margin-top: 20px;">Get Started!</button>
+      <button id="close-hue-onboarding-modal" class="button" style="margin-top: 20px;">Get Started!</button>
     </div>
   `;
 
@@ -40,12 +38,12 @@ function createOnboardingModal() {
   dialog.showModal();
 
   // Add event listener to close the dialog
-  document.getElementById('close-onboarding-modal').addEventListener('click', () => {
+  document.getElementById('close-hue-onboarding-modal').addEventListener('click', () => {
     dialog.close();
     dialog.remove();
   });
 
-  document.getElementById('close-onboarding-modal-x').addEventListener('click', () => {
+  document.getElementById('close-hue-onboarding-modal-x').addEventListener('click', () => {
     dialog.close();
     dialog.remove();
   });
