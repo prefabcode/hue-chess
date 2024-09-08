@@ -17,10 +17,20 @@ function createOnboardingModal() {
   const content = document.createElement('div');
   content.innerHTML = `
     <h2>Welcome to Hue Chess!</h2>
-    <p>Here you can add your onboarding text explaining the features and purpose of th
-extension.</p>
-    <button id="close-onboarding-modal" class="button" style="margin-top: 20px;">Get
-Started</button>
+    <p>Hue Chess is a fun gamification extension for Lichess.org that transforms your chess experience. With this extension, you’ll earn <strong>Hue Points</strong> every time you win a game. These points will not only track your progress but also slightly change the color of your chessboard, giving you a unique visual experience!</p>
+    
+    <h3>Level Up with Hue Points</h3>
+    <p>Each level requires 100 Hue Points, and every time you level up, you’ll unlock a new chessboard theme to enhance your gameplay.</p>
+    
+    <h3>Discover Exciting Perks</h3>
+    <p>Hue Chess also features a <strong>Perk System</strong>! Perks boost your Hue Point generation for every win, but to earn them, you’ll need to complete specific challenges on Lichess. As you progress and gain levels, new perks will unlock, adding even more fun to your games!</p>
+    
+    <h3>Get Started</h3>
+    <p>To choose your perks, simply click on the <strong>Hue Progress Bar</strong> in the navigation.</p>
+    
+    <p>Let’s make your chess journey more colorful with Hue Chess!</p>
+    
+    <button id="close-onboarding-modal" class="button" style="margin-top: 20px;">Get Started</button>
   `;
 
   // Append the content to the dialog
@@ -40,7 +50,7 @@ Started</button>
 export const initializeExtension = async () => {
   console.log("Initializing extension for the first time...");
   await resetUserMenuState();
-  createOnboardingModal();
+  // createOnboardingModal();
   // Click the user tag to open the menu
   const userTag = document.getElementById('user_tag');
   userTag.click();
@@ -154,7 +164,7 @@ export const init = async () => {
 
   updateProgressBarTooltip();
   monitorBoardDiv();
-
+  createOnboardingModal();
   await checkUrlAndStartMonitoring();
   let currentUrl = window.location.href;
 
