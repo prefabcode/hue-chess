@@ -1,9 +1,9 @@
-import { updateProgressBar, monitorBoardDiv, waitForElm, updateProgressBarTooltip } from './uiUpdates.js';
+import { updateProgressBar, monitorBoardDiv, waitForElm, updateProgressBarTooltip, resetUserMenuState } from './uiUpdates.js';
 import { checkUrlAndStartMonitoring } from './gameMonitoring.js';
 
 export const initializeExtension = async () => {
   console.log("Initializing extension for the first time...");
-
+  await resetUserMenuState();
   // Click the user tag to open the menu
   const userTag = document.getElementById('user_tag');
   userTag.click();

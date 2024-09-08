@@ -1,4 +1,4 @@
-import { updateProgressBar, waitForElm, updateProgressBarTooltip } from './uiUpdates.js';
+import { updateProgressBar, waitForElm, updateProgressBarTooltip, resetUserMenuState } from './uiUpdates.js';
 import { getActivePerks, setAllowGladiatorPerkRemoval, resetGladiatorLossBuffer, setPlayedOpenings } from './storageManagement.js';
 import { calculatePerkBonuses } from './perks.js';
 
@@ -49,7 +49,9 @@ export const incrementHue = async (game) => {
 
   incrementValue += perkBonus;
 
-  waitForElm('#user_tag').then((userTag) => {
+  try {
+    await resetUserMenuState();
+    const userTag = await waitForElm('#user_tag');
     userTag.click();
 
     const dasherApp = document.getElementById('dasher_app');
@@ -58,76 +60,86 @@ export const incrementHue = async (game) => {
       return;
     }
 
-    waitForElm('.subs').then((subsDiv) => {
-      console.log('Subs div detected');
-      const boardButton = Array.from(subsDiv.querySelectorAll('button')).find(button => button.textContent === 'Board');
-      if (!boardButton) {
-        console.log("Board button not found");
-        return;
+    const subsDiv = await waitForElm('.subs');
+     console.log('Subs div detected');
+     const subButtons = subsDiv.querySelectorAll('button.sub');
+    if (subButtons.length < 5) {
+      console.error(`Error: expected at least 5 buttons in menu container, but found ${subButtons.length}`);
+      return;
+    }
+    const boardButton = subButtons[3]; // currently binded to Board Button
+
+    boardButton.click();
+    console.log("Clicked board button");
+
+    const boardHueDiv = await waitForElm('.board-hue');
+    const boardBackButton = await waitForElm('.head');
+    const hueSlider = boardHueDiv.querySelector('input.range');
+    if (!hueSlider) {
+      console.log('Hue slider not found');
+      return;
+    }
+
+    // Get the current hue value
+    let currentValue = parseInt(hueSlider.value, 10);
+    let newValue = currentValue + incrementValue;
+    console.log(`Current hue value: ${currentValue}, New hue value: ${newValue}`);
+
+    if (newValue >= 100) {
+      let carryOverValue = newValue - 100;
+      console.log('Max hue reached, resetting to 0 and changing board');
+
+      // Reset playedOpenings array
+      await setPlayedOpenings([]);
+      updateProgressBarTooltip();
+      console.log('Played openings reset for new level');
+
+      // Change to the next board
+      const boardList = dasherApp.querySelector('.list');
+      const activeButton = boardList.querySelector('button.active');
+      const nextButton = activeButton.nextElementSibling;
+      if (nextButton) {
+        nextButton.click();
+        console.log('Clicked next board button');
       }
 
-      boardButton.click();
-      console.log("Clicked board button");
-
-      waitForElm('.board-hue').then(async (boardHueDiv) => {
-        const hueSlider = boardHueDiv.querySelector('input.range');
-        if (!hueSlider) {
-          console.log("Hue slider not found");
-          return;
-        }
-
-        // Get the current hue value
-        let currentValue = parseInt(hueSlider.value, 10);
-        let newValue = currentValue + incrementValue;
-        console.log(`Current hue value: ${currentValue}, New hue value: ${newValue}`);
-
-        if (newValue >= 100) {
-          let carryOverValue = newValue - 100;
-          console.log("Max hue reached, resetting to 0 and changing board");
-
-          // Reset playedOpenings array
-          await setPlayedOpenings([]);
-          updateProgressBarTooltip();
-          console.log("Played openings reset for new level");
-
-          // Change to the next board
-          const boardList = dasherApp.querySelector('.list');
-          const activeButton = boardList.querySelector('button.active');
-          const nextButton = activeButton.nextElementSibling;
-          if (nextButton) {
-            nextButton.click();
-            console.log("Clicked next board button");
-          }
-
-          // Increment completedBoards
-          chrome.storage.local.get(['completedBoards'], (result) => {
-            const completedBoards = (result.completedBoards || 0) + 1;
-            chrome.storage.local.set({ completedBoards, currentHue: carryOverValue }, () => {
-              console.log(`Completed boards incremented, now: ${completedBoards}`);
-              updateProgressBar(completedBoards, carryOverValue);
-            });
-          });
-          // allow removal of gladiator perk on level up.
-          const activePerks = await getActivePerks();
-          if (activePerks.includes('gladiator')) {
-            await resetGladiatorLossBuffer();
-            await setAllowGladiatorPerkRemoval(true);
-          }
-        } else {
-          // Update current hue in storage
-          chrome.storage.local.set({ currentHue: newValue }, () => {
-            updateProgressBar(null, newValue);
-          });
-        }
-
-        // Set the new value to the hue slider and dispatch the event
-        hueSlider.value = newValue >= 100 ? newValue - 100 : newValue;
-        hueSlider.dispatchEvent(new Event('input'));
-        console.log("Updated hue slider value");
-        userTag.click();
+      // Increment completedBoards
+      const result = await new Promise((resolve) => {
+        chrome.storage.local.get(['completedBoards'], resolve);
       });
-    });
-  });
+      const completedBoards = (result.completedBoards || 0) + 1;
+      await new Promise((resolve) => {
+        chrome.storage.local.set({ completedBoards, currentHue: carryOverValue },
+resolve);
+      });
+      console.log(`Completed boards incremented, now: ${completedBoards}`);
+      updateProgressBar(completedBoards, carryOverValue);
+
+      // Allow removal of gladiator perk on level up.
+      const activePerks = await getActivePerks();
+      if (activePerks.includes('gladiator')) {
+        await resetGladiatorLossBuffer();
+        await setAllowGladiatorPerkRemoval(true);
+      }
+    } else {
+      // Update current hue in storage
+      await new Promise((resolve) => {
+        chrome.storage.local.set({ currentHue: newValue }, resolve);
+      });
+      updateProgressBar(null, newValue);
+    }
+
+    // Set the new value to the hue slider and dispatch the event
+    hueSlider.value = newValue >= 100 ? newValue - 100 : newValue;
+    hueSlider.dispatchEvent(new Event('input'));
+    console.log('Updated hue slider value');
+    boardBackButton.click();
+    userTag.click();
+
+  } catch (error) {
+    console.error('An error occurred in incrementHue function', error);
+  }
+    
 };
 
 export const applyGladiatorPenalty = async () => {
