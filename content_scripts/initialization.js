@@ -1,9 +1,58 @@
 import { updateProgressBar, monitorBoardDiv, waitForElm, updateProgressBarTooltip, resetUserMenuState } from './uiUpdates.js';
 import { checkUrlAndStartMonitoring } from './gameMonitoring.js';
 
+
+function createOnboardingModal() {
+  // Create the dialog element
+  const dialog = document.createElement('dialog');
+  dialog.id = 'hue-onboarding-modal';
+  
+  // Create the content for the dialog
+  const content = document.createElement('div');
+  content.innerHTML = `
+    <div class="close-button-anchor">
+      <button id="close-hue-onboarding-modal-x" class="close-button" data-icon="" aria-label="Close"></button>
+    </div>
+    <div class="scrollable dialog-content">
+      <h2>Welcome to Hue Chess!</h2>
+      <p>Hue Chess adds gamification elements to Lichess. With this extension enabled, you'll earn <strong>Hue Points</strong> every time you win a game. These points slightly change the color of your chessboard, and are also used to track your progress throughout each level. </p>
+      
+      <h3>Discover Exciting Perks</h3>
+      <p>Hue Chess features a <strong>Perk System</strong> that boosts the number of Hue Points you earn for every win, in exchange for completing specific challenges on Lichess. As you progress and gain levels in Hue Chess, you'll unlock new perks that provide different ways to accumulate even more Hue Points for your victories!</p>
+      
+      <h3>Level Up with Hue Points</h3>
+      <p>Each level requires 100 Hue Points, and every level features a unique chessboard theme. Journey through 25 distinct levels, discover 11 unique perks, complete the Hue Chess Challenge, and earn a special trophy for your profile page! (The trophy will only be visible to you.)</p>
+
+      <h3>Get Started</h3>
+      <p>To choose your perks, simply click on the <strong>Hue Progress Bar</strong> in the top right corner of your navigation bar.</p>
+      
+      <button id="close-hue-onboarding-modal" class="button" style="margin-top: 20px;">Get Started!</button>
+    </div>
+  `;
+
+  // Append the content to the dialog
+  dialog.appendChild(content);
+  document.body.appendChild(dialog);
+
+  // Show the dialog
+  dialog.showModal();
+
+  // Add event listener to close the dialog
+  document.getElementById('close-hue-onboarding-modal').addEventListener('click', () => {
+    dialog.close();
+    dialog.remove();
+  });
+
+  document.getElementById('close-hue-onboarding-modal-x').addEventListener('click', () => {
+    dialog.close();
+    dialog.remove();
+  });
+}  
+
 export const initializeExtension = async () => {
   console.log("Initializing extension for the first time...");
   await resetUserMenuState();
+  createOnboardingModal();
   // Click the user tag to open the menu
   const userTag = document.getElementById('user_tag');
   userTag.click();
@@ -117,7 +166,6 @@ export const init = async () => {
 
   updateProgressBarTooltip();
   monitorBoardDiv();
-
   await checkUrlAndStartMonitoring();
   let currentUrl = window.location.href;
 
