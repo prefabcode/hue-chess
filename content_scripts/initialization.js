@@ -17,13 +17,13 @@ function createOnboardingModal() {
     </div>
     <div class="scrollable dialog-content">
       <h2>Welcome to Hue Chess!</h2>
-      <p>Hue Chess adds gamification elements to lichess. With this extension enabled, you'll earn Hue Points every time you win a game. These points slightly change the color of your chessboard, and are also used to track your progress throughout a level. </p>
+      <p>Hue Chess adds gamification elements to Lichess. With this extension enabled, you'll earn <strong>Hue Points</strong> every time you win a game. These points slightly change the color of your chessboard, and are also used to track your progress throughout each level. </p>
       
       <h3>Discover Exciting Perks</h3>
-      <p>Hue Chess also features a <strong>Perk System</strong>! Perks boost the amount of Hue Points you earn for every win, in exchange for completing specific challenges on lichess. As you progress and gain levels in Hue Chess, you'll unlock new perks that will offer new and unique ways to accumulate even more Hue Points for your wins!</p>
+      <p>Hue Chess features a <strong>Perk System</strong> that boosts the number of Hue Points you earn for every win, in exchange for completing specific challenges on Lichess. As you progress and gain levels in Hue Chess, you'll unlock new perks that provide different ways to accumulate even more Hue Points for your victories!</p>
       
       <h3>Level Up with Hue Points</h3>
-      <p>Each level requires 100 Hue Points, and every level features a unique chessboard theme. Journey through 25 unique levels, discover 11 cool perks, complete the Hue Chess Challenge, and earn a cool and unique trophy on your profile! (trophy will only be visible for you)</p>
+      <p>Each level requires 100 Hue Points, and every level features a unique chessboard theme. Journey through 25 distinct levels, discover 11 unique perks, complete the Hue Chess Challenge, and earn a special trophy for your profile page! (The trophy will only be visible to you.)</p>
 
       <h3>Get Started</h3>
       <p>To choose your perks, simply click on the <strong>Hue Progress Bar</strong> in the top right corner of your navigation bar.</p>
