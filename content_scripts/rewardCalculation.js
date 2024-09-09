@@ -1,5 +1,5 @@
-import { updateProgressBar, waitForElm, updateProgressBarTooltip, resetUserMenuState } from './uiUpdates.js';
-import { getActivePerks, setAllowGladiatorPerkRemoval, resetGladiatorLossBuffer, setPlayedOpenings } from './storageManagement.js';
+import { updateProgressBar, waitForElm, updateProgressBarTooltip, resetUserMenuState, createChallengeCompletionModal } from './uiUpdates.js';
+import { getActivePerks, setAllowGladiatorPerkRemoval, resetGladiatorLossBuffer, setPlayedOpenings, resetProgress } from './storageManagement.js';
 import { calculatePerkBonuses } from './perks.js';
 
 
@@ -94,6 +94,23 @@ export const incrementHue = async (game) => {
       updateProgressBarTooltip();
       console.log('Played openings reset for new level');
 
+      // Increment completedBoards
+      const result = await new Promise((resolve) => {
+        chrome.storage.local.get(['completedBoards', 'prestige'], resolve);
+      });
+      let completedBoards = (result.completedBoards || 0) + 1;
+      let prestige = result.prestige || 0;
+
+      if (completedBoards >= 25) {
+        prestige += 1;
+        console.log(`Prestige level increased to: ${prestige}, and resetting to level 1`);
+        boardBackButton.click();
+        userTag.click();
+        resetProgress(prestige);
+        createChallengeCompletionModal();
+        return;
+      }
+
       // Change to the next board
       const boardList = dasherApp.querySelector('.list');
       const activeButton = boardList.querySelector('button.active');
@@ -102,12 +119,7 @@ export const incrementHue = async (game) => {
         nextButton.click();
         console.log('Clicked next board button');
       }
-
-      // Increment completedBoards
-      const result = await new Promise((resolve) => {
-        chrome.storage.local.get(['completedBoards'], resolve);
-      });
-      const completedBoards = (result.completedBoards || 0) + 1;
+      
       await new Promise((resolve) => {
         chrome.storage.local.set({ completedBoards, currentHue: carryOverValue },
 resolve);

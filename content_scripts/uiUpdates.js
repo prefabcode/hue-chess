@@ -282,12 +282,19 @@ export const openPerksModal = async () => {
 }
 
 export const updatePerksModalContent = async () => {
-  chrome.storage.local.get(['completedBoards', 'currentHue', 'activePerks'], (result) => {
+  chrome.storage.local.get(['completedBoards', 'currentHue', 'activePerks', 'prestige'], (result) => {
     const playerLevel = (result.completedBoards !== null ? result.completedBoards : 0) + 1;
     const huePoints = `${result.currentHue || 0}/100`;
+    const prestige = (result.prestige || 0);
 
     document.getElementById('current-level').innerText = playerLevel;
     document.getElementById('hue-points').innerText = huePoints;
+
+    if (prestige) {
+      document.getElementById('prestige-points').innerText = prestige;
+      const prestigeContainer = document.getElementById('prestige-level');
+      prestigeContainer.style.display = 'block';
+    }
 
     // Set active perks and handle locked perks
     const activePerks = result.activePerks || [];
@@ -424,11 +431,12 @@ export const updateUIAfterImport = (extensionState) => {
     }
 
     waitForElm('.subs').then((subsDiv) => {
-      const boardButton = Array.from(subsDiv.querySelectorAll('button')).find(button => button.textContent === 'Board');
-      if (!boardButton) {
-        console.log("Board button not found");
+      const subButtons = subsDiv.querySelectorAll('button.sub');
+      if (subButtons.length < 5) {
+        console.error(`Error: expected at least 5 buttons in menu container, but found ${subButtons.length}`);
         return;
       }
+      const boardButton = subButtons[3]; // currently binded to Board Button
 
       boardButton.click();
       console.log("Clicked board button");
@@ -622,3 +630,48 @@ export const resetUserMenuState = async () => {
     console.error('An error occurred while resetting the user menu state:', error);
   }
 };
+
+
+export const createChallengeCompletionModal = () => {
+  // Create the dialog element
+  const dialog = document.createElement('dialog');
+  dialog.id = 'hue-challenge-completion-modal';
+
+  // Create the content for the dialog
+  const content = document.createElement('div');
+  content.innerHTML = `
+    <div class="close-button-anchor">
+      <button id="close-hue-challenge-completion-modal-x" class="close-button" data-icon="" aria-label="Close"></button>
+    </div>
+    <div class="scrollable dialog-content">
+      <h2>Congratulations!</h2>
+      <p>You've successfully completed the Hue Chess Challenge! 🏆</p>
+      
+      <h3>You're a Hue Chess Champion!</h3>
+      <p>As a reward for completing the challenge, a unique trophy has been added to your profile. This trophy is stackable, so each time you beat Hue Chess, you'll get a new one (with a unique twist thrown in)!</p>
+      
+      <h3>What’s Next?</h3>
+      <p>In addition to your trophy, the number of times you've beaten Hue Chess will now display in the perks selection. Thank you for playing Hue Chess!</p>
+      
+      <button id="close-hue-challenge-completion-modal" class="button" style="margin-top: 20px;">Continue Playing</button>
+    </div>
+  `;
+
+  // Append the content to the dialog
+  dialog.appendChild(content);
+  document.body.appendChild(dialog);
+
+  // Show the dialog
+  dialog.showModal();
+
+  // Add event listener to close the dialog
+  document.getElementById('close-hue-challenge-completion-modal').addEventListener('click', () => {
+    dialog.close();
+    dialog.remove();
+  });
+
+  document.getElementById('close-hue-challenge-completion-modal-x').addEventListener('click', () => {
+    dialog.close();
+    dialog.remove();
+  });
+}

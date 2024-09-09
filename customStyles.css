@@ -220,6 +220,18 @@
   font-size: 1em;
 }
 
+#hue-chess-perks-modal .progress-info {
+  margin-bottom: 20px;
+}
+
+#hue-chess-perks-modal .progress-info p {
+  margin-bottom: 8px;
+}
+
+#hue-chess-perks-modal #perks-header {
+  font-size: 18px;
+}
+
 #hue-chess-perks-modal .flash {
   margin: 1em 0 2em 0;
   padding: 1em 2em;
@@ -236,18 +248,18 @@
   margin: 0;
 }
 
-#hue-onboarding-modal {
+#hue-onboarding-modal, #hue-challenge-completion-modal {
   width: 600px;
   z-index: 1000;
   top: 40%;
 }
 
-#hue-onboarding-modal h3 {
+#hue-onboarding-modal h3, #hue-challenge-completion-modal h3 {
   font-size: 22px;
   margin-bottom: 7px;
 }
 
-#hue-onboarding-modal h2 {
+#hue-onboarding-modal h2, #hue-challenge-completion-modal h2 {
   margin-bottom: 10px;
 }
 
