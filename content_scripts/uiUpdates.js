@@ -282,12 +282,19 @@ export const openPerksModal = async () => {
 }
 
 export const updatePerksModalContent = async () => {
-  chrome.storage.local.get(['completedBoards', 'currentHue', 'activePerks'], (result) => {
+  chrome.storage.local.get(['completedBoards', 'currentHue', 'activePerks', 'prestige'], (result) => {
     const playerLevel = (result.completedBoards !== null ? result.completedBoards : 0) + 1;
     const huePoints = `${result.currentHue || 0}/100`;
+    const prestige = (result.prestige || 0);
 
     document.getElementById('current-level').innerText = playerLevel;
     document.getElementById('hue-points').innerText = huePoints;
+
+    if (prestige) {
+      document.getElementById('prestige-points').innerText = prestige;
+      const prestigeContainer = document.getElementById('prestige-level');
+      prestigeContainer.style.display = 'block';
+    }
 
     // Set active perks and handle locked perks
     const activePerks = result.activePerks || [];

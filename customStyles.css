@@ -220,6 +220,18 @@
   font-size: 1em;
 }
 
+#hue-chess-perks-modal .progress-info {
+  margin-bottom: 20px;
+}
+
+#hue-chess-perks-modal .progress-info p {
+  margin-bottom: 8px;
+}
+
+#hue-chess-perks-modal #perks-header {
+  font-size: 18px;
+}
+
 #hue-chess-perks-modal .flash {
   margin: 1em 0 2em 0;
   padding: 1em 2em;
