@@ -1,5 +1,5 @@
 import { updateProgressBar, waitForElm, updateProgressBarTooltip, resetUserMenuState } from './uiUpdates.js';
-import { getActivePerks, setAllowGladiatorPerkRemoval, resetGladiatorLossBuffer, setPlayedOpenings } from './storageManagement.js';
+import { getActivePerks, setAllowGladiatorPerkRemoval, resetGladiatorLossBuffer, setPlayedOpenings, resetProgress } from './storageManagement.js';
 import { calculatePerkBonuses } from './perks.js';
 
 
@@ -102,29 +102,25 @@ export const incrementHue = async (game) => {
       let prestige = result.prestige || 0;
 
       if (completedBoards >= 25) {
-        completedBoards = 0;
         prestige += 1;
-        
-        console.log(`Prestige level increased to: ${prestige}`);
-        // reset to brown board theme
-        const brownBoardButton = boardList.querySelector('button[title="brown"]');
-        if (!brownBoardButton) {
-          console.log("Brown board button not found");
-          return;
-        }
-        brownBoardButton.click();
-      } else {
-        // Change to the next board
-        const boardList = dasherApp.querySelector('.list');
-        const activeButton = boardList.querySelector('button.active');
-        const nextButton = activeButton.nextElementSibling;
-        if (nextButton) {
-          nextButton.click();
-          console.log('Clicked next board button');
-        }
+        console.log(`Prestige level increased to: ${prestige}, and resetting to level 1`);
+        boardBackButton.click();
+        userTag.click();
+        resetProgress(prestige);
+        return;
       }
+
+      // Change to the next board
+      const boardList = dasherApp.querySelector('.list');
+      const activeButton = boardList.querySelector('button.active');
+      const nextButton = activeButton.nextElementSibling;
+      if (nextButton) {
+        nextButton.click();
+        console.log('Clicked next board button');
+      }
+      
       await new Promise((resolve) => {
-        chrome.storage.local.set({ completedBoards, currentHue: carryOverValue, prestige },
+        chrome.storage.local.set({ completedBoards, currentHue: carryOverValue },
 resolve);
       });
       console.log(`Completed boards incremented, now: ${completedBoards}`);

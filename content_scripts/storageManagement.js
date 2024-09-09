@@ -47,16 +47,17 @@ export const confirmResetProgress = () => {
   }
 };
 
-export const resetProgress = () => {
+export const resetProgress = (prestige = 0) => {
   const resetState = {
     initialized: true,
     completedBoards: 0,
     currentHue: 0,
-    activePerks: []
+    activePerks: [],
+    prestige,
   };
 
   chrome.storage.local.set(resetState, () => {
-    console.log('Progress has been reset.');
+    console.log(`Progress has been reset. Setting Prestige to: ${prestige}`);
     updateUIAfterImport(resetState);
   });
 };
