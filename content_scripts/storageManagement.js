@@ -230,7 +230,6 @@ export const setPlayedOpenings = (openings) => {
   });
 };
 
-// Get the prestige level
 export const getPrestige = () => {
   return new Promise((resolve) => {
     chrome.storage.local.get(['prestige'], (result) => {
@@ -239,7 +238,6 @@ export const getPrestige = () => {
   });
 };
 
-// Set the prestige level
 export const setPrestige = (prestige) => {
   return new Promise((resolve) => {
     chrome.storage.local.set({ prestige }, () => {
