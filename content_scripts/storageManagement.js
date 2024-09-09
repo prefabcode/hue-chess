@@ -39,9 +39,10 @@ export const importExtensionState = () => {
 };
 
 export const confirmResetProgress = () => {
-  const confirmReset = confirm('Are you sure you want to reset your progress? This action cannot be undone.');
+  const confirmReset = confirm('Are you sure you want to reset your progress? This action cannot be undone. (Prestige trophy will not be reset, to do that you have to re-install hue-chess extension)');
   if (confirmReset) {
-    resetProgress();
+    const prestige = getPrestige();
+    resetProgress(prestige);
     updatePerksModalContent();
     updatePerksHeader();
   }
@@ -224,6 +225,25 @@ export const setPlayedOpenings = (openings) => {
   return new Promise((resolve) => {
     chrome.storage.local.set({ playedOpenings: openings }, () => {
       console.log("Played openings updated:", openings);
+      resolve();
+    });
+  });
+};
+
+// Get the prestige level
+export const getPrestige = () => {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(['prestige'], (result) => {
+      resolve(result.prestige || 0);
+    });
+  });
+};
+
+// Set the prestige level
+export const setPrestige = (prestige) => {
+  return new Promise((resolve) => {
+    chrome.storage.local.set({ prestige }, () => {
+      console.log("Prestige level set to:", prestige);
       resolve();
     });
   });
