@@ -237,12 +237,3 @@ export const getPrestige = () => {
     });
   });
 };
-
-export const setPrestige = (prestige) => {
-  return new Promise((resolve) => {
-    chrome.storage.local.set({ prestige }, () => {
-      console.log("Prestige level set to:", prestige);
-      resolve();
-    });
-  });
-};
