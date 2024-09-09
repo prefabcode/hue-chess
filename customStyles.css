@@ -248,18 +248,18 @@
   margin: 0;
 }
 
-#hue-onboarding-modal {
+#hue-onboarding-modal, #hue-challenge-completion-modal {
   width: 600px;
   z-index: 1000;
   top: 40%;
 }
 
-#hue-onboarding-modal h3 {
+#hue-onboarding-modal h3, #hue-challenge-completion-modal h3 {
   font-size: 22px;
   margin-bottom: 7px;
 }
 
-#hue-onboarding-modal h2 {
+#hue-onboarding-modal h2, #hue-challenge-completion-modal h2 {
   margin-bottom: 10px;
 }
 

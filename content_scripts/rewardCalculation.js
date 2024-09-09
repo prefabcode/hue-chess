@@ -1,4 +1,4 @@
-import { updateProgressBar, waitForElm, updateProgressBarTooltip, resetUserMenuState } from './uiUpdates.js';
+import { updateProgressBar, waitForElm, updateProgressBarTooltip, resetUserMenuState, createChallengeCompletionModal } from './uiUpdates.js';
 import { getActivePerks, setAllowGladiatorPerkRemoval, resetGladiatorLossBuffer, setPlayedOpenings, resetProgress } from './storageManagement.js';
 import { calculatePerkBonuses } from './perks.js';
 
@@ -107,6 +107,7 @@ export const incrementHue = async (game) => {
         boardBackButton.click();
         userTag.click();
         resetProgress(prestige);
+        createChallengeCompletionModal();
         return;
       }
 
