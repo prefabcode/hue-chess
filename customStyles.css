@@ -21,6 +21,7 @@
   position: relative;
   cursor: pointer;
   transition: background 0.3s ease;
+  user-select: none;
 }
 
 .perk-box img {
