@@ -19,7 +19,7 @@ export const exportExtensionState = () => {
 export const importExtensionState = () => {
   const base64String = document.getElementById('import-input').value.trim();
   if (!base64String) {
-    alert('Please paste a valid base64 string.');
+    alert('Please paste a valid game data string.');
     return;
   }
 
