@@ -221,6 +221,10 @@
   font-size: 1em;
 }
 
+#hue-chess-perks-modal {
+  max-width: 720px;
+}
+
 #hue-chess-perks-modal .progress-info {
   margin-bottom: 20px;
 }
