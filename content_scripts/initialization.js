@@ -54,16 +54,12 @@ export const initializeExtension = async () => {
   await resetUserMenuState();
   createOnboardingModal();
   // Click the user tag to open the menu
-  const userTag = document.getElementById('user_tag');
-  userTag.click();
-
-  const dasherApp = document.getElementById('dasher_app');
-  if (!dasherApp) {
-    console.log("Dasher app not found");
-    return;
-  }
-
+  
   try {
+    const userTag = await waitForElm('#user_tag');
+    console.log('user_tag detected');
+    userTag.click();
+    
     const subsDiv = await waitForElm('.subs');
     console.log('Subs div detected');
     const subButtons = subsDiv.querySelectorAll('button.sub');
