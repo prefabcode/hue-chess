@@ -39,13 +39,13 @@ export const updateProgressBar = (completedBoards = null, hueValue = null) => {
       progressBar.style.margin = '0 10px';
       progressBar.style.flexGrow = '1';
       progressBar.style.justifyContent = 'flex-end';
-      progressBar.style.cursor = 'pointer';
 
       const progressBarContainer = document.createElement('div');
       progressBarContainer.id = 'progress-bar-container';
       progressBarContainer.style.display = 'flex';
       progressBarContainer.style.alignItems = 'center';
       progressBarContainer.style.width = '240px';
+      progressBarContainer.style.cursor = 'pointer';
 
       const progressBarOuter = document.createElement('div');
       progressBarOuter.id = 'progress-bar-outer';
@@ -77,7 +77,7 @@ export const updateProgressBar = (completedBoards = null, hueValue = null) => {
       const siteButtons = header.querySelector('.site-buttons');
       header.insertBefore(progressBar, siteButtons);
 
-      progressBar.addEventListener('click', openPerksModal);
+      progressBarContainer.addEventListener('click', openPerksModal);
 
     } else {
       const progressFill = progressBar.querySelector('#progress-fill');
