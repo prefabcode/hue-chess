@@ -1,6 +1,9 @@
 import { updateProgressBar, monitorBoardDiv, waitForElm, updateProgressBarTooltip, resetUserMenuState } from './uiUpdates.js';
 import { checkUrlAndStartMonitoring } from './gameMonitoring.js';
 
+const sleep = (milliseconds) => {
+  return new Promise(resolve => setTimeout(resolve, milliseconds));
+};
 
 function createOnboardingModal() {
   // Create the dialog element
@@ -47,19 +50,50 @@ function createOnboardingModal() {
     dialog.close();
     dialog.remove();
   });
-}  
+}
+
+async function ensureDasherAppIsPopulated(maxRetries = 5, delay = 500) {
+  let retries = 0;
+   while (retries < maxRetries) {
+     const userTag = document.querySelector('#user_tag');
+     const dasherApp = document.querySelector('#dasher_app');
+
+     if (userTag) {
+       userTag.click();
+       console.log('user_tag clicked');
+
+       // Wait for a short period to allow dasher_app to populate
+       await sleep(500);
+
+       // Check if dasher_app has been populated
+       if (dasherApp && dasherApp.children.length > 0) {
+         console.log('dasher_app populated');
+         return true;
+       }
+     }
+
+     retries++;
+     console.log(`Retrying to click user_tag and check dasher_app... Attempt
+ ${retries}`);
+     await sleep(delay);
+   }
+   console.error('Failed to populate dasher_app after multiple attempts');
+   return false;
+}
 
 export const initializeExtension = async () => {
   console.log("Initializing extension for the first time...");
   await resetUserMenuState();
   createOnboardingModal();
-  // Click the user tag to open the menu
   
   try {
-    const userTag = await waitForElm('#user_tag');
-    console.log('user_tag detected');
-    userTag.click();
-    
+    // const userTag = await waitForElm('#user_tag');
+    // console.log('user_tag detected');
+    // userTag.click();
+    // console.log('user_tag clicked');
+
+    await ensureDasherAppIsPopulated(10, 500);
+   
     const subsDiv = await waitForElm('.subs');
     console.log('Subs div detected');
     const subButtons = subsDiv.querySelectorAll('button.sub');
@@ -72,6 +106,7 @@ export const initializeExtension = async () => {
     boardButton.click();
     console.log("Clicked board button");
 
+    const userTag = await waitForElm('#user_tag');
     const boardSettingsDiv = await waitForElm('.board');
     const boardBackButton = await waitForElm('.head');
 
