@@ -237,3 +237,11 @@ export const getPrestige = () => {
     });
   });
 };
+
+export const getCompletedBoards = () => {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(['completedBoards'], (result) => {
+      resolve(result.completedBoards || 0);
+    });
+  });
+};
