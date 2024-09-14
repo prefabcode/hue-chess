@@ -52,7 +52,9 @@ function createOnboardingModal() {
   });
 }
 
-async function ensureDasherAppIsPopulated(maxRetries = 5, delay = 500) {
+// event handler that populates dasher app may not be set at the time this is called initially
+// retry to see if dasher_app menu is populated before continuing with installation. 
+async function ensureDasherAppIsPopulated(maxRetries) {
   let retries = 0;
    while (retries < maxRetries) {
      const userTag = document.querySelector('#user_tag');
@@ -62,10 +64,8 @@ async function ensureDasherAppIsPopulated(maxRetries = 5, delay = 500) {
        userTag.click();
        console.log('user_tag clicked');
 
-       // Wait for a short period to allow dasher_app to populate
        await sleep(500);
 
-       // Check if dasher_app has been populated
        if (dasherApp && dasherApp.children.length > 0) {
          console.log('dasher_app populated');
          return true;
@@ -75,7 +75,7 @@ async function ensureDasherAppIsPopulated(maxRetries = 5, delay = 500) {
      retries++;
      console.log(`Retrying to click user_tag and check dasher_app... Attempt
  ${retries}`);
-     await sleep(delay);
+     await sleep(500);
    }
    console.error('Failed to populate dasher_app after multiple attempts');
    return false;
@@ -85,15 +85,14 @@ export const initializeExtension = async () => {
   console.log("Initializing extension for the first time...");
   await resetUserMenuState();
   createOnboardingModal();
-  
-  try {
-    // const userTag = await waitForElm('#user_tag');
-    // console.log('user_tag detected');
-    // userTag.click();
-    // console.log('user_tag clicked');
 
-    await ensureDasherAppIsPopulated(10, 500);
-   
+  try {
+    const dasherResult = await ensureDasherAppIsPopulated(10);
+    if (!dasherResult) {
+      alert('Hue Chess installation failed. Try to reinstall the extension. Please report this error to prefabcode@gmail.com or make an issue on the project github: https://github.com/prefabcode/hue-chess/issues');
+      return; 
+    }
+
     const subsDiv = await waitForElm('.subs');
     console.log('Subs div detected');
     const subButtons = subsDiv.querySelectorAll('button.sub');
