@@ -32,9 +32,10 @@ export const importExtensionState = () => {
       alert('Extension state imported successfully.');
       updateUIAfterImport(extensionState);
       updatePerksModalContent();
+      updatePerksHeader();
     });
   } catch (error) {
-    alert('Invalid base64 string. Please try again.');
+    alert('Invalid game string. Please try again.');
   }
 };
 
@@ -234,6 +235,14 @@ export const getPrestige = () => {
   return new Promise((resolve) => {
     chrome.storage.local.get(['prestige'], (result) => {
       resolve(result.prestige || 0);
+    });
+  });
+};
+
+export const getCompletedBoards = () => {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(['completedBoards'], (result) => {
+      resolve(result.completedBoards || 0);
     });
   });
 };

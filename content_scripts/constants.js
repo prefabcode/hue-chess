@@ -12,8 +12,6 @@ export const materialValues = {
   'P': 1
 };
 
-export const MAX_PERKS = 2;
-
 export const PREPARATION_TIME = 300;
 
 export const TIPS = [

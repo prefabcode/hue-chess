@@ -12,9 +12,10 @@ import {
   setPreparationStatus, 
   getPlayingId,
   setSecondWindStatus,
+  getCompletedBoards,
 } from './storageManagement.js';
 import { showPerkToast } from './perks.js';
-import { levelNames, MAX_PERKS, PREPARATION_TIME, TIPS, PERK_DISPLAY_NAMES } from './constants.js';
+import { levelNames, PREPARATION_TIME, TIPS, PERK_DISPLAY_NAMES } from './constants.js';
 import tippy from 'tippy.js';
 
 const showRandomTip = () => {
@@ -261,9 +262,13 @@ export const openPerksModal = async () => {
           await setSecondWindStatus(false);
         }
 
+        const completedBoards = await getCompletedBoards();
+        const playerLevel = completedBoards + 1;
+        const maxPerks = playerLevel >= 12 ? 3 : 2;
         const activePerks = await getActivePerks();
-        if (!isActive && activePerks.length >= MAX_PERKS) {
-          alert(`You can only select up to ${MAX_PERKS} perks.`);
+
+        if (!isActive && activePerks.length >= maxPerks) {
+          alert(`You can only select up to ${maxPerks} perks.`);
         } else {
           await updateActivePerks(perk, !isActive);
           box.classList.toggle('active');
@@ -348,8 +353,11 @@ export const updatePerksModalContent = async () => {
 
 export const updatePerksHeader = async () => {
   const activePerks = await getActivePerks();
+  const completedBoards = await getCompletedBoards();
+  const playerLevel = completedBoards + 1;
+  const maxPerks = playerLevel >= 12 ? 3 : 2;
   const perksHeader = document.getElementById('perks-header');
-  perksHeader.textContent = `Select Perks: (${activePerks.length}/${MAX_PERKS})`;
+  perksHeader.textContent = `Select Perks: (${activePerks.length}/${maxPerks})`;
 }
 
 const openSettingsModal = async () => {
