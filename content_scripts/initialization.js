@@ -1,6 +1,9 @@
 import { updateProgressBar, monitorBoardDiv, waitForElm, updateProgressBarTooltip, resetUserMenuState } from './uiUpdates.js';
 import { checkUrlAndStartMonitoring } from './gameMonitoring.js';
 
+const sleep = (milliseconds) => {
+  return new Promise(resolve => setTimeout(resolve, milliseconds));
+};
 
 function createOnboardingModal() {
   // Create the dialog element
@@ -47,19 +50,49 @@ function createOnboardingModal() {
     dialog.close();
     dialog.remove();
   });
-}  
+}
+
+// event handler that populates dasher app may not be set at the time this is called initially
+// retry to see if dasher_app menu is populated before continuing with installation. 
+async function ensureDasherAppIsPopulated(maxRetries) {
+  let retries = 0;
+   while (retries < maxRetries) {
+     const userTag = document.querySelector('#user_tag');
+     const dasherApp = document.querySelector('#dasher_app');
+
+     if (userTag) {
+       userTag.click();
+       console.log('user_tag clicked');
+
+       await sleep(500);
+
+       if (dasherApp && dasherApp.children.length > 0) {
+         console.log('dasher_app populated');
+         return true;
+       }
+     }
+
+     retries++;
+     console.log(`Retrying to click user_tag and check dasher_app... Attempt
+ ${retries}`);
+     await sleep(500);
+   }
+   console.error('Failed to populate dasher_app after multiple attempts');
+   return false;
+}
 
 export const initializeExtension = async () => {
   console.log("Initializing extension for the first time...");
   await resetUserMenuState();
   createOnboardingModal();
-  // Click the user tag to open the menu
-  
+
   try {
-    const userTag = await waitForElm('#user_tag');
-    console.log('user_tag detected');
-    userTag.click();
-    
+    const dasherResult = await ensureDasherAppIsPopulated(10);
+    if (!dasherResult) {
+      alert('Hue Chess installation failed. Try to reinstall the extension. Please report this error to prefabcode@gmail.com or make an issue on the project github: https://github.com/prefabcode/hue-chess/issues');
+      return; 
+    }
+
     const subsDiv = await waitForElm('.subs');
     console.log('Subs div detected');
     const subButtons = subsDiv.querySelectorAll('button.sub');
@@ -72,6 +105,7 @@ export const initializeExtension = async () => {
     boardButton.click();
     console.log("Clicked board button");
 
+    const userTag = await waitForElm('#user_tag');
     const boardSettingsDiv = await waitForElm('.board');
     const boardBackButton = await waitForElm('.head');
 
