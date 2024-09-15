@@ -365,7 +365,7 @@ const isPreparationFulfilled = async () => {
   const preparationStatusMet = await getPreparationStatus();
   let bonus = 0;
   if (preparationStatusMet) {
-    bonus = calculateRandomBonus(5, 8);
+    bonus = calculateRandomBonus(8, 12);
     const message = `Preparation: ${bonus} points`;
     showPerkToast('preparation', message);
     await setPreparationStatus(false);
