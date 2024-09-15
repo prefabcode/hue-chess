@@ -19,16 +19,16 @@ export const getInitialRewardValue = (game) => {
       rewardRange = [1, 3];
     } else if (estimatedDuration < 179) {
       gameType = 'Bullet';
-      rewardRange = [1, 3];
+      rewardRange = [2, 4];
     } else if (estimatedDuration < 479) {
       gameType = 'Blitz';
-      rewardRange = [3, 6];
+      rewardRange = [4, 7];
     } else if (estimatedDuration < 1499) {
       gameType = 'Rapid';
-      rewardRange = [6, 10];
+      rewardRange = [7, 11];
     } else {
       gameType = 'Classical';
-      rewardRange = [10, 15];
+      rewardRange = [12, 16];
     }
 
     const [min, max] = rewardRange;
