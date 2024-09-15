@@ -46,6 +46,10 @@ export function showPerkToast(perkId, message) {
   }).showToast();
 }
 
+const calculateRandomBonus = (min, max) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
 const isBerzerkerFulfilled = (userName, game) => {
   const whitePlayer = game.tags.White;
   const blackPlayer = game.tags.Black;
@@ -110,7 +114,7 @@ const isBerzerkerFulfilled = (userName, game) => {
   const totalTimeAllowed = initialTime;
 
   if (remainingTimeInSeconds >= totalTimeAllowed / 2) {
-    const bonus = Math.floor(Math.random() * (8 - 6 + 1)) + 6;
+    const bonus = calculateRandomBonus(7, 9);
     console.log(`Berzerker bonus applied: ${bonus}`);
     const message = `Berzerker: ${bonus} points`;
     showPerkToast('berzerker', message);
@@ -123,19 +127,19 @@ const isGladiatorFulfilled = (initialIncrementValue, gameType) => {
   let bonus = 0;
   switch (gameType) {
     case 'Bullet':
-      bonus = (5 - initialIncrementValue) + Math.floor(Math.random() * 3); // Ensure total is 5-7
+      bonus = calculateRandomBonus(6 - initialIncrementValue, 8 - initialIncrementValue);
       break;
     case 'Blitz':
-      bonus = (8 - initialIncrementValue) + Math.floor(Math.random() * 3); // Ensure total is 8-10
+      bonus = calculateRandomBonus(9 - initialIncrementValue, 11 - initialIncrementValue);
       break;
     case 'Rapid':
-      bonus = (11 - initialIncrementValue) + Math.floor(Math.random() * 4); // Ensure total is 11-14
+      bonus = calculateRandomBonus(12 - initialIncrementValue, 15 - initialIncrementValue);
       break;
     case 'Classical':
-      bonus = (15 - initialIncrementValue) + Math.floor(Math.random() * 4); // Ensure total is 15-18
+      bonus = calculateRandomBonus(16 - initialIncrementValue, 19 - initialIncrementValue);
       break;
     case 'Unknown':
-      bonus = (8 - initialIncrementValue) + Math.floor(Math.random() * 3); // Ensure total is 8-10, for variants
+      bonus = calculateRandomBonus(9 - initialIncrementValue, 11 - initialIncrementValue);
       break;
   }
   const message = `Gladiator: ${bonus} points`;
@@ -180,7 +184,7 @@ const isBongcloudFulfilled = (userName, game) => {
 
   if (secondMove.startsWith('K')) {
     console.log('King move detected on move 2. Bongcloud bonus applied');
-    const bonus = Math.floor(Math.random() * (2 - 1 + 1)) + 1;
+    const bonus = calculateRandomBonus(3, 4);
     console.log(`Bongcloud bonus points: ${bonus}`);
     const message = `Bongcloud: ${bonus} points`;
     showPerkToast('bongcloud', message);
@@ -196,7 +200,7 @@ const isGambiteerFulfilled = (game) => {
   const opening = game.tags.Opening || '';
   if (opening.toLowerCase().includes('gambit')) {
     console.log('Gambit detected. Gambiteer bonus applied');
-    const bonus = Math.floor(Math.random() * (4 - 2 + 1)) + 2; // Random number between 2 and 4
+    const bonus = calculateRandomBonus(3, 5);
     console.log(`Gambiteer bonus points: ${bonus}`);
     const message = `Gambiteer: ${bonus} points`;
     showPerkToast('gambiteer', message);
@@ -214,7 +218,7 @@ const isEndgameSpecialistFulfilled = (game) => {
   }
   const moves = game.moves;
   if (containsEndgame(moves)) {
-   const bonus = Math.floor(Math.random() * (4 - 2 + 1)) + 2;
+   const bonus = calculateRandomBonus(3, 5);
    console.log(`Endgame bonus points: ${bonus}`);
    const message = `Endgame Specialist: ${bonus} points`;
    showPerkToast('endgame-specialist', message);
@@ -226,7 +230,7 @@ const isEndgameSpecialistFulfilled = (game) => {
 const isHueFocusFulfilled = () => {
   const hasNoRatingClass = document.body.classList.contains('no-rating');
   if (hasNoRatingClass) {
-    const bonus = Math.floor(Math.random() * (2 - 1 + 1)) + 1;;
+    const bonus = calculateRandomBonus(2, 3);
     const message = `Hue Focus: ${bonus} points`;
     showPerkToast('hue-focus', message); 
     console.log('body has no-rating class, adding 1 hue point to bonus'); 
@@ -241,11 +245,11 @@ const isHotStreakFulfilled = async () => {
   let bonus = 0;
 
   if (winningStreak === 1) {
-      bonus = Math.floor(Math.random() * (2 - 1 + 1)) + 1;
+      bonus = calculateRandomBonus(2, 3);
   } else if (winningStreak === 2) {
-      bonus = Math.floor(Math.random() * (4 - 3 + 1)) + 3;
+      bonus = calculateRandomBonus(4, 5);
   } else if (winningStreak >= 3) {
-      bonus = Math.floor(Math.random() * (7 - 5 + 1)) + 5;
+      bonus = calculateRandomBonus(6, 8);
   }
   const message = `Hot Streak: ${bonus} points`;
   showPerkToast('hot-streak', message);
@@ -361,7 +365,7 @@ const isPreparationFulfilled = async () => {
   const preparationStatusMet = await getPreparationStatus();
   let bonus = 0;
   if (preparationStatusMet) {
-    bonus = Math.floor(Math.random() * (7 - 4 + 1)) + 4;
+    bonus = calculateRandomBonus(5, 8);
     const message = `Preparation: ${bonus} points`;
     showPerkToast('preparation', message);
     await setPreparationStatus(false);
@@ -373,7 +377,7 @@ const isSecondWindFulfilled = async () => {
   const secondWindStatus = await getSecondWindStatus();
   if (secondWindStatus) {
     await setSecondWindStatus(false);
-    const bonus = Math.floor(Math.random() * (3 - 2 + 1)) + 2;
+    const bonus = calculateRandomBonus(2, 3);
     const message = `Second Wind: ${bonus} points`;
     showPerkToast('second-wind', message);
     return bonus;
@@ -391,13 +395,13 @@ const isVersatilityFulfilled = async (game) => {
 
     let bonus = 0;
     if (playedOpenings.length <= 2) {
-      bonus = Math.floor(Math.random() * (2 - 1 + 1)) + 1; // Random number between 1 and 2
+      bonus = calculateRandomBonus(2, 3);
 
     } else if (playedOpenings.length <= 6) {
-      bonus = Math.floor(Math.random() * (4 - 3 + 1)) + 3; // Random number between 3 and 4
+      bonus = calculateRandomBonus(4, 5);
 
     } else {
-      bonus = Math.floor(Math.random() * (6 - 5 + 1)) + 5; // Random number between 5 and 6
+      bonus = calculateRandomBonus(6, 7);
     }
 
     const message = `Versatility: ${bonus} points`;
