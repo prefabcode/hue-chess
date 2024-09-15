@@ -373,7 +373,7 @@ const isSecondWindFulfilled = async () => {
   const secondWindStatus = await getSecondWindStatus();
   if (secondWindStatus) {
     await setSecondWindStatus(false);
-    let bonus = Math.floor(Math.random() * (2 - 1 + 1)) + 1;
+    const bonus = Math.floor(Math.random() * (3 - 2 + 1)) + 2;
     const message = `Second Wind: ${bonus} points`;
     showPerkToast('second-wind', message);
     return bonus;
