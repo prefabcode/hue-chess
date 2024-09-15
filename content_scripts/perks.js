@@ -46,6 +46,10 @@ export function showPerkToast(perkId, message) {
   }).showToast();
 }
 
+const calculateRandomBonus = (min, max) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
 const isBerzerkerFulfilled = (userName, game) => {
   const whitePlayer = game.tags.White;
   const blackPlayer = game.tags.Black;
