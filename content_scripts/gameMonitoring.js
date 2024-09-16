@@ -175,7 +175,7 @@ export const fetchGameStream = async (streamId, playingId, userColor) => {
                     if (activePerks.includes('preparation')) {
                       await setPreparationStatus(false);
                     }
-                    if (activePerks.includes('second-wind') && game.moves?.length >= 19) {
+                    if (game.moves?.length >= 19) {
                       await setSecondWindStatus(true);
                     }
                   }
