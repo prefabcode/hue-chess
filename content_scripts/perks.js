@@ -233,7 +233,7 @@ const isHueFocusFulfilled = () => {
     const bonus = calculateRandomBonus(2, 3);
     const message = `Hue Focus: ${bonus} points`;
     showPerkToast('hue-focus', message); 
-    console.log('body has no-rating class, adding 1 hue point to bonus'); 
+    console.log(`body has no-rating class, adding ${bonus} hue points to bonus`); 
     return bonus;
   }
   return 0;
@@ -379,6 +379,7 @@ const isSecondWindFulfilled = async () => {
     await setSecondWindStatus(false);
     const bonus = calculateRandomBonus(2, 3);
     const message = `Second Wind: ${bonus} points`;
+    console.log(`Second Wind: adding ${bonus} points`);
     showPerkToast('second-wind', message);
     return bonus;
   }
