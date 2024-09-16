@@ -20,7 +20,7 @@ To choose your perks, simply click on the **Hue Progress Bar** in the top right 
   - Rapid: 6-10 points
   - Classical: 10-15 points
 - **Progress Tracking (implemented)**: A progress bar displays your current level and how far you are from reaching the next level.
-- **Perk System (11/11 perks implemented)**: As you level up in Hue Chess, you will unlock new perks that allow you to gain bonus hue points from your wins. At launch, Hue chess will feature 11 perks to unlock spread across 25 levels. Note: current unlock levels for perks are subject to change before launch.
+- **Perk System (10/10 perks implemented)**: As you level up in Hue Chess, you will unlock new perks that allow you to gain bonus hue points from your wins. At launch, Hue chess will feature 11 perks to unlock spread across 25 levels. Note: current unlock levels for perks are subject to change before launch.
 - **Easter Egg Perks (implemented)**: Hue Chess will ship with a few easter eggs. 
 - **Import / Export functionality (Implemented)**: Encode your progress in a BASE64 string, which you can then import on another machine to sync your progress on hue chess across multiple computers.
 - **Challenge Completion and Trophy (In-Progress)**: When you complete all 25 levels on Hue Chess, you should be rewarded with a unique Trophy on your profile. This Trophy stacks, so you can beat Hue Chess multiple times and continue earning more Trophies!  
