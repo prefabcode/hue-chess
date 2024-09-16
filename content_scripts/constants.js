@@ -23,7 +23,8 @@ export const TIPS = [
   "Some perks may not function with Lichess variants due to incompatibilities. The following perks are affected: Opportunist, Equalizer, Endgame Specialist. These perks will work in the Chess960 variant, as it is similar to standard chess.",
   "Wins in slower time controls award more hue points than wins in shorter time controls.",
   "You can only earn hue points if you are signed in to Lichess.",
-  "You can look at other tabs while the preparation timer is counting down. Just make sure that it's chess related material so that you're getting the most out of the perk!"
+  "You can look at other tabs while the preparation timer is counting down. Just make sure that it's chess related material so that you're getting the most out of the perk!",
+  "You will earn [2-3] extra hue points if you win a game after losing a game that is 10 moves or greater. This effect is called 'Second Wind'."
 ];
 
 export const PERK_DISPLAY_NAMES = {
@@ -36,6 +37,5 @@ export const PERK_DISPLAY_NAMES = {
   'equalizer': 'Equalizer',
   'rivalry': 'Rivalry',
   'opportunist': 'Opportunist',
-  'second-wind': 'Second Wind',
   'versatility': 'Versatility',
 };

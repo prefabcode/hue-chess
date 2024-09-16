@@ -11,7 +11,6 @@ import {
   getPreparationStatus,
   setPreparationStatus, 
   getPlayingId,
-  setSecondWindStatus,
   getCompletedBoards,
 } from './storageManagement.js';
 import { showPerkToast } from './perks.js';
@@ -155,7 +154,6 @@ async function setImageSources() {
     'rivalry-icon',
     'preparation-icon',
     'opportunist-icon',
-    'second-wind-icon',
     'versatility-icon',
   ];
 
@@ -255,11 +253,6 @@ export const openPerksModal = async () => {
           } else if (isActive && timerElement) {
             timerElement.remove();
           }
-        }
-
-        if (perk === 'second-wind') {
-          console.log('resetting second-wind status');
-          await setSecondWindStatus(false);
         }
 
         const completedBoards = await getCompletedBoards();
@@ -486,12 +479,11 @@ export const updateUIAfterImport = (extensionState) => {
 let progressBarTooltipInstance = null;
 
 export const updateProgressBarTooltip = () => {
-  chrome.storage.local.get(['activePerks', 'winningStreak', 'gladiatorLossBuffer', 'preparationStatus', 'secondWindStatus', 'playedOpenings'], async (result) => {
+  chrome.storage.local.get(['activePerks', 'winningStreak', 'gladiatorLossBuffer', 'preparationStatus', 'playedOpenings'], async (result) => {
     const activePerks = result.activePerks || [];
     const winningStreak = result.winningStreak || 0;
     const gladiatorLossBuffer = result.gladiatorLossBuffer || 0;
     const preparationStatus = result.preparationStatus || false;
-    const secondWindStatus = result.secondWindStatus || false;
     const playedOpenings = result.playedOpenings || [];
 
     await waitForElm('#hue-progress-bar');
@@ -514,8 +506,6 @@ export const updateProgressBarTooltip = () => {
           tooltipContent += ` (Allowed Losses: ${gladiatorLossBuffer})`;
         } else if (perk === 'preparation') {
           tooltipContent += ` (${preparationStatus ? 'Fulfilled' : 'Not Fulfilled'})`;
-        } else if (perk === 'second-wind') {
-          tooltipContent += ` (${secondWindStatus ? 'Fulfilled' : 'Not Fulfilled'})`;
         } else if (perk === 'versatility') {
           tooltipContent += ` (Unique Openings: ${playedOpenings.length})`;
         }

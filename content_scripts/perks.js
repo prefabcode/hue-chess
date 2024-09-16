@@ -233,7 +233,7 @@ const isHueFocusFulfilled = () => {
     const bonus = calculateRandomBonus(2, 3);
     const message = `Hue Focus: ${bonus} points`;
     showPerkToast('hue-focus', message); 
-    console.log('body has no-rating class, adding 1 hue point to bonus'); 
+    console.log(`body has no-rating class, adding ${bonus} hue points to bonus`); 
     return bonus;
   }
   return 0;
@@ -288,7 +288,7 @@ const isEqualizerFulfilled = (userName, game) => {
 
     if (materialBalance < 0) {
       if (wasDownInMaterial) {
-        const bonus = Math.floor(Math.random() * (4 - 2 + 1)) + 2;
+        const bonus = calculateRandomBonus(3, 5);
         const message = `Equalizer: ${bonus} points`;
         showPerkToast('equalizer', message);
         return bonus; 
@@ -305,10 +305,10 @@ const isEqualizerFulfilled = (userName, game) => {
 
 const isRivalryFulfilled = async () => {
   const hasPlayedBefore = await getHasPlayedBefore();
-  let bonus = Math.floor(Math.random() * (2 - 1 + 1)) + 1;
+  let bonus = calculateRandomBonus(2, 3);
   if (hasPlayedBefore) {
     console.log('Rivalry perk fulfilled. Bonus applied.');
-    bonus = Math.floor(Math.random() * (4 - 3 + 1)) + 3; // Random number between 2 and 4
+    bonus = calculateRandomBonus(4, 5);
   }
   const message = `Rivalry: ${bonus} points`;
   showPerkToast('rivalry', message);
@@ -347,7 +347,7 @@ const isOpportunistFulfilled = (userName, game) => {
 
     if (materialBalance > 0) {
       if (wasUpInMaterial) {
-        const bonus = Math.floor(Math.random() * (3 - 2 + 1)) + 2;
+        const bonus = calculateRandomBonus(3, 4);
         const message = `Opportunist: ${bonus} points`;
         showPerkToast('opportunist', message);
         return bonus;
@@ -379,6 +379,7 @@ const isSecondWindFulfilled = async () => {
     await setSecondWindStatus(false);
     const bonus = calculateRandomBonus(2, 3);
     const message = `Second Wind: ${bonus} points`;
+    console.log(`Second Wind: adding ${bonus} points`);
     showPerkToast('second-wind', message);
     return bonus;
   }
@@ -496,13 +497,11 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
   if (activePerks.includes('opportunist')) {
     bonus += isOpportunistFulfilled(userName, game);
   }
-  if (activePerks.includes('second-wind')) {
-    bonus += await isSecondWindFulfilled();
-  }
   if (activePerks.includes('versatility')) {
     bonus += await isVersatilityFulfilled(game);
   }
-  // no-rating bonus check
+  
+  bonus += await isSecondWindFulfilled();
   bonus += isHueFocusFulfilled();
   bonus += isBongcloudFulfilled(userName, game);
 
