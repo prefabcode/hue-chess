@@ -288,7 +288,7 @@ const isEqualizerFulfilled = (userName, game) => {
 
     if (materialBalance < 0) {
       if (wasDownInMaterial) {
-        const bonus = calculateRandomBonus(3, 5);
+        const bonus = calculateRandomBonus(4, 6);
         const message = `Equalizer: ${bonus} points`;
         showPerkToast('equalizer', message);
         return bonus; 
@@ -365,7 +365,7 @@ const isPreparationFulfilled = async () => {
   const preparationStatusMet = await getPreparationStatus();
   let bonus = 0;
   if (preparationStatusMet) {
-    bonus = calculateRandomBonus(8, 12);
+    bonus = calculateRandomBonus(7, 11);
     const message = `Preparation: ${bonus} points`;
     showPerkToast('preparation', message);
     await setPreparationStatus(false);
