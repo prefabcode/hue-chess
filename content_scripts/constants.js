@@ -24,7 +24,7 @@ export const TIPS = [
   "Wins in slower time controls award more hue points than wins in shorter time controls.",
   "You can only earn hue points if you are signed in to Lichess.",
   "You can look at other tabs while the preparation timer is counting down. Just make sure that it's chess related material so that you're getting the most out of the perk!",
-  "You will earn [2-3] extra hue points if you win a game after losing a game that is 10 moves or greater. This effect is called 'Second Wind'."
+  "You will earn [1-2] extra hue points if you win a game after losing a game that is 10 moves or greater. This effect is called 'Second Wind'."
 ];
 
 export const PERK_DISPLAY_NAMES = {
