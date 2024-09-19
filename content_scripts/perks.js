@@ -305,11 +305,11 @@ const isEqualizerFulfilled = (userName, game) => {
 
 const isRivalryFulfilled = async () => {
   const hasPlayedBefore = await getHasPlayedBefore();
-  let bonus = calculateRandomBonus(2, 3);
+  let bonus = calculateRandomBonus(1, 2);
   if (hasPlayedBefore) {
-    console.log('Rivalry perk fulfilled. Bonus applied.');
-    bonus = calculateRandomBonus(4, 5);
+    bonus = calculateRandomBonus(3, 4);
   }
+  console.log(`Rivalry bonus: ${bonus}`);
   const message = `Rivalry: ${bonus} points`;
   showPerkToast('rivalry', message);
   return bonus;
@@ -347,7 +347,7 @@ const isOpportunistFulfilled = (userName, game) => {
 
     if (materialBalance > 0) {
       if (wasUpInMaterial) {
-        const bonus = calculateRandomBonus(3, 4);
+        const bonus = calculateRandomBonus(2, 3);
         const message = `Opportunist: ${bonus} points`;
         showPerkToast('opportunist', message);
         return bonus;
