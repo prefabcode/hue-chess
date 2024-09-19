@@ -218,7 +218,7 @@ const isEndgameSpecialistFulfilled = (game) => {
   }
   const moves = game.moves;
   if (containsEndgame(moves)) {
-   const bonus = calculateRandomBonus(3, 5);
+   const bonus = calculateRandomBonus(4, 5);
    console.log(`Endgame bonus points: ${bonus}`);
    const message = `Endgame Specialist: ${bonus} points`;
    showPerkToast('endgame-specialist', message);
@@ -305,9 +305,9 @@ const isEqualizerFulfilled = (userName, game) => {
 
 const isRivalryFulfilled = async () => {
   const hasPlayedBefore = await getHasPlayedBefore();
-  let bonus = calculateRandomBonus(1, 2);
+  let bonus = calculateRandomBonus(1, 3);
   if (hasPlayedBefore) {
-    bonus = calculateRandomBonus(3, 4);
+    bonus = calculateRandomBonus(4, 5);
   }
   console.log(`Rivalry bonus: ${bonus}`);
   const message = `Rivalry: ${bonus} points`;
@@ -365,7 +365,7 @@ const isPreparationFulfilled = async () => {
   const preparationStatusMet = await getPreparationStatus();
   let bonus = 0;
   if (preparationStatusMet) {
-    bonus = calculateRandomBonus(7, 11);
+    bonus = calculateRandomBonus(8, 11);
     const message = `Preparation: ${bonus} points`;
     showPerkToast('preparation', message);
     await setPreparationStatus(false);
