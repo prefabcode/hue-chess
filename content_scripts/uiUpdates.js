@@ -257,7 +257,7 @@ export const openPerksModal = async () => {
 
         const completedBoards = await getCompletedBoards();
         const playerLevel = completedBoards + 1;
-        const maxPerks = playerLevel >= 12 ? 3 : 2;
+        const maxPerks = playerLevel >= 10 ? 3 : 2;
         const activePerks = await getActivePerks();
 
         if (!isActive && activePerks.length >= maxPerks) {
