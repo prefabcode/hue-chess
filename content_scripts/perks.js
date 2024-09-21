@@ -196,18 +196,45 @@ const isBongcloudFulfilled = (userName, game) => {
   return 0;
 };
 
-const isGambiteerFulfilled = (game) => {
+const isGambiteerFulfilled = (userName, game) => {
   const opening = game.tags.Opening || '';
+  const moves = game.moves;
+
   if (opening.toLowerCase().includes('gambit')) {
-    console.log('Gambit detected. Gambiteer bonus applied');
     const bonus = calculateRandomBonus(3, 5);
     console.log(`Gambiteer bonus points: ${bonus}`);
     const message = `Gambiteer: ${bonus} points`;
     showPerkToast('gambiteer', message);
     return bonus;
-  } else {
-    console.log('Player did not play a known gambit or countergambit.');
   }
+
+  // Determine the player's color
+  const whitePlayer = game.tags.White;
+  const blackPlayer = game.tags.Black;
+
+  let playerColor = null;
+
+  if (whitePlayer === userName) {
+    playerColor = 'white';
+  } else if (blackPlayer === userName) {
+    playerColor = 'black';
+  }
+
+  if (!playerColor) {
+    console.error('Player not found in this game.');
+    return 0;
+  }
+
+  for (const move of moves) {
+    if (move.notation.notation === 'O-O-O' && move.turn === playerColor.charAt(0)) {
+      const bonus = calculateRandomBonus(3, 5);
+      console.log(`Gambiteer bonus points: ${bonus}`);
+      const message = `Gambiteer: ${bonus} points`;
+      showPerkToast('gambiteer', message);
+      return bonus;
+    }
+  }
+  
   return 0;
 };
 
@@ -477,7 +504,7 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
     bonus += isGladiatorFulfilled(initialIncrementValue, gameType);
   }
   if (activePerks.includes('gambiteer')) {
-    bonus += isGambiteerFulfilled(game);
+    bonus += isGambiteerFulfilled(userName, game);
   }
   if (activePerks.includes('endgame-specialist')) {
     bonus += isEndgameSpecialistFulfilled(game);
