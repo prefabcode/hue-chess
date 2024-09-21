@@ -348,7 +348,7 @@ export const updatePerksHeader = async () => {
   const activePerks = await getActivePerks();
   const completedBoards = await getCompletedBoards();
   const playerLevel = completedBoards + 1;
-  const maxPerks = playerLevel >= 12 ? 3 : 2;
+  const maxPerks = playerLevel >= 10 ? 3 : 2;
   const perksHeader = document.getElementById('perks-header');
   perksHeader.textContent = `Select Perks: (${activePerks.length}/${maxPerks})`;
 }
