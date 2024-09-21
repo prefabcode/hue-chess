@@ -114,7 +114,7 @@ const isBerzerkerFulfilled = (userName, game) => {
   const totalTimeAllowed = initialTime;
 
   if (remainingTimeInSeconds >= totalTimeAllowed / 2) {
-    const bonus = calculateRandomBonus(7, 9);
+    const bonus = calculateRandomBonus(8, 10);
     console.log(`Berzerker bonus applied: ${bonus}`);
     const message = `Berzerker: ${bonus} points`;
     showPerkToast('berzerker', message);
@@ -122,24 +122,24 @@ const isBerzerkerFulfilled = (userName, game) => {
   } 
   return 0;
 }
-
-const isGladiatorFulfilled = (initialIncrementValue, gameType) => {
+// UltraBullet, Bullet, Blitz, Rapid, Classical, Default
+const isGladiatorFulfilled = (gameType) => {
   let bonus = 0;
   switch (gameType) {
+    case 'UltraBullet': 
+      bonus = calculateRandomBonus(9, 10);
+      break;
     case 'Bullet':
-      bonus = calculateRandomBonus(6 - initialIncrementValue, 8 - initialIncrementValue);
+      bonus = calculateRandomBonus(8, 9);
       break;
     case 'Blitz':
-      bonus = calculateRandomBonus(9 - initialIncrementValue, 11 - initialIncrementValue);
+      bonus = calculateRandomBonus(7, 8);
       break;
     case 'Rapid':
-      bonus = calculateRandomBonus(12 - initialIncrementValue, 15 - initialIncrementValue);
+      bonus = calculateRandomBonus(6, 7);
       break;
-    case 'Classical':
-      bonus = calculateRandomBonus(16 - initialIncrementValue, 19 - initialIncrementValue);
-      break;
-    case 'Unknown':
-      bonus = calculateRandomBonus(9 - initialIncrementValue, 11 - initialIncrementValue);
+    default: 
+      bonus = calculateRandomBonus(5, 6);
       break;
   }
   const message = `Gladiator: ${bonus} points`;
@@ -501,7 +501,7 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
     bonus += isBerzerkerFulfilled(userName, game);
   }
   if (activePerks.includes('gladiator')) {
-    bonus += isGladiatorFulfilled(initialIncrementValue, gameType);
+    bonus += isGladiatorFulfilled(gameType);
   }
   if (activePerks.includes('gambiteer')) {
     bonus += isGambiteerFulfilled(userName, game);
