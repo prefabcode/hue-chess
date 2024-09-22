@@ -1,7 +1,6 @@
 import { Chess } from 'chess.js'
 import {
-  getActivePerks, 
-  getWinningStreak, 
+  getActivePerks,
   getHasPlayedBefore, 
   setPreparationStatus, 
   getPreparationStatus, 
@@ -20,7 +19,6 @@ export function showPerkToast(perkId, message) {
     'hue-focus': 'linear-gradient(to right, #43cea2, #185a9d)',
     'gambiteer': 'linear-gradient(to right, #4a148c, #880e4f)',
     'endgame-specialist': 'linear-gradient(to right, #00c6ff, #0072ff)',
-    'hot-streak': 'linear-gradient(to right, #f12711, #f5af19)',
     'gladiator': 'linear-gradient(to right, #434343, #000000)',
     'equalizer': 'linear-gradient(to right, #1b5e20, #4a9e4d)',
     'rivalry': 'linear-gradient(to right, #7f1d1d, #c0392b)',
@@ -264,21 +262,6 @@ const isHueFocusFulfilled = () => {
     return bonus;
   }
   return 0;
-}
-
-const isHotStreakFulfilled = async () => {
-  const winningStreak = await getWinningStreak();
-
-  let bonus = 0;
-
-  if (winningStreak > 1) { 
-    bonus = 1
-    const message = `Hot Streak: ${bonus} point`;
-    showPerkToast('hot-streak', message);
-    console.log(`Hot Streak bonus point: ${bonus}`);
-  }
-
-  return bonus;
 }
 
 const isEqualizerFulfilled = (userName, game) => {
@@ -526,7 +509,6 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
   bonus += await isSecondWindFulfilled();
   bonus += isHueFocusFulfilled();
   bonus += isBongcloudFulfilled(userName, game);
-  bonus += await isHotStreakFulfilled();
 
   const message = `Total Hue Earned: ${initialIncrementValue + bonus} points`;
   showPerkToast('total-earned', message);

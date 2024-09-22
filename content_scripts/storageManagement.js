@@ -107,22 +107,6 @@ export const setPlayingId = (playingId) => {
   });
 };
 
-export const getWinningStreak = () => {
-  return new Promise((resolve) => {
-    chrome.storage.local.get(['winningStreak'], (result) => {
-      resolve(result.winningStreak || 0);
-    });
-  });
-};
-
-export const setWinningStreak = (streak) => {
-  return new Promise((resolve) => {
-    chrome.storage.local.set({ winningStreak: streak }, () => {
-      resolve();
-    });
-  });
-};
-
 export const getGladiatorLossBuffer = () => {
   return new Promise((resolve) => {
     chrome.storage.local.get(['gladiatorLossBuffer'], (result) => {
