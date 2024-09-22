@@ -6,21 +6,17 @@ Hue Chess is a chrome extension that adds gamification elements to Lichess. With
 Hue Chess features a **Perk System** that boosts the number of Hue Points you earn for every win in exchange for completing specific challenges on Lichess. As you progress and gain levels in Hue Chess, you'll unlock new perks that provide different ways to accumulate even more Hue Points for your victories.
 
 ### Level Up with Hue Points
-Each level requires 100 Hue Points, and every level features a unique chessboard theme. Journey through 25 distinct levels, discover 11 unique perks, complete the Hue Chess Challenge, and earn a special trophy for your profile! (The trophy will only be visible to you.)
+Each level requires 100 Hue Points, and every level features a unique chessboard theme. Journey through 18 distinct levels, discover 9 unique perks, complete the Hue Chess Challenge, and earn a special trophy for your profile! (The trophy will only be visible to you.)
 
 ### Get Started
 To choose your perks, simply click on the **Hue Progress Bar** in the top right corner of your navigation bar.
 
 ## Features
 
-- **Hue Points System (Implemented)**: Accumulate hue points by winning chess games. The hue of your chess board changes as you earn more points. Progress through 25 unique levels. 
-- **Time Control-Based Rewards (implemented)** : Different time controls grant varying ranges of hue points:
-  - Bullet: 1-3 points
-  - Blitz: 3-6 points
-  - Rapid: 6-10 points
-  - Classical: 10-15 points
+- **Hue Points System (Implemented)**: Accumulate hue points by winning chess games. The hue of your chess board changes as you earn more points. Progress through 18 unique levels. 
+- **Time Control-Based Rewards (implemented)** : Different time controls grant varying ranges of hue points. 
 - **Progress Tracking (implemented)**: A progress bar displays your current level and how far you are from reaching the next level.
-- **Perk System (10/10 perks implemented)**: As you level up in Hue Chess, you will unlock new perks that allow you to gain bonus hue points from your wins. At launch, Hue chess will feature 10 perks to unlock spread across 25 levels. 
+- **Perk System (9/9 perks implemented)**: As you level up in Hue Chess, you will unlock new perks that allow you to gain bonus hue points from your wins. At launch, Hue chess will feature 9 perks to unlock spread across 18 levels. 
 - **Easter Egg Perks (implemented)**: Hue Chess will ship with a few easter eggs. 
 - **Import / Export functionality (Implemented)**: Encode your progress in a BASE64 string, which you can then import on another machine to sync your progress on hue chess across multiple computers.
 - **Challenge Completion and Trophy (In-Progress)**: When you complete all 25 levels on Hue Chess, you should be rewarded with a unique Trophy on your profile. This Trophy stacks, so you can beat Hue Chess multiple times and continue earning more Trophies!  
@@ -56,8 +52,8 @@ To choose your perks, simply click on the **Hue Progress Bar** in the top right 
 ## Future Features
 
 - **Feats of Strength**: These intend to be passive, large hue point bonuses for feats that occur more rarely, such as winning a minature or playing on lichess for extended periods of time.
-- **More Perks**: While Hue Chess will initially ship with 11 unique perks, I have ideas for introducing more perks after v1.  
-- **Themed Prestige System**: Once you complete your journey and beat level 25, future runs of Hue-Chess should offer unique bonuses for playing certain openings (that change based on the number of times you've beaten Hue Chess).
+- **More Perks**: While Hue Chess will initially ship with 9 unique perks, I have ideas for introducing more perks after v1.  
+- **Themed Prestige System**: Once you complete your journey and beat level 18, future runs of Hue-Chess should offer unique bonuses for playing certain openings (that change based on the number of times you've beaten Hue Chess).
 
 ## Contributing
 
