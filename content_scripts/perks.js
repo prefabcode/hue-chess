@@ -3,9 +3,7 @@ import {
   getActivePerks,
   getHasPlayedBefore, 
   setPreparationStatus, 
-  getPreparationStatus, 
-  getSecondWindStatus,
-  setSecondWindStatus,
+  getPreparationStatus,
   getPlayedOpenings,
   setPlayedOpenings,
 } from "./storageManagement.js";
@@ -25,7 +23,6 @@ export function showPerkToast(perkId, message) {
     'total-earned': 'linear-gradient(to right, #0f2027, #2c5364)',
     'preparation': 'linear-gradient(to right, #093a5e, #0077b6)',
     'opportunist': 'linear-gradient(to right, #daa520, #b8860b)',
-    'second-wind': 'linear-gradient(to right, #007a7e, #009688)',
     'versatility': 'linear-gradient(to right, #8e44ad, #f39c12)',
   };
 
@@ -381,19 +378,6 @@ const isPreparationFulfilled = async () => {
   return bonus;
 };
 
-const isSecondWindFulfilled = async () => {
-  const secondWindStatus = await getSecondWindStatus();
-  if (secondWindStatus) {
-    await setSecondWindStatus(false);
-    const bonus = 1
-    const message = `Second Wind: ${bonus} point`;
-    console.log(`Second Wind: adding ${bonus} point`);
-    showPerkToast('second-wind', message);
-    return bonus;
-  }
-  return 0;
-}
-
 const isVersatilityFulfilled = async (game) => {
   const opening = game.tags.Opening || '';
   let playedOpenings = await getPlayedOpenings();
@@ -506,7 +490,6 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
     bonus += await isVersatilityFulfilled(game);
   }
   
-  bonus += await isSecondWindFulfilled();
   bonus += isHueFocusFulfilled();
   bonus += isBongcloudFulfilled(userName, game);
 

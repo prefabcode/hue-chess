@@ -179,25 +179,6 @@ export const setPreparationStatus = (status) => {
   });
 };
 
-
-
-export const getSecondWindStatus = () => {
-  return new Promise((resolve) => {
-    chrome.storage.local.get(['secondWindStatus'], (result) => {
-      resolve(result.secondWindStatus || false);
-    });
-  });
-};
-
-export const setSecondWindStatus = (status) => {
-  return new Promise((resolve) => {
-    chrome.storage.local.set({ secondWindStatus: status }, () => {
-      console.log("Second wind status set to:", status);
-      resolve();
-    });
-  });
-};
-
 export const getPlayedOpenings = () => {
   return new Promise((resolve) => {
     chrome.storage.local.get(['playedOpenings'], (result) => {
