@@ -114,7 +114,7 @@ const isBerzerkerFulfilled = (userName, game) => {
   const totalTimeAllowed = initialTime;
 
   if (remainingTimeInSeconds >= totalTimeAllowed / 2) {
-    const bonus = calculateRandomBonus(7, 9);
+    const bonus = calculateRandomBonus(8, 10);
     console.log(`Berzerker bonus applied: ${bonus}`);
     const message = `Berzerker: ${bonus} points`;
     showPerkToast('berzerker', message);
@@ -122,24 +122,24 @@ const isBerzerkerFulfilled = (userName, game) => {
   } 
   return 0;
 }
-
-const isGladiatorFulfilled = (initialIncrementValue, gameType) => {
+// UltraBullet, Bullet, Blitz, Rapid, Classical, Default
+const isGladiatorFulfilled = (gameType) => {
   let bonus = 0;
   switch (gameType) {
+    case 'UltraBullet': 
+      bonus = calculateRandomBonus(8, 9);
+      break;
     case 'Bullet':
-      bonus = calculateRandomBonus(6 - initialIncrementValue, 8 - initialIncrementValue);
+      bonus = calculateRandomBonus(7, 8);
       break;
     case 'Blitz':
-      bonus = calculateRandomBonus(9 - initialIncrementValue, 11 - initialIncrementValue);
+      bonus = calculateRandomBonus(6, 7);
       break;
     case 'Rapid':
-      bonus = calculateRandomBonus(12 - initialIncrementValue, 15 - initialIncrementValue);
+      bonus = calculateRandomBonus(5, 6);
       break;
-    case 'Classical':
-      bonus = calculateRandomBonus(16 - initialIncrementValue, 19 - initialIncrementValue);
-      break;
-    case 'Unknown':
-      bonus = calculateRandomBonus(9 - initialIncrementValue, 11 - initialIncrementValue);
+    default: 
+      bonus = calculateRandomBonus(4, 5);
       break;
   }
   const message = `Gladiator: ${bonus} points`;
@@ -257,7 +257,7 @@ const isEndgameSpecialistFulfilled = (game) => {
 const isHueFocusFulfilled = () => {
   const hasNoRatingClass = document.body.classList.contains('no-rating');
   if (hasNoRatingClass) {
-    const bonus = calculateRandomBonus(2, 3);
+    const bonus = calculateRandomBonus(1, 2);
     const message = `Hue Focus: ${bonus} points`;
     showPerkToast('hue-focus', message); 
     console.log(`body has no-rating class, adding ${bonus} hue points to bonus`); 
@@ -423,13 +423,13 @@ const isVersatilityFulfilled = async (game) => {
 
     let bonus = 0;
     if (playedOpenings.length <= 2) {
-      bonus = calculateRandomBonus(2, 3);
+      bonus = calculateRandomBonus(1, 2);
 
-    } else if (playedOpenings.length <= 6) {
-      bonus = calculateRandomBonus(4, 5);
+    } else if (playedOpenings.length <= 4) {
+      bonus = calculateRandomBonus(3, 4);
 
     } else {
-      bonus = calculateRandomBonus(6, 7);
+      bonus = calculateRandomBonus(5, 6);
     }
 
     const message = `Versatility: ${bonus} points`;
@@ -501,7 +501,7 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
     bonus += isBerzerkerFulfilled(userName, game);
   }
   if (activePerks.includes('gladiator')) {
-    bonus += isGladiatorFulfilled(initialIncrementValue, gameType);
+    bonus += isGladiatorFulfilled(gameType);
   }
   if (activePerks.includes('gambiteer')) {
     bonus += isGambiteerFulfilled(userName, game);

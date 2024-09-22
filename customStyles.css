@@ -160,6 +160,14 @@
   margin-top: 7px;
 }
 
+.tippy-box ul.versatility-openings {
+  margin-left: 18px;
+}
+
+.tippy-box ul.versatility-openings li {
+  list-style: disc !important;
+}
+
 #hue-chess-settings-modal {
   width: 500px;
   font-family: 'Roboto', 'Noto Sans', sans-serif;
