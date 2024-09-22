@@ -148,7 +148,6 @@ async function setImageSources() {
     'berzerker-icon',
     'gambiteer-icon',
     'endgame-specialist-icon',
-    'hot-streak-icon',
     'gladiator-icon',
     'equalizer-icon',
     'rivalry-icon',
