@@ -257,7 +257,7 @@ const isEndgameSpecialistFulfilled = (game) => {
 const isHueFocusFulfilled = () => {
   const hasNoRatingClass = document.body.classList.contains('no-rating');
   if (hasNoRatingClass) {
-    const bonus = calculateRandomBonus(2, 3);
+    const bonus = calculateRandomBonus(1, 2);
     const message = `Hue Focus: ${bonus} points`;
     showPerkToast('hue-focus', message); 
     console.log(`body has no-rating class, adding ${bonus} hue points to bonus`); 
@@ -423,10 +423,10 @@ const isVersatilityFulfilled = async (game) => {
 
     let bonus = 0;
     if (playedOpenings.length <= 2) {
-      bonus = calculateRandomBonus(2, 3);
+      bonus = calculateRandomBonus(1, 2);
 
     } else if (playedOpenings.length <= 4) {
-      bonus = calculateRandomBonus(4, 5);
+      bonus = calculateRandomBonus(3, 4);
 
     } else {
       bonus = calculateRandomBonus(5, 6);
