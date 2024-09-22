@@ -371,7 +371,7 @@ const isOpportunistFulfilled = (userName, game) => {
 
     if (materialBalance > 0) {
       if (wasUpInMaterial) {
-        const bonus = calculateRandomBonus(2, 3);
+        const bonus = calculateRandomBonus(3, 4);
         const message = `Opportunist: ${bonus} points`;
         showPerkToast('opportunist', message);
         return bonus;
