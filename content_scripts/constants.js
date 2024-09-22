@@ -16,7 +16,6 @@ export const PREPARATION_TIME = 300;
 
 export const TIPS = [
   "You can earn a bonus [1-2] hue points per win if you have 'Show Player Ratings' turned off in the lichess settings. This can be configured under Lichess preferences, display settings section.",
-  "At level 10, you will unlock an extra perk slot.",
   "You can access the Hue Chess settings menu by clicking on your chrome browser hue chess extension icon. The settings menu contains additional options for Hue Chess.",
   "Got feedback? Send an email to prefabcode@gmail.com or create a post on https://github.com/prefabcode/hue-chess/issues",
   "In the medieval era, it was not uncommon for kings to actively participate in battles and lead their armies into war.",
@@ -39,3 +38,5 @@ export const PERK_DISPLAY_NAMES = {
   'opportunist': 'Opportunist',
   'versatility': 'Versatility',
 };
+
+export const MAX_PERKS = 2;
