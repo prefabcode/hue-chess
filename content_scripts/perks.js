@@ -272,10 +272,10 @@ const isHotStreakFulfilled = async () => {
   let bonus = 0;
 
   if (winningStreak > 1) { 
-    bonus = calculateRandomBonus(1, 2);
-    const message = `Hot Streak: ${bonus} points`;
+    bonus = 1
+    const message = `Hot Streak: ${bonus} point`;
     showPerkToast('hot-streak', message);
-    console.log(`Hot Streak bonus points: ${bonus}`);
+    console.log(`Hot Streak bonus point: ${bonus}`);
   }
 
   return bonus;
@@ -373,6 +373,7 @@ const isOpportunistFulfilled = (userName, game) => {
       if (wasUpInMaterial) {
         const bonus = calculateRandomBonus(3, 4);
         const message = `Opportunist: ${bonus} points`;
+        console.log(`Opportunist bonus points: ${bonus}`);
         showPerkToast('opportunist', message);
         return bonus;
       }
@@ -401,9 +402,9 @@ const isSecondWindFulfilled = async () => {
   const secondWindStatus = await getSecondWindStatus();
   if (secondWindStatus) {
     await setSecondWindStatus(false);
-    const bonus = calculateRandomBonus(1, 2);
-    const message = `Second Wind: ${bonus} points`;
-    console.log(`Second Wind: adding ${bonus} points`);
+    const bonus = 1
+    const message = `Second Wind: ${bonus} point`;
+    console.log(`Second Wind: adding ${bonus} point`);
     showPerkToast('second-wind', message);
     return bonus;
   }
