@@ -276,9 +276,12 @@ const isHotStreakFulfilled = async () => {
   } else if (winningStreak >= 3) {
     bonus = calculateRandomBonus(3, 4);
   }
-  const message = `Hot Streak: ${bonus} points`;
-  showPerkToast('hot-streak', message);
-  console.log(`Hot Streak bonus points: ${bonus}`);
+
+  if (bonus > 0) {
+    const message = `Hot Streak: ${bonus} points`;
+    showPerkToast('hot-streak', message);
+    console.log(`Hot Streak bonus points: ${bonus}`);
+  }
   return bonus;
 }
 
