@@ -10,25 +10,23 @@ export const getInitialRewardValue = (game) => {
 
     // Calculate estimated game duration
     const estimatedDuration = initialTime + (40 * increment);
+    let bulletDuration = 179; 
 
     let gameType;
-    let rewardRange;
+    let rewardMultiplier = Math.ceil(3 * (estimatedDuration / bulletDuration));
+    let rewardRange = [rewardMultiplier - 1, rewardMultiplier + 1];
+
 
     if (estimatedDuration < 29) {
       gameType = 'UltraBullet';
-      rewardRange = [1, 3];
     } else if (estimatedDuration < 179) {
       gameType = 'Bullet';
-      rewardRange = [2, 4];
     } else if (estimatedDuration < 479) {
       gameType = 'Blitz';
-      rewardRange = [4, 7];
     } else if (estimatedDuration < 1499) {
       gameType = 'Rapid';
-      rewardRange = [7, 11];
     } else {
       gameType = 'Classical';
-      rewardRange = [12, 16];
     }
 
     const [min, max] = rewardRange;
