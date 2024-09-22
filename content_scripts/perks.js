@@ -245,7 +245,7 @@ const isEndgameSpecialistFulfilled = (game) => {
   }
   const moves = game.moves;
   if (containsEndgame(moves)) {
-   const bonus = calculateRandomBonus(4, 5);
+   const bonus = calculateRandomBonus(3, 4);
    console.log(`Endgame bonus points: ${bonus}`);
    const message = `Endgame Specialist: ${bonus} points`;
    showPerkToast('endgame-specialist', message);
@@ -371,7 +371,7 @@ const isOpportunistFulfilled = (userName, game) => {
 
     if (materialBalance > 0) {
       if (wasUpInMaterial) {
-        const bonus = calculateRandomBonus(3, 4);
+        const bonus = calculateRandomBonus(2, 3);
         const message = `Opportunist: ${bonus} points`;
         console.log(`Opportunist bonus points: ${bonus}`);
         showPerkToast('opportunist', message);
