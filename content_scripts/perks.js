@@ -425,11 +425,11 @@ const isVersatilityFulfilled = async (game) => {
     if (playedOpenings.length <= 2) {
       bonus = calculateRandomBonus(2, 3);
 
-    } else if (playedOpenings.length <= 6) {
+    } else if (playedOpenings.length <= 4) {
       bonus = calculateRandomBonus(4, 5);
 
     } else {
-      bonus = calculateRandomBonus(6, 7);
+      bonus = calculateRandomBonus(5, 6);
     }
 
     const message = `Versatility: ${bonus} points`;

@@ -515,7 +515,7 @@ export const updateProgressBarTooltip = () => {
 
       // If Versatility is active, add the playedOpenings list
       if (activePerks.includes('versatility') && playedOpenings.length) {
-        tooltipContent += '<br><p>Played Openings:</p><ul>';
+        tooltipContent += '<br><p>Played Openings:</p><ul class="versatility-openings">';
         playedOpenings.forEach(opening => {
           tooltipContent += `<li>${opening}</li>`;
         });
