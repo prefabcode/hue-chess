@@ -271,16 +271,13 @@ const isHotStreakFulfilled = async () => {
 
   let bonus = 0;
 
-  if (winningStreak === 1) {
-      bonus = calculateRandomBonus(2, 3);
-  } else if (winningStreak === 2) {
-      bonus = calculateRandomBonus(4, 5);
-  } else if (winningStreak >= 3) {
-      bonus = calculateRandomBonus(6, 8);
+  if (winningStreak > 1) { 
+    bonus = calculateRandomBonus(1, 2);
+    const message = `Hot Streak: ${bonus} points`;
+    showPerkToast('hot-streak', message);
+    console.log(`Hot Streak bonus points: ${bonus}`);
   }
-  const message = `Hot Streak: ${bonus} points`;
-  showPerkToast('hot-streak', message);
-  console.log(`Hot Streak bonus points: ${bonus}`);
+
   return bonus;
 }
 
@@ -509,9 +506,6 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
   if (activePerks.includes('endgame-specialist')) {
     bonus += isEndgameSpecialistFulfilled(game);
   }
-  if (activePerks.includes('hot-streak')) {
-    bonus += await isHotStreakFulfilled();
-  }
   if (activePerks.includes('equalizer')) {
     bonus += isEqualizerFulfilled(userName, game);
   }
@@ -531,6 +525,7 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
   bonus += await isSecondWindFulfilled();
   bonus += isHueFocusFulfilled();
   bonus += isBongcloudFulfilled(userName, game);
+  bonus += await isHotStreakFulfilled();
 
   const message = `Total Hue Earned: ${initialIncrementValue + bonus} points`;
   showPerkToast('total-earned', message);
