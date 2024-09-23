@@ -1,12 +1,9 @@
 import { Chess } from 'chess.js'
 import {
-  getActivePerks, 
-  getWinningStreak, 
+  getActivePerks,
   getHasPlayedBefore, 
   setPreparationStatus, 
-  getPreparationStatus, 
-  getSecondWindStatus,
-  setSecondWindStatus,
+  getPreparationStatus,
   getPlayedOpenings,
   setPlayedOpenings,
 } from "./storageManagement.js";
@@ -20,14 +17,12 @@ export function showPerkToast(perkId, message) {
     'hue-focus': 'linear-gradient(to right, #43cea2, #185a9d)',
     'gambiteer': 'linear-gradient(to right, #4a148c, #880e4f)',
     'endgame-specialist': 'linear-gradient(to right, #00c6ff, #0072ff)',
-    'hot-streak': 'linear-gradient(to right, #f12711, #f5af19)',
     'gladiator': 'linear-gradient(to right, #434343, #000000)',
     'equalizer': 'linear-gradient(to right, #1b5e20, #4a9e4d)',
     'rivalry': 'linear-gradient(to right, #7f1d1d, #c0392b)',
     'total-earned': 'linear-gradient(to right, #0f2027, #2c5364)',
     'preparation': 'linear-gradient(to right, #093a5e, #0077b6)',
     'opportunist': 'linear-gradient(to right, #daa520, #b8860b)',
-    'second-wind': 'linear-gradient(to right, #007a7e, #009688)',
     'versatility': 'linear-gradient(to right, #8e44ad, #f39c12)',
   };
 
@@ -266,21 +261,6 @@ const isHueFocusFulfilled = () => {
   return 0;
 }
 
-const isHotStreakFulfilled = async () => {
-  const winningStreak = await getWinningStreak();
-
-  let bonus = 0;
-
-  if (winningStreak > 1) { 
-    bonus = 1
-    const message = `Hot Streak: ${bonus} point`;
-    showPerkToast('hot-streak', message);
-    console.log(`Hot Streak bonus point: ${bonus}`);
-  }
-
-  return bonus;
-}
-
 const isEqualizerFulfilled = (userName, game) => {
   if (game.tags.Variant !== 'Standard' && game.tags.Variant !== 'Chess960') {
     console.log('Standard or Chess960 not detected. Equalizer disabled.')
@@ -398,19 +378,6 @@ const isPreparationFulfilled = async () => {
   return bonus;
 };
 
-const isSecondWindFulfilled = async () => {
-  const secondWindStatus = await getSecondWindStatus();
-  if (secondWindStatus) {
-    await setSecondWindStatus(false);
-    const bonus = 1
-    const message = `Second Wind: ${bonus} point`;
-    console.log(`Second Wind: adding ${bonus} point`);
-    showPerkToast('second-wind', message);
-    return bonus;
-  }
-  return 0;
-}
-
 const isVersatilityFulfilled = async (game) => {
   const opening = game.tags.Opening || '';
   let playedOpenings = await getPlayedOpenings();
@@ -523,10 +490,8 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
     bonus += await isVersatilityFulfilled(game);
   }
   
-  bonus += await isSecondWindFulfilled();
   bonus += isHueFocusFulfilled();
   bonus += isBongcloudFulfilled(userName, game);
-  bonus += await isHotStreakFulfilled();
 
   const message = `Total Hue Earned: ${initialIncrementValue + bonus} points`;
   showPerkToast('total-earned', message);

@@ -107,22 +107,6 @@ export const setPlayingId = (playingId) => {
   });
 };
 
-export const getWinningStreak = () => {
-  return new Promise((resolve) => {
-    chrome.storage.local.get(['winningStreak'], (result) => {
-      resolve(result.winningStreak || 0);
-    });
-  });
-};
-
-export const setWinningStreak = (streak) => {
-  return new Promise((resolve) => {
-    chrome.storage.local.set({ winningStreak: streak }, () => {
-      resolve();
-    });
-  });
-};
-
 export const getGladiatorLossBuffer = () => {
   return new Promise((resolve) => {
     chrome.storage.local.get(['gladiatorLossBuffer'], (result) => {
@@ -190,25 +174,6 @@ export const setPreparationStatus = (status) => {
   return new Promise((resolve) => {
     chrome.storage.local.set({ preparationStatus: status }, () => {
       console.log("Preparation status set to:", status);
-      resolve();
-    });
-  });
-};
-
-
-
-export const getSecondWindStatus = () => {
-  return new Promise((resolve) => {
-    chrome.storage.local.get(['secondWindStatus'], (result) => {
-      resolve(result.secondWindStatus || false);
-    });
-  });
-};
-
-export const setSecondWindStatus = (status) => {
-  return new Promise((resolve) => {
-    chrome.storage.local.set({ secondWindStatus: status }, () => {
-      console.log("Second wind status set to:", status);
       resolve();
     });
   });

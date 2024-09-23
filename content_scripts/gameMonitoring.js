@@ -2,8 +2,6 @@ import { incrementHue } from "./rewardCalculation.js";
 import { applyGladiatorPenalty } from "./rewardCalculation.js";
 import {
   getActivePerks,
-  setWinningStreak,
-  getWinningStreak,
   setGladiatorLossBuffer,
   getGladiatorLossBuffer,
   resetGladiatorLossBuffer,
@@ -13,7 +11,6 @@ import {
   setHasPlayedBefore,
   setPreparationStatus,
   getPreparationStatus,
-  setSecondWindStatus,
 } from "./storageManagement.js";
 import { PREPARATION_TIME } from "./constants.js";
 import { startAnalysisTimer, updateProgressBarTooltip } from "./uiUpdates.js";
@@ -151,16 +148,12 @@ export const fetchGameStream = async (streamId, playingId, userColor) => {
                   const result = checkForWinOrLoss(userColor, game);
                   const activePerks = await getActivePerks();
                   if (result.win) {
-                    const winningStreak = await getWinningStreak();
-                    await setWinningStreak(winningStreak + 1);
-                    
                     if (activePerks.includes('gladiator')) {
                       const gladiatorLossBuffer = await getGladiatorLossBuffer();
                       await setGladiatorLossBuffer(gladiatorLossBuffer + 1);
                     }
                     await incrementHue(game);
                   } else if (result.loss) {
-                    setWinningStreak(0);
                     if (activePerks.includes('gladiator')) {
                       const gladiatorLossBuffer = await getGladiatorLossBuffer();
                       if (gladiatorLossBuffer > 0) {
@@ -173,9 +166,6 @@ export const fetchGameStream = async (streamId, playingId, userColor) => {
                     }
                     if (activePerks.includes('preparation')) {
                       await setPreparationStatus(false);
-                    }
-                    if (game.moves?.length >= 19) {
-                      await setSecondWindStatus(true);
                     }
                   }
                   await setPlayingId(null);

@@ -3,7 +3,6 @@ import {
   importExtensionState, 
   confirmResetProgress, 
   updateActivePerks, 
-  setWinningStreak, 
   resetGladiatorLossBuffer, 
   setAllowGladiatorPerkRemoval, 
   getAllowGladiatorPerkRemoval, 
@@ -11,7 +10,6 @@ import {
   getPreparationStatus,
   setPreparationStatus, 
   getPlayingId,
-  getCompletedBoards,
 } from './storageManagement.js';
 import { showPerkToast } from './perks.js';
 import { levelNames, PREPARATION_TIME, TIPS, PERK_DISPLAY_NAMES, MAX_PERKS } from './constants.js';
@@ -220,11 +218,6 @@ export const openPerksModal = async () => {
         }
         const perk = box.id.replace('-perk', '');
         const isActive = box.classList.contains('active');
-
-        if (perk === 'hot-streak') {
-          console.log(`hot-streak perk toggled with value:${!isActive}, resetting win streak`);
-          await setWinningStreak(0);
-        }
 
         if (perk === 'gladiator') {
           if (!isActive) {
@@ -493,9 +486,7 @@ export const updateProgressBarTooltip = () => {
         const displayName = PERK_DISPLAY_NAMES[perk] || perk;
         const svgIcon = chrome.runtime.getURL(`imgs/${perk}.svg`);
         tooltipContent += `<li><img src="${svgIcon}" class="perk-icon" alt="${displayName} icon"/> ${displayName}`;
-        if (perk === 'hot-streak') {
-          tooltipContent += ` (Winning Streak: ${winningStreak})`;
-        } else if (perk === 'gladiator') {
+        if (perk === 'gladiator') {
           tooltipContent += ` (Allowed Losses: ${gladiatorLossBuffer})`;
         } else if (perk === 'preparation') {
           tooltipContent += ` (${preparationStatus ? 'Fulfilled' : 'Not Fulfilled'})`;
