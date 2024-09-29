@@ -257,6 +257,21 @@
   margin: 0;
 }
 
+#hue-chess-perks-modal #prestige-level {
+  justify-content: center;
+  align-items: center;
+}
+
+#hue-chess-perks-modal .prestige-icon {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  background-size: 400%;
+  background-position-y: 15px;
+  /* filter: hue-rotate(200deg); */
+  margin-left: 5px;
+}
+
 #hue-onboarding-modal, #hue-challenge-completion-modal {
   width: 600px;
   z-index: 1000;

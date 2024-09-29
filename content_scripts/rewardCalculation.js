@@ -99,7 +99,7 @@ export const incrementHue = async (game) => {
       let completedBoards = (result.completedBoards || 0) + 1;
       let prestige = result.prestige || 0;
 
-      if (completedBoards >= 25) {
+      if (completedBoards >= 17) {
         prestige += 1;
         console.log(`Prestige level increased to: ${prestige}, and resetting to level 1`);
         boardBackButton.click();

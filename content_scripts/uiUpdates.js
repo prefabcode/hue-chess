@@ -280,7 +280,21 @@ export const updatePerksModalContent = async () => {
     if (prestige) {
       document.getElementById('prestige-points').innerText = prestige;
       const prestigeContainer = document.getElementById('prestige-level');
-      prestigeContainer.style.display = 'block';
+     
+      let existingPrestigeIcon = prestigeContainer.querySelector('.prestige-icon');
+      if (existingPrestigeIcon) {
+        existingPrestigeIcon.remove();
+      }
+
+      const imageNumber = Math.min(prestige, 17); // if prestige is > 17, we want to use 17th prestige icon.
+      const imageFormat = [1, 10, 15, 16].includes(imageNumber) ? 'svg' : 'jpg';
+      const imagePath = chrome.runtime.getURL(`imgs/prestige/${imageNumber}.${imageFormat}`);
+      prestigeIcon = document.createElement('div');
+      prestigeIcon.className = 'prestige-icon';
+      prestigeIcon.style.backgroundImage = `url('${imagePath}')`;
+      prestigeContainer.appendChild(prestigeIcon);
+
+      prestigeContainer.style.display = 'flex';
     }
 
     // Set active perks and handle locked perks
@@ -467,7 +481,6 @@ let progressBarTooltipInstance = null;
 export const updateProgressBarTooltip = () => {
   chrome.storage.local.get(['activePerks', 'winningStreak', 'gladiatorLossBuffer', 'preparationStatus', 'playedOpenings'], async (result) => {
     const activePerks = result.activePerks || [];
-    const winningStreak = result.winningStreak || 0;
     const gladiatorLossBuffer = result.gladiatorLossBuffer || 0;
     const preparationStatus = result.preparationStatus || false;
     const playedOpenings = result.playedOpenings || [];
