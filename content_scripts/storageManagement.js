@@ -43,7 +43,7 @@ export const importExtensionState = () => {
 };
 
 export const confirmResetProgress = async () => {
-  const confirmReset = confirm('Are you sure you want to reset your progress? This action cannot be undone. (Prestige trophy will not be reset, to do that you have to re-install hue-chess extension)');
+  const confirmReset = confirm('Are you sure you want to reset your progress? This action cannot be undone. (Prestige level will not be reset, to do that you have to re-install hue-chess extension)');
   if (confirmReset) {
     const prestige = await getPrestige();
     resetProgress(prestige);
