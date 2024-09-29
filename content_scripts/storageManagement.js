@@ -1,12 +1,15 @@
 import { updateUIAfterImport, updatePerksModalContent, updateProgressBarTooltip, updatePerksHeader } from './uiUpdates.js';
 
 export const exportExtensionState = () => {
-  chrome.storage.local.get(['initialized', 'completedBoards', 'currentHue'], (result) => {
+  chrome.storage.local.get(['initialized', 'completedBoards', 'currentHue', 'prestige'], (result) => {
     const extensionState = {
       initialized: result.initialized,
       completedBoards: result.completedBoards,
       currentHue: result.currentHue || 0,
     };
+    if (result.prestige) {
+      extensionState.prestige = result.prestige;
+    }
     const jsonString = JSON.stringify(extensionState);
     const base64String = btoa(jsonString);
 
