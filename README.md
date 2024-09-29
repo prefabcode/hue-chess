@@ -6,20 +6,20 @@ Hue Chess is a chrome extension that adds gamification elements to Lichess. With
 Hue Chess features a **Perk System** that boosts the number of Hue Points you earn for every win in exchange for completing specific challenges on Lichess. As you progress and gain levels in Hue Chess, you'll unlock new perks that provide different ways to accumulate even more Hue Points for your victories.
 
 ### Level Up with Hue Points
-Each level requires 100 Hue Points, and every level features a unique chessboard theme. Journey through 18 distinct levels, discover 9 unique perks, complete the Hue Chess Challenge, and earn a special trophy for your profile! (The trophy will only be visible to you.)
+Each level requires 100 Hue Points, and every level features a unique chessboard theme. Journey through 17 distinct levels, discover 9 unique perks, and complete the Hue Chess Challenge!
 
 ### Get Started
 To choose your perks, simply click on the **Hue Progress Bar** in the top right corner of your navigation bar.
 
 ## Features
 
-- **Hue Points System (Implemented)**: Accumulate hue points by winning chess games. The hue of your chess board changes as you earn more points. Progress through 18 unique levels. 
+- **Hue Points System (implemented)**: Accumulate hue points by winning chess games. The hue of your chess board changes as you earn more points. Progress through 18 unique levels. 
 - **Time Control-Based Rewards (implemented)** : Different time controls grant varying ranges of hue points. 
 - **Progress Tracking (implemented)**: A progress bar displays your current level and how far you are from reaching the next level.
 - **Perk System (9/9 perks implemented)**: As you level up in Hue Chess, you will unlock new perks that allow you to gain bonus hue points from your wins. At launch, Hue chess will feature 9 perks to unlock spread across 18 levels. 
 - **Easter Egg Perks (implemented)**: Hue Chess will ship with a few easter eggs. 
-- **Import / Export functionality (Implemented)**: Encode your progress in a BASE64 string, which you can then import on another machine to sync your progress on hue chess across multiple computers.
-- **Challenge Completion and Trophy (In-Progress)**: When you complete all 25 levels on Hue Chess, you should be rewarded with a unique Trophy on your profile. This Trophy stacks, so you can beat Hue Chess multiple times and continue earning more Trophies!  
+- **Import / Export functionality (implemented)**: Encode your progress in a BASE64 string, which you can then import on another machine to sync your progress on hue chess across multiple computers.
+- **Prestige System (implemented)**: When you complete all 17 levels on Hue Chess, your progress will reset to level 1 and you will enter prestige mode. Prestige mode adds a unique icon to your perk selection menu, that changes as you obtain more prestige.
 
 ## Installation
 

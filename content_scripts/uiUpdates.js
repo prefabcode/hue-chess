@@ -280,7 +280,21 @@ export const updatePerksModalContent = async () => {
     if (prestige) {
       document.getElementById('prestige-points').innerText = prestige;
       const prestigeContainer = document.getElementById('prestige-level');
-      prestigeContainer.style.display = 'block';
+     
+      let existingPrestigeIcon = prestigeContainer.querySelector('.prestige-icon');
+      if (existingPrestigeIcon) {
+        existingPrestigeIcon.remove();
+      }
+
+      const imageNumber = Math.min(prestige, 17); // if prestige is > 17, we want to use 17th prestige icon.
+      const imageFormat = [1, 10, 15, 16].includes(imageNumber) ? 'svg' : 'jpg';
+      const imagePath = chrome.runtime.getURL(`imgs/prestige/${imageNumber}.${imageFormat}`);
+      prestigeIcon = document.createElement('div');
+      prestigeIcon.className = `prestige-icon prestige-icon-${imageNumber}`;
+      prestigeIcon.style.backgroundImage = `url('${imagePath}')`;
+      prestigeContainer.appendChild(prestigeIcon);
+
+      prestigeContainer.style.display = 'flex';
     }
 
     // Set active perks and handle locked perks
@@ -467,7 +481,6 @@ let progressBarTooltipInstance = null;
 export const updateProgressBarTooltip = () => {
   chrome.storage.local.get(['activePerks', 'winningStreak', 'gladiatorLossBuffer', 'preparationStatus', 'playedOpenings'], async (result) => {
     const activePerks = result.activePerks || [];
-    const winningStreak = result.winningStreak || 0;
     const gladiatorLossBuffer = result.gladiatorLossBuffer || 0;
     const preparationStatus = result.preparationStatus || false;
     const playedOpenings = result.playedOpenings || [];
@@ -629,11 +642,11 @@ export const createChallengeCompletionModal = () => {
       <h2>Congratulations!</h2>
       <p>You've successfully completed the Hue Chess Challenge! 🏆</p>
       
-      <h3>You're a Hue Chess Champion!</h3>
-      <p>As a reward for completing the challenge, a unique trophy has been added to your profile. This trophy is stackable, so each time you beat Hue Chess, you'll get a new one (with a unique twist thrown in)!</p>
+      <h3>New Prestige Rank Unlocked!</h3>
+      <p>Every time you beat level 17 you will gain a new prestige rank and a unique prestige icon visible in the perk selection menu. Your prestige icon will change as your prestige rank increases. </p>
       
       <h3>What’s Next?</h3>
-      <p>In addition to your trophy, the number of times you've beaten Hue Chess will now display in the perks selection. Thank you for playing Hue Chess!</p>
+      <p>Try to challenge yourself by playing one specific time control throughout an entire prestige, or a specific variant throughout an entire prestige. You can try a self-imposed "hardcore" mode, where you reset your progress if you lose a certain number of games within any given level. Reset Progress is accessible through the extension settings (it will not wipe your current prestige, just reset your level back to 1). You can also try a speedrun to a specific level. The possibilities for Hue Chess are limited by your own imagination! Good luck, have fun and experiment!</p>
       
       <button id="close-hue-challenge-completion-modal" class="button" style="margin-top: 20px;">Continue Playing</button>
     </div>
