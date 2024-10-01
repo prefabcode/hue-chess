@@ -21,7 +21,7 @@
     "web_accessible_resources": [
         {
             "resources":  ["settings.html", "perks.html", "imgs/*"],
-            "matches": ["<all_urls>"]
+            "matches": ["*://lichess.org/*"]
         }
     ]
 }
