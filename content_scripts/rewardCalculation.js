@@ -1,5 +1,5 @@
 import { updateProgressBar, waitForElm, updateProgressBarTooltip, resetUserMenuState, createChallengeCompletionModal } from './uiUpdates.js';
-import { getActivePerks, setAllowGladiatorPerkRemoval, resetGladiatorLossBuffer, setPlayedOpenings, resetProgress } from './storageManagement.js';
+import { getActivePerks, setAllowGladiatorPerkRemoval, resetGladiatorLossBuffer, setPlayedOpenings, resetProgress, updateActivePerks } from './storageManagement.js';
 import { calculatePerkBonuses } from './perks.js';
 
 
@@ -125,11 +125,12 @@ resolve);
       console.log(`Completed boards incremented, now: ${completedBoards}`);
       updateProgressBar(completedBoards, carryOverValue);
 
-      // Allow removal of gladiator perk on level up.
+      // Unselect and remove gladiator on level up. 
       const activePerks = await getActivePerks();
       if (activePerks.includes('gladiator')) {
         await resetGladiatorLossBuffer();
         await setAllowGladiatorPerkRemoval(true);
+        updateActivePerks('gladiator', false);
       }
     } else {
       // Update current hue in storage
