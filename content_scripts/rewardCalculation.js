@@ -13,7 +13,7 @@ export const getInitialRewardValue = (game) => {
     let bulletDuration = 179; 
 
     let gameType;
-    let rewardMultiplier = Math.ceil(3 * (estimatedDuration / bulletDuration));
+    let rewardMultiplier = Math.ceil(4 * (estimatedDuration / bulletDuration));
     let rewardRange = [rewardMultiplier - 1, rewardMultiplier + 1];
 
 
