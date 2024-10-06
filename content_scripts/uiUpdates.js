@@ -394,33 +394,34 @@ const openSettingsModal = async () => {
              initialized: result.initialized,
              completedBoards: result.completedBoards,
              currentHue: result.currentHue || 0,
+             activePerks: [],
            };
            if (result.prestige) {
              extensionState.prestige = result.prestige;
            }
            const jsonString = JSON.stringify(extensionState);
-           const base64String = btoa(jsonString);
 
-           navigator.clipboard.writeText(base64String);
+           navigator.clipboard.writeText(jsonString);
 
            alert('Hue chess profile string copied to clipboard');
          });
        });
 
        document.getElementById('import-state').addEventListener('click', () => {
-         const base64String = prompt('Paste your game data string:').trim();
-         if (!base64String) {
+         const jsonString = prompt('Paste your game data string:').trim();
+         if (!jsonString) {
            alert('Please paste a valid game data string.');
            return;
          }
 
          try {
-           const jsonString = atob(base64String);
            const extensionState = JSON.parse(jsonString);
 
            chrome.storage.local.set(extensionState, () => {
-             alert('Extension state imported successfully.');
-             // Call any necessary update functions here
+            alert('Extension state imported successfully.');
+            updateUIAfterImport(extensionState);
+            updatePerksModalContent();
+            updatePerksHeader();
            });
          } catch (error) {
            alert('Invalid game string. Please try again.');
