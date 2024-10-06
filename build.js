@@ -51,7 +51,10 @@ function copyFolderRecursiveSync(source, target) {
 esbuild.build({
   entryPoints: ['content.js'],
   bundle: true,
-  outfile: 'build/content-bundle.js'
+  outfile: 'build/content-bundle.js',
+  define: {
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
+  }
 }).catch(() => process.exit(1));
 
 // Build background.js

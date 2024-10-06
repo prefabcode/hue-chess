@@ -1,46 +1,5 @@
 import { updateUIAfterImport, updatePerksModalContent, updateProgressBarTooltip, updatePerksHeader } from './uiUpdates.js';
 
-export const exportExtensionState = () => {
-  chrome.storage.local.get(['initialized', 'completedBoards', 'currentHue', 'prestige'], (result) => {
-    const extensionState = {
-      initialized: result.initialized,
-      completedBoards: result.completedBoards,
-      currentHue: result.currentHue || 0,
-    };
-    if (result.prestige) {
-      extensionState.prestige = result.prestige;
-    }
-    const jsonString = JSON.stringify(extensionState);
-    const base64String = btoa(jsonString);
-
-    navigator.clipboard.writeText(base64String);
-
-    alert('Hue chess profile string copied to clipboard');
-  });
-};
-
-export const importExtensionState = () => {
-  const base64String = document.getElementById('import-input').value.trim();
-  if (!base64String) {
-    alert('Please paste a valid game data string.');
-    return;
-  }
-
-  try {
-    const jsonString = atob(base64String);
-    const extensionState = JSON.parse(jsonString);
-
-    // Update the storage with imported values
-    chrome.storage.local.set(extensionState, () => {
-      alert('Extension state imported successfully.');
-      updateUIAfterImport(extensionState);
-      updatePerksModalContent();
-      updatePerksHeader();
-    });
-  } catch (error) {
-    alert('Invalid game string. Please try again.');
-  }
-};
 
 export const confirmResetProgress = async () => {
   const confirmReset = confirm('Are you sure you want to reset your progress? This action cannot be undone. (Prestige level will not be reset, to do that you have to re-install hue-chess extension)');

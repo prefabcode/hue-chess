@@ -1,6 +1,4 @@
 import {
-  exportExtensionState, 
-  importExtensionState, 
   confirmResetProgress, 
   updateActivePerks, 
   resetGladiatorLossBuffer, 
@@ -384,10 +382,51 @@ const openSettingsModal = async () => {
       modal.close();
     });
 
-    document.getElementById('export-progress').addEventListener('click', exportExtensionState);
-    document.getElementById('import-progress').addEventListener('click', importExtensionState);
     document.getElementById('reset-progress').addEventListener('click', confirmResetProgress);
+    
+    if (process.env.NODE_ENV !== 'production') {
+      document.getElementById('dev-tools').style.display = 'block';
 
+       document.getElementById('export-state').addEventListener('click', () => {
+         chrome.storage.local.get(['initialized', 'completedBoards', 'currentHue',
+ 'prestige'], (result) => {
+           const extensionState = {
+             initialized: result.initialized,
+             completedBoards: result.completedBoards,
+             currentHue: result.currentHue || 0,
+           };
+           if (result.prestige) {
+             extensionState.prestige = result.prestige;
+           }
+           const jsonString = JSON.stringify(extensionState);
+           const base64String = btoa(jsonString);
+
+           navigator.clipboard.writeText(base64String);
+
+           alert('Hue chess profile string copied to clipboard');
+         });
+       });
+
+       document.getElementById('import-state').addEventListener('click', () => {
+         const base64String = prompt('Paste your game data string:').trim();
+         if (!base64String) {
+           alert('Please paste a valid game data string.');
+           return;
+         }
+
+         try {
+           const jsonString = atob(base64String);
+           const extensionState = JSON.parse(jsonString);
+
+           chrome.storage.local.set(extensionState, () => {
+             alert('Extension state imported successfully.');
+             // Call any necessary update functions here
+           });
+         } catch (error) {
+           alert('Invalid game string. Please try again.');
+         }
+       });
+    }
 
   }
   catch (error) {
