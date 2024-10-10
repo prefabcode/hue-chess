@@ -8,6 +8,8 @@ import {
   getPreparationStatus,
   setPreparationStatus, 
   getPlayingId,
+  getCurrentHue,
+  getCompletedBoards,
 } from './storageManagement.js';
 import { showPerkToast } from './perks.js';
 import { levelNames, PREPARATION_TIME, TIPS, PERK_DISPLAY_NAMES, MAX_PERKS } from './constants.js';
@@ -383,7 +385,8 @@ const openSettingsModal = async () => {
     });
 
     document.getElementById('reset-progress').addEventListener('click', confirmResetProgress);
-    
+    document.getElementById('sync-ui').addEventListener('click', syncLichessUIWithExtensionState);
+
     if (process.env.NODE_ENV !== 'production') {
       document.getElementById('dev-tools').style.display = 'block';
 
@@ -710,3 +713,71 @@ export const createChallengeCompletionModal = () => {
     dialog.remove();
   });
 }
+
+const syncLichessUIWithExtensionState = async () => {
+  try {
+    // Ensure the board is in the correct initial state
+    const userTag = await waitForElm('#user_tag');
+    userTag.click();
+
+    const dasherApp = await waitForElm('#dasher_app');
+    const subsDiv = await waitForElm('.subs');
+    const subButtons = subsDiv.querySelectorAll('button.sub');
+    const boardButton = subButtons[3]; // Assuming this is the board button
+
+    boardButton.click();
+    console.log("Clicked board button");
+
+    const boardSettingsDiv = await waitForElm('.board');
+    const dimensionSelector = boardSettingsDiv.querySelector('.selector');
+    const the2DButton =
+Array.from(dimensionSelector.querySelectorAll('button')).find(button =>
+button.textContent === '2D');
+    the2DButton.click();
+    console.log('Clicked 2D button');
+
+    const boardList = await waitForElm('.list');
+    const brownBoardButton = boardList.querySelector('button[title="brown"]');
+    brownBoardButton.click();
+    console.log("Clicked brown board button");
+
+    const isTransparentMode = document.body.classList.contains('transp');
+    if (isTransparentMode) {
+      const boardOpacityDiv = await waitForElm('.board-opacity');
+      const opacitySlider = boardOpacityDiv.querySelector('input.range');
+      opacitySlider.value = 100;
+      opacitySlider.dispatchEvent(new Event('input'));
+      console.log('Opacity slider set to 100');
+    } else {
+      const boardBrightnessDiv = await waitForElm('.board-brightness');
+      const brightnessSlider = boardBrightnessDiv.querySelector('input.range');
+      brightnessSlider.value = 100;
+      brightnessSlider.dispatchEvent(new Event('input'));
+      console.log('Brightness slider set to 100');
+    }
+
+    const boardHueDiv = await waitForElm('.board-hue');
+    const hueSlider = boardHueDiv.querySelector('input.range');
+    hueSlider.value = 0;
+    hueSlider.dispatchEvent(new Event('input'));
+    console.log("Set hue slider to 0");
+
+    const boardBackButton = await waitForElm('.head');
+    boardBackButton.click(); // Return to default profile view
+    userTag.click(); // Close the user menu
+
+    // Now apply the extension state
+    const completedBoards = await getCompletedBoards();
+    const currentHue = await getCurrentHue();
+
+    const extensionState = {
+      completedBoards,
+      currentHue,
+    };
+
+    updateUIAfterImport(extensionState);
+    console.log('UI synchronized with extension state.');
+  } catch (error) {
+    console.error('Error synchronizing UI:', error);
+  }
+};
