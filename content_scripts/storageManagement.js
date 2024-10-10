@@ -173,3 +173,11 @@ export const getCompletedBoards = () => {
     });
   });
 };
+
+export const getCurrentHue = () => {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(['currentHue'], (result) => {
+      resolve(result.currentHue || 0);
+    });
+  });
+};
