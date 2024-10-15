@@ -61,4 +61,4 @@ Feel free to submit issues or pull requests if you have suggestions or improveme
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the GPL-3.O License.
