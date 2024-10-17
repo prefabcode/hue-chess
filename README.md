@@ -2,11 +2,7 @@
 
 Hue Chess is a chrome extension that adds gamification elements to Lichess. With this extension enabled, you'll earn **Hue Points** every time you win a game. These points slightly change the color of your chessboard and are also used to track your progress throughout each level.
 
-
-
-https://github.com/user-attachments/assets/11e3e499-21e3-4f9a-92ab-09ed162e3428
-
-
+![hue-chess-demo](https://github.com/user-attachments/assets/a92577f7-314d-450d-9b70-c827be1128ed)
 
 ### Discover Perks
 Hue Chess features a **Perk System** that boosts the number of Hue Points you earn for every win in exchange for completing specific challenges on Lichess. As you progress and gain levels in Hue Chess, you'll unlock new perks that provide different ways to accumulate even more Hue Points for your victories.
