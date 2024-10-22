@@ -1,33 +1,36 @@
 {
-    "manifest_version": 3,
-    "name": "Hue Chess",
-    "version": "0.9.2",
-    "description": "Gamification mod that adds colors, xp points, levels, and unlockable perks to lichess.org.",
-    "permissions": [
-        "activeTab",
-        "storage",
-        "scripting"
-    ],
-    "action": {},
-    "background": {
-        "service_worker": "background-bundle.js"
-    },
-    "icons": {
-        "16": "imgs/huelogo16.png",
-        "48": "imgs/huelogo48.png",
-        "128": "imgs/huelogo128.png"
-    },
-    "content_scripts": [
-        {
-        "matches": ["*://lichess.org/*"],
-        "js": ["content-bundle.js"],
-        "css": ["customStyles.css", "toastify.css", "tippy.css"]
-        }
-    ],
-    "web_accessible_resources": [
-        {
-            "resources":  ["settings.html", "perks.html", "imgs/*"],
-            "matches": ["*://lichess.org/*"]
-        }
-    ]
+  "manifest_version": 2,
+  "name": "Hue Chess",
+  "version": "0.9.2",
+  "description": "Gamification mod that adds colors, xp points, levels, and unlockable perks to lichess.org.",
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "browser_action": {},
+  "background": {
+    "scripts": ["background-bundle.js"]
+  },
+  "icons": {
+    "16": "imgs/huelogo16.png",
+    "48": "imgs/huelogo48.png",
+    "128": "imgs/huelogo128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://lichess.org/*"],
+      "js": ["content-bundle.js"],
+      "css": ["customStyles.css", "toastify.css", "tippy.css"]
+    }
+  ],
+  "web_accessible_resources": [
+    "settings.html",
+    "perks.html",
+    "imgs/*"
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "huechess@prefabcode.xyz"
+    }
+  }
 }
