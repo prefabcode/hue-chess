@@ -1,3 +1,5 @@
+const browser = typeof chrome !== "undefined" ? chrome : browser;
+
 import { Chess } from "chess.js";
 import {
 	getActivePerks,

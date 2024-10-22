@@ -5,6 +5,8 @@ import {
 	updatePerksHeader,
 } from "./uiUpdates.js";
 
+const browser = typeof chrome !== "undefined" ? chrome : browser;
+
 export const confirmResetProgress = async () => {
 	const confirmReset = confirm(
 		"Are you sure you want to reset your progress? This action cannot be undone. (Prestige level will not be reset, to do that you have to re-install hue-chess extension)",

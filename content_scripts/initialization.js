@@ -7,6 +7,7 @@ import {
 } from "./uiUpdates.js";
 import { checkUrlAndStartMonitoring } from "./gameMonitoring.js";
 
+const browser = typeof chrome !== "undefined" ? chrome : browser;
 const sleep = (milliseconds) => {
 	return new Promise((resolve) => setTimeout(resolve, milliseconds));
 };

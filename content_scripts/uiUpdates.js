@@ -21,6 +21,7 @@ import {
 } from "./constants.js";
 import tippy from "tippy.js";
 
+const browser = typeof chrome !== "undefined" ? chrome : browser;
 const showRandomTip = () => {
 	const tipMessage = document.getElementById("tips-message");
 	const randomIndex = Math.floor(Math.random() * TIPS.length);

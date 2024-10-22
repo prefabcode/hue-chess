@@ -15,6 +15,8 @@ import {
 } from "./storageManagement.js";
 import { calculatePerkBonuses } from "./perks.js";
 
+const browser = typeof chrome !== "undefined" ? chrome : browser;
+
 export const getInitialRewardValue = (game) => {
 	return new Promise((resolve) => {
 		const timeControl = game.tags.TimeControl.value;
