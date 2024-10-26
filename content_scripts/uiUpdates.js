@@ -440,13 +440,11 @@ const openSettingsModal = async () => {
 }
 
 // register openSettingsModal for firefox
-if (typeof chrome === 'undefined') {
-  browser.runtime.onMessage.addListener((request) => {   
-    if (request.action === 'openSettingsModal') {                            
-        openSettingsModal();                                                 
-    }                                                                         
-  }); 
-}
+browser.runtime.onMessage.addListener((request) => {   
+  if (request.action === 'openSettingsModal') {                            
+      openSettingsModal();                                                 
+  }                                                                        
+});
 
 // register openSettingsModal for chrome
 window.openSettingsModal = openSettingsModal;
