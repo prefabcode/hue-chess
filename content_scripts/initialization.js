@@ -1,5 +1,7 @@
 import { updateProgressBar, monitorBoardDiv, waitForElm, updateProgressBarTooltip, resetUserMenuState } from './uiUpdates.js';
 import { checkUrlAndStartMonitoring } from './gameMonitoring.js';
+import { browser } from './constants.js';
+
 
 const sleep = (milliseconds) => {
   return new Promise(resolve => setTimeout(resolve, milliseconds));
@@ -169,7 +171,7 @@ export const initializeExtension = async () => {
     userTag.click(); // Close the user menu
 
     // Mark the initialization as done
-    chrome.storage.local.set({ initialized: true, completedBoards: 0, prestige: 0 }, () => {
+    browser.storage.local.set({ initialized: true, completedBoards: 0, prestige: 0 }, () => {
       console.log("Initialization complete, flag set in storage");
       // TODO: Understand how this works, wouldn't passing 0 in this method break updateProgressBar? 
       updateProgressBar(0, 0);
@@ -182,13 +184,13 @@ export const initializeExtension = async () => {
 export const init = async () => {
   console.log("Initializing extension...");
 
-  chrome.storage.local.get(['initialized'], (result) => {
+  browser.storage.local.get(['initialized'], (result) => {
     if (!result.initialized) {
       initializeExtension();
     } else {
       console.log("Extension already initialized");
       // Initialize the progress bar with current values
-      chrome.storage.local.get(['completedBoards', 'currentHue'], (result) => {
+      browser.storage.local.get(['completedBoards', 'currentHue'], (result) => {
         updateProgressBar(result.completedBoards, result.currentHue);
       });
     }

@@ -7,7 +7,7 @@ import {
   getPlayedOpenings,
   setPlayedOpenings,
 } from "./storageManagement.js";
-import { materialValues } from "./constants.js";
+import { materialValues, browser } from "./constants.js";
 import Toastify from 'toastify-js';
 
 export function showPerkToast(perkId, message) {
@@ -27,7 +27,7 @@ export function showPerkToast(perkId, message) {
   };
 
   const gradient = gradientMap[perkId];
-  const imageUrl = perkId !== 'total-earned' ? chrome.runtime.getURL(`imgs/${perkId}.svg`) : '';
+  const imageUrl = perkId !== 'total-earned' ? browser.runtime.getURL(`imgs/${perkId}.svg`) : '';
 
   Toastify({
     text: message,

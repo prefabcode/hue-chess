@@ -1,3 +1,5 @@
+build-chrome
+build-firefox
 build
 node_modules
 .DS_Store

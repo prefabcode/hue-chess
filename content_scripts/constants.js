@@ -37,4 +37,6 @@ export const PERK_DISPLAY_NAMES = {
   'versatility': 'Versatility',
 };
 
+export const browser = typeof chrome !== "undefined" ? chrome : browser;
+
 export const MAX_PERKS = 2;

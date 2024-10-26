@@ -1,6 +1,7 @@
 import { updateProgressBar, waitForElm, updateProgressBarTooltip, resetUserMenuState, createChallengeCompletionModal } from './uiUpdates.js';
 import { getActivePerks, setAllowGladiatorPerkRemoval, resetGladiatorLossBuffer, setPlayedOpenings, resetProgress, updateActivePerks } from './storageManagement.js';
 import { calculatePerkBonuses } from './perks.js';
+import { browser } from './constants.js';
 
 
 export const getInitialRewardValue = (game) => {
@@ -94,7 +95,7 @@ export const incrementHue = async (game) => {
 
       // Increment completedBoards
       const result = await new Promise((resolve) => {
-        chrome.storage.local.get(['completedBoards', 'prestige'], resolve);
+        browser.storage.local.get(['completedBoards', 'prestige'], resolve);
       });
       let completedBoards = (result.completedBoards || 0) + 1;
       let prestige = result.prestige || 0;
@@ -119,7 +120,7 @@ export const incrementHue = async (game) => {
       }
       
       await new Promise((resolve) => {
-        chrome.storage.local.set({ completedBoards, currentHue: carryOverValue },
+        browser.storage.local.set({ completedBoards, currentHue: carryOverValue },
 resolve);
       });
       console.log(`Completed boards incremented, now: ${completedBoards}`);
@@ -135,7 +136,7 @@ resolve);
     } else {
       // Update current hue in storage
       await new Promise((resolve) => {
-        chrome.storage.local.set({ currentHue: newValue }, resolve);
+        browser.storage.local.set({ currentHue: newValue }, resolve);
       });
       updateProgressBar(null, newValue);
     }
@@ -184,7 +185,7 @@ export const applyGladiatorPenalty = async () => {
         // Get the current hue value
         let currentHue = parseInt(hueSlider.value, 10);
         let newHue = currentHue - 35 >= 0 ? currentHue - 35 : 0;
-        chrome.storage.local.set({ currentHue: newHue }, () => {
+        browser.storage.local.set({ currentHue: newHue }, () => {
           updateProgressBar(null, newHue);
         });
         hueSlider.value = newHue

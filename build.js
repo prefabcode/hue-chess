@@ -1,38 +1,30 @@
+
 const esbuild = require('esbuild');
 const fs = require('fs');
 const path = require('path');
 
-// Ensure the build directory exists
-const buildDir = path.join(__dirname, 'build');
-if (!fs.existsSync(buildDir)) {
-  fs.mkdirSync(buildDir, { recursive: true });
-  console.log('build directory created');
+function ensureDirSync(dir) {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+    console.log(`${dir} directory created`);
+  }
 }
 
-// Helper function to copy a file
 function copyFileSync(source, target) {
   let targetFile = target;
-
-  // If target is a directory, a new file with the same name will be created
   if (fs.existsSync(target)) {
     if (fs.lstatSync(target).isDirectory()) {
       targetFile = path.join(target, path.basename(source));
     }
   }
-
   fs.writeFileSync(targetFile, fs.readFileSync(source));
 }
 
-// Helper function to copy a folder
 function copyFolderRecursiveSync(source, target) {
   let files = [];
-
-  // Check if folder needs to be created or integrated
   if (!fs.existsSync(target)) {
     fs.mkdirSync(target);
   }
-
-  // Copy
   if (fs.lstatSync(source).isDirectory()) {
     files = fs.readdirSync(source);
     files.forEach(function (file) {
@@ -47,100 +39,125 @@ function copyFolderRecursiveSync(source, target) {
   }
 }
 
-// Build content.js
-esbuild.build({
-  entryPoints: ['content.js'],
-  bundle: true,
-  outfile: 'build/content-bundle.js',
-  define: {
-    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
-  }
-}).catch(() => process.exit(1));
+const buildDirChrome = path.join(__dirname, 'build-chrome');
+const buildDirFirefox = path.join(__dirname, 'build-firefox');
 
-// Build background.js
-esbuild.build({
-  entryPoints: ['background.js'],
-  bundle: false,
-  outfile: 'build/background-bundle.js'
-}).catch(() => process.exit(1));
+const buildTarget = process.argv[2];
+const chromeBrowser = 'chrome';
+const firefoxBrowser = 'firefox';
 
-// Copy customStyles.css
-esbuild.build({
-  entryPoints: ['customStyles.css'],
-  bundle: false,
-  outfile: 'build/customStyles.css'
-}).catch(() => process.exit(1));
+function buildForChrome() {
+  ensureDirSync(buildDirChrome);
+  console.log('chrome directory exists');
 
-// Copy settings.html
-const sourceSettingsHtml = path.join(__dirname, 'settings.html');
-const targetSettingsHtml = path.join(__dirname, 'build', 'settings.html');
+  esbuild.build({
+    entryPoints: ['content.js'],
+    bundle: true,
+    outfile: path.join(buildDirChrome, 'content-bundle.js'),
+    define: {
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV ||
+        'development')
+    }
+  }).catch(() => process.exit(1));
+  console.log('content-bundle.js created for chrome');
 
+  esbuild.build({
+    entryPoints: ['background-chrome.js'],
+    bundle: false,
+    outfile: path.join(buildDirChrome, 'background-bundle.js')
+  }).catch(() => process.exit(1));
+  console.log('background-bundle.js created for chrome');
 
-try {
-  copyFileSync(sourceSettingsHtml, targetSettingsHtml);
-  console.log('settings.html copied to build directory');
-} catch (err) {
-  console.error('Error copying settings.html:', err);
-  process.exit(1);
+  esbuild.build({
+    entryPoints: ['customStyles.css'],
+    bundle: false,
+    outfile: path.join(buildDirChrome, 'customStyles.css')
+  }).catch(() => process.exit(1));
+  console.log('customStyles.css copied to chrome build directory');
+
+  ['settings.html', 'perks.html'].forEach(file => {
+    const sourceFile = path.join(__dirname, file);
+    copyFileSync(sourceFile, path.join(buildDirChrome, file));
+  });
+  console.log('html files copied into chrome build directory');
+
+  copyFileSync(path.join(__dirname, 'chrome-manifest.json'),
+    path.join(buildDirChrome, 'manifest.json'));
+  console.log('copied manifest file into chrome build directory');
+
+  copyFolderRecursiveSync(path.join(__dirname, 'imgs'),
+    path.join(buildDirChrome, 'imgs'));
+  console.log('copied images into chrome build directory');
+
+  const sourceToastifyCss = path.join(__dirname, 'node_modules',
+    'toastify-js', 'src', 'toastify.css');
+  copyFileSync(sourceToastifyCss, path.join(buildDirChrome, 'toastify.css'))
+  console.log('copied toastify.css into chrome build directory');
+
+  const sourceTippyCss = path.join(__dirname, 'node_modules', 'tippy.js',
+    'dist', 'tippy.css');
+  copyFileSync(sourceTippyCss, path.join(buildDirChrome, 'tippy.css'));
+  console.log('copied tippy.css into chrome build directory');
 }
 
+function buildForFirefox() {
+  ensureDirSync(buildDirFirefox);
+  console.log('firefox directory exists');
 
-// Copy perks.html
-const sourcePerksHtml = path.join(__dirname, 'perks.html');
-const targetPerksHtml = path.join(__dirname, 'build', 'perks.html');
+  esbuild.build({
+    entryPoints: ['content.js'],
+    bundle: true,
+    outfile: path.join(buildDirFirefox, 'content-bundle.js'),
+    define: {
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV ||
+        'development')
+    }
+  }).catch(() => process.exit(1));
+  console.log('content-bundle.js created for firefox');
 
-try {
-  copyFileSync(sourcePerksHtml, targetPerksHtml);
-  console.log('perks.html copied to build directory');
-} catch (err) {
-  console.error('Error copying perks.html:', err);
-  process.exit(1);
+  esbuild.build({
+    entryPoints: ['background-firefox.js'],
+    bundle: false,
+    outfile: path.join(buildDirFirefox, 'background-bundle.js')
+  }).catch(() => process.exit(1));
+  console.log('background-bundle.js created for firefox');
+
+  esbuild.build({
+    entryPoints: ['customStyles.css'],
+    bundle: false,
+    outfile: path.join(buildDirFirefox, 'customStyles.css')
+  }).catch(() => process.exit(1));
+  console.log('customStyles.css copied to firefox build directory');
+
+  ['settings.html', 'perks.html'].forEach(file => {
+    const sourceFile = path.join(__dirname, file);
+    copyFileSync(sourceFile, path.join(buildDirFirefox, file));
+  });
+  console.log('html files copied into firefox build directory');
+
+  copyFileSync(path.join(__dirname, 'moz-manifest.json'),
+    path.join(buildDirFirefox, 'manifest.json'));
+  console.log('copied manifest file into firefox build directory');
+
+  copyFolderRecursiveSync(path.join(__dirname, 'imgs'),
+    path.join(buildDirFirefox, 'imgs'));
+  console.log('copied images into firefox build directory');
+
+  const sourceToastifyCss = path.join(__dirname, 'node_modules', 'toastify-js', 'src', 'toastify.css');
+  copyFileSync(sourceToastifyCss, path.join(buildDirFirefox, 'toastify.css'));
+  console.log('copied toastify.css into firefox build directory');
+
+  const sourceTippyCss = path.join(__dirname, 'node_modules', 'tippy.js', 'dist', 'tippy.css');
+  copyFileSync(sourceTippyCss, path.join(buildDirFirefox, 'tippy.css'));
+  console.log('copied tippy.css into firefox build directory');
+}
+                                            
+if (!buildTarget || buildTarget === chromeBrowser) {
+  buildForChrome();
 }
 
-// Copy manifest.json
-const sourceManifest = path.join(__dirname, 'manifest.json');
-const targetManifest = path.join(__dirname, 'build', 'manifest.json');
-
-try {
-  copyFileSync(sourceManifest, targetManifest);
-  console.log('manifest.json copied to build directory');
-} catch (err) {
-  console.error('Error copying manifest.json:', err);
-  process.exit(1);
+if (!buildTarget || buildTarget === firefoxBrowser) {
+  buildForFirefox();
 }
 
-// Copy imgs folder
-const sourceImgs = path.join(__dirname, 'imgs');
-const targetImgs = path.join(__dirname, 'build', 'imgs');
-
-try {
-  copyFolderRecursiveSync(sourceImgs, targetImgs);
-  console.log('imgs folder copied to build directory');
-} catch (err) {
-  console.error('Error copying imgs folder:', err);
-  process.exit(1);
-}
-
-// Copy Toastify CSS file
-const sourceToastifyCss = path.join(__dirname, 'node_modules', 'toastify-js', 'src', 'toastify.css');
-const targetToastifyCss = path.join(__dirname, 'build', 'toastify.css');
-
-try {
-  copyFileSync(sourceToastifyCss, targetToastifyCss);
-  console.log('toastify.css copied to build directory');
-} catch (err) {
-  console.error('Error copying toastify.css:', err);
-  process.exit(1);
-}
-
-// Copy Tippy CSS file
-const sourceTippyCss = path.join(__dirname, 'node_modules', 'tippy.js', 'dist', 'tippy.css');
-const targetTippyCss = path.join(__dirname, 'build', 'tippy.css');
-
-try {
-  copyFileSync(sourceTippyCss, targetTippyCss);
-  console.log('tippy.css copied to build directory');
-} catch (err) {
-  console.error('Error copying tippy.css:', err);
-  process.exit(1);
-}
+console.log('build completed!');   
