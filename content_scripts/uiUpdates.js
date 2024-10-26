@@ -439,7 +439,16 @@ const openSettingsModal = async () => {
   // Check if the modal already exists
 }
 
-// expose settings modal to extension button
+// register openSettingsModal for firefox
+if (typeof chrome === 'undefined') {
+  browser.runtime.onMessage.addListener((request) => {   
+    if (request.action === 'openSettingsModal') {                            
+        openSettingsModal();                                                 
+    }                                                                         
+  }); 
+}
+
+// register openSettingsModal for chrome
 window.openSettingsModal = openSettingsModal;
 
 export const waitForElm = (selector) => {

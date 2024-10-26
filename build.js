@@ -62,7 +62,7 @@ function buildForChrome() {
   console.log('content-bundle.js created for chrome');
 
   esbuild.build({
-    entryPoints: ['background.js'],
+    entryPoints: ['background-chrome.js'],
     bundle: false,
     outfile: path.join(buildDirChrome, 'background-bundle.js')
   }).catch(() => process.exit(1));
@@ -116,7 +116,7 @@ function buildForFirefox() {
   console.log('content-bundle.js created for firefox');
 
   esbuild.build({
-    entryPoints: ['background.js'],
+    entryPoints: ['background-firefox.js'],
     bundle: false,
     outfile: path.join(buildDirFirefox, 'background-bundle.js')
   }).catch(() => process.exit(1));
