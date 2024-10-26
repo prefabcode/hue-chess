@@ -24,6 +24,7 @@ export function showPerkToast(perkId, message) {
     'preparation': 'linear-gradient(to right, #093a5e, #0077b6)',
     'opportunist': 'linear-gradient(to right, #daa520, #b8860b)',
     'versatility': 'linear-gradient(to right, #8e44ad, #f39c12)',
+    'en-passant': 'linear-gradient(to right, #ff6a00, #ee0979)',
   };
 
   const gradient = gradientMap[perkId];
@@ -405,6 +406,44 @@ const isVersatilityFulfilled = async (game) => {
   return 0;
 };
 
+const isEnPassantFulfilled = (userName, game) => {               
+  // Determine the player's color                                   
+  const whitePlayer = game.tags.White;                              
+  const blackPlayer = game.tags.Black;                              
+                                                                    
+  let playerColor = null;                                           
+                                                                    
+  if (whitePlayer === userName) {                                   
+    playerColor = 'white';                                          
+  } else if (blackPlayer === userName) {                            
+    playerColor = 'black';                                          
+  }                                                                 
+                                                                    
+  if (!playerColor) {                                               
+    console.error('Player not found in this game.');                
+    return 0;                                                       
+  }                                                                 
+                                                                    
+  const moves = game.moves;                                         
+  const chess = new Chess();                                        
+                                                                    
+  for (const move of moves) {                                       
+    chess.move(move.notation.notation);                             
+                                                                    
+    // Check if the last move was an en passant capture             
+    if (chess.history({ verbose: true                               
+}).slice(-1)[0].flags.includes('e')) {                            
+      console.log('En passant capture detected.');                  
+      const bonus = calculateRandomBonus(1, 2);                     
+      const message = `En Passant: ${bonus} points`;                
+      showPerkToast('en-passant', message);                         
+      return bonus;                                                 
+    }                                                       
+  }                                                               
+                                                                    
+  return 0;                                                         
+};      
+
 const calculateEndgameMaterialFromFEN = (fen) => {
   const pieceCount = { white: 0, black: 0 };
   const pieces = fen.split(' ')[0].split('');
@@ -492,6 +531,7 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
   
   bonus += isHueFocusFulfilled();
   bonus += isBongcloudFulfilled(userName, game);
+  bonus += isEnPassantFulfilled(userName, game);
 
   const message = `Total Hue Earned: ${initialIncrementValue + bonus} points`;
   showPerkToast('total-earned', message);
