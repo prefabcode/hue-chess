@@ -5,6 +5,8 @@
   "main": "background.js",
   "scripts": {
     "build": "node build.js",
+    "build-chrome": "node build.js chrome",
+    "build-moz": "node build.js firefox",
     "build:prod": "NODE_ENV=production node build.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
