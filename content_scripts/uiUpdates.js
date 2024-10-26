@@ -12,7 +12,7 @@ import {
   getCompletedBoards,
 } from './storageManagement.js';
 import { showPerkToast } from './perks.js';
-import { levelNames, PREPARATION_TIME, TIPS, PERK_DISPLAY_NAMES, MAX_PERKS } from './constants.js';
+import { levelNames, PREPARATION_TIME, TIPS, PERK_DISPLAY_NAMES, MAX_PERKS, browser } from './constants.js';
 import tippy from 'tippy.js';
 
 const showRandomTip = () => {
@@ -22,7 +22,7 @@ const showRandomTip = () => {
 }
 
 export const updateProgressBar = (completedBoards = null, hueValue = null) => {
-  chrome.storage.local.get(['completedBoards'], (result) => {
+  browser.storage.local.get(['completedBoards'], (result) => {
     const level = (completedBoards !== null ? completedBoards : result.completedBoards) + 1;
     const progress = hueValue !== null ? hueValue : 0;
     const levelName = levelNames[level - 1];
@@ -158,12 +158,12 @@ async function setImageSources() {
     const imageElement = document.getElementById(imageId);
     const perkBox = imageElement.closest('.perk-box');
     const unlockLevel = parseInt(perkBox.getAttribute('data-unlock-level'), 10);
-    chrome.storage.local.get(['completedBoards'], (result) => {
+    browser.storage.local.get(['completedBoards'], (result) => {
       const playerLevel = (result.completedBoards !== null ? result.completedBoards : 0) + 1;
       if (playerLevel >= unlockLevel) {
-        imageElement.src = chrome.runtime.getURL(`imgs/${imageId.replace('-icon', '')}.svg`);
+        imageElement.src = browser.runtime.getURL(`imgs/${imageId.replace('-icon', '')}.svg`);
       } else {
-        imageElement.src = chrome.runtime.getURL('imgs/lock.svg');
+        imageElement.src = browser.runtime.getURL('imgs/lock.svg');
       }
     });
   });
@@ -181,7 +181,7 @@ export const openPerksModal = async () => {
       return;
     }
 
-    const response = await fetch(chrome.runtime.getURL('perks.html'));
+    const response = await fetch(browser.runtime.getURL('perks.html'));
     const data = await response.text();
 
     // Create a temporary div to hold the fetched HTML
@@ -269,7 +269,7 @@ export const openPerksModal = async () => {
 }
 
 export const updatePerksModalContent = async () => {
-  chrome.storage.local.get(['completedBoards', 'currentHue', 'activePerks', 'prestige'], (result) => {
+  browser.storage.local.get(['completedBoards', 'currentHue', 'activePerks', 'prestige'], (result) => {
     const playerLevel = (result.completedBoards !== null ? result.completedBoards : 0) + 1;
     const huePoints = `${result.currentHue || 0}/100`;
     const prestige = (result.prestige || 0);
@@ -288,7 +288,7 @@ export const updatePerksModalContent = async () => {
 
       const imageNumber = Math.min(prestige, 17); // if prestige is > 17, we want to use 17th prestige icon.
       const imageFormat = [1, 10, 15, 16].includes(imageNumber) ? 'svg' : 'jpg';
-      const imagePath = chrome.runtime.getURL(`imgs/prestige/${imageNumber}.${imageFormat}`);
+      const imagePath = browser.runtime.getURL(`imgs/prestige/${imageNumber}.${imageFormat}`);
       prestigeIcon = document.createElement('div');
       prestigeIcon.className = `prestige-icon prestige-icon-${imageNumber}`;
       prestigeIcon.style.backgroundImage = `url('${imagePath}')`;
@@ -307,13 +307,13 @@ export const updatePerksModalContent = async () => {
 
       if (playerLevel >= unlockLevel) {
         box.style.display = 'flex';
-        imgElement.src = chrome.runtime.getURL(`imgs/${perk}.svg`);
+        imgElement.src = browser.runtime.getURL(`imgs/${perk}.svg`);
         box.classList.remove('locked');
         box.setAttribute('data-tippy-content', box.getAttribute('data-tippy-content-original'));
       } else {
         box.style.display = 'flex';
         box.classList.add('locked');
-        imgElement.src = chrome.runtime.getURL('imgs/lock.svg');
+        imgElement.src = browser.runtime.getURL('imgs/lock.svg');
         box.setAttribute('data-tippy-content', `Unlocks at Level ${unlockLevel}`);
       }
 
@@ -362,7 +362,7 @@ const openSettingsModal = async () => {
       return;
     }
 
-    const response = await fetch(chrome.runtime.getURL('settings.html'));
+    const response = await fetch(browser.runtime.getURL('settings.html'));
     const data = await response.text();
 
     // Create a temporary div to hold the fetched HTML
@@ -391,7 +391,7 @@ const openSettingsModal = async () => {
       document.getElementById('dev-tools').style.display = 'block';
 
        document.getElementById('export-state').addEventListener('click', () => {
-         chrome.storage.local.get(['initialized', 'completedBoards', 'currentHue',
+         browser.storage.local.get(['initialized', 'completedBoards', 'currentHue',
  'prestige'], (result) => {
            const extensionState = {
              initialized: result.initialized,
@@ -420,7 +420,7 @@ const openSettingsModal = async () => {
          try {
            const extensionState = JSON.parse(jsonString);
 
-           chrome.storage.local.set(extensionState, () => {
+           browser.storage.local.set(extensionState, () => {
             alert('Extension state imported successfully.');
             updateUIAfterImport(extensionState);
             updatePerksModalContent();
@@ -522,7 +522,7 @@ export const updateUIAfterImport = (extensionState) => {
 let progressBarTooltipInstance = null;
 
 export const updateProgressBarTooltip = () => {
-  chrome.storage.local.get(['activePerks', 'winningStreak', 'gladiatorLossBuffer', 'preparationStatus', 'playedOpenings'], async (result) => {
+  browser.storage.local.get(['activePerks', 'winningStreak', 'gladiatorLossBuffer', 'preparationStatus', 'playedOpenings'], async (result) => {
     const activePerks = result.activePerks || [];
     const gladiatorLossBuffer = result.gladiatorLossBuffer || 0;
     const preparationStatus = result.preparationStatus || false;
@@ -540,7 +540,7 @@ export const updateProgressBarTooltip = () => {
       tooltipContent = '<ul class="progress-perk-tooltip">';
       activePerks.forEach(perk => {
         const displayName = PERK_DISPLAY_NAMES[perk] || perk;
-        const svgIcon = chrome.runtime.getURL(`imgs/${perk}.svg`);
+        const svgIcon = browser.runtime.getURL(`imgs/${perk}.svg`);
         tooltipContent += `<li><img src="${svgIcon}" class="perk-icon" alt="${displayName} icon"/> ${displayName}`;
         if (perk === 'gladiator') {
           tooltipContent += ` (Allowed Losses: ${gladiatorLossBuffer})`;

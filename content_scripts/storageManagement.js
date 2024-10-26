@@ -1,4 +1,5 @@
 import { updateUIAfterImport, updatePerksModalContent, updateProgressBarTooltip, updatePerksHeader } from './uiUpdates.js';
+import { browser } from './constants.js';
 
 
 export const confirmResetProgress = async () => {
@@ -20,14 +21,14 @@ export const resetProgress = (prestige = 0) => {
     prestige,
   };
 
-  chrome.storage.local.set(resetState, () => {
+  browser.storage.local.set(resetState, () => {
     console.log(`Progress has been reset. Setting Prestige to: ${prestige}`);
     updateUIAfterImport(resetState);
   });
 };
 
 export const updateActivePerks = (perk, isChecked) => {
-  chrome.storage.local.get(['activePerks'], (result) => {
+  browser.storage.local.get(['activePerks'], (result) => {
     let activePerks = result.activePerks || [];
     if (isChecked) {
       if (!activePerks.includes(perk)) {
@@ -36,7 +37,7 @@ export const updateActivePerks = (perk, isChecked) => {
     } else {
       activePerks = activePerks.filter(p => p !== perk);
     }
-    chrome.storage.local.set({ activePerks }, () => {
+    browser.storage.local.set({ activePerks }, () => {
       console.log(`Active perks updated: ${activePerks}`);
       updateProgressBarTooltip();  // Update the tooltip content
       updatePerksHeader();
@@ -46,7 +47,7 @@ export const updateActivePerks = (perk, isChecked) => {
 
 export const getActivePerks = () => {
   return new Promise((resolve) => {
-    chrome.storage.local.get(['activePerks'], (result) => {
+    browser.storage.local.get(['activePerks'], (result) => {
       resolve(result.activePerks || []);
     });
   });
@@ -54,7 +55,7 @@ export const getActivePerks = () => {
 
 export const getPlayingId = () => {
   return new Promise((resolve) => {
-    chrome.storage.local.get(['playingId'], (result) => {
+    browser.storage.local.get(['playingId'], (result) => {
       resolve(result.playingId || null);
     });
   });
@@ -62,7 +63,7 @@ export const getPlayingId = () => {
 
 export const setPlayingId = (playingId) => {
   return new Promise((resolve) => {
-    chrome.storage.local.set({ playingId }, () => {
+    browser.storage.local.set({ playingId }, () => {
       console.log("Playing ID stored:", playingId);
       resolve();
     });
@@ -71,7 +72,7 @@ export const setPlayingId = (playingId) => {
 
 export const getGladiatorLossBuffer = () => {
   return new Promise((resolve) => {
-    chrome.storage.local.get(['gladiatorLossBuffer'], (result) => {
+    browser.storage.local.get(['gladiatorLossBuffer'], (result) => {
       resolve(result.gladiatorLossBuffer || 0);
     });
   });
@@ -79,7 +80,7 @@ export const getGladiatorLossBuffer = () => {
 
 export const setGladiatorLossBuffer = (value) => {
   return new Promise((resolve) => {
-    chrome.storage.local.set({ gladiatorLossBuffer: value }, () => {
+    browser.storage.local.set({ gladiatorLossBuffer: value }, () => {
       resolve();
     });
   });
@@ -91,7 +92,7 @@ export const resetGladiatorLossBuffer = () => {
 
 export const getAllowGladiatorPerkRemoval = () => {
   return new Promise((resolve) => {
-      chrome.storage.local.get(['allowGladiatorPerkRemoval'], (result) => {
+      browser.storage.local.get(['allowGladiatorPerkRemoval'], (result) => {
           resolve(result.allowGladiatorPerkRemoval || false);
       });
   });
@@ -99,7 +100,7 @@ export const getAllowGladiatorPerkRemoval = () => {
 
 export const setAllowGladiatorPerkRemoval = (value) => {
   return new Promise((resolve) => {
-      chrome.storage.local.set({ allowGladiatorPerkRemoval: value }, () => {
+      browser.storage.local.set({ allowGladiatorPerkRemoval: value }, () => {
           resolve();
       });
   });
@@ -108,7 +109,7 @@ export const setAllowGladiatorPerkRemoval = (value) => {
 // Get the hasPlayedBefore flag
 export const getHasPlayedBefore = () => {
   return new Promise((resolve) => {
-    chrome.storage.local.get(['hasPlayedBefore'], (result) => {
+    browser.storage.local.get(['hasPlayedBefore'], (result) => {
       resolve(result.hasPlayedBefore || false);
     });
   });
@@ -117,7 +118,7 @@ export const getHasPlayedBefore = () => {
 // Set the hasPlayedBefore flag
 export const setHasPlayedBefore = (hasPlayedBefore) => {
   return new Promise((resolve) => {
-    chrome.storage.local.set({ hasPlayedBefore }, () => {
+    browser.storage.local.set({ hasPlayedBefore }, () => {
       console.log("Has Played Before flag stored:", hasPlayedBefore);
       resolve();
     });
@@ -126,7 +127,7 @@ export const setHasPlayedBefore = (hasPlayedBefore) => {
 
 export const getPreparationStatus = () => {
   return new Promise((resolve) => {
-    chrome.storage.local.get(['preparationStatus'], (result) => {
+    browser.storage.local.get(['preparationStatus'], (result) => {
       resolve(result.preparationStatus || false);
     });
   });
@@ -134,7 +135,7 @@ export const getPreparationStatus = () => {
 
 export const setPreparationStatus = (status) => {
   return new Promise((resolve) => {
-    chrome.storage.local.set({ preparationStatus: status }, () => {
+    browser.storage.local.set({ preparationStatus: status }, () => {
       console.log("Preparation status set to:", status);
       resolve();
     });
@@ -143,7 +144,7 @@ export const setPreparationStatus = (status) => {
 
 export const getPlayedOpenings = () => {
   return new Promise((resolve) => {
-    chrome.storage.local.get(['playedOpenings'], (result) => {
+    browser.storage.local.get(['playedOpenings'], (result) => {
       resolve(result.playedOpenings || []);
     });
   });
@@ -151,7 +152,7 @@ export const getPlayedOpenings = () => {
 
 export const setPlayedOpenings = (openings) => {
   return new Promise((resolve) => {
-    chrome.storage.local.set({ playedOpenings: openings }, () => {
+    browser.storage.local.set({ playedOpenings: openings }, () => {
       console.log("Played openings updated:", openings);
       resolve();
     });
@@ -160,7 +161,7 @@ export const setPlayedOpenings = (openings) => {
 
 export const getPrestige = () => {
   return new Promise((resolve) => {
-    chrome.storage.local.get(['prestige'], (result) => {
+    browser.storage.local.get(['prestige'], (result) => {
       resolve(result.prestige || 0);
     });
   });
@@ -168,7 +169,7 @@ export const getPrestige = () => {
 
 export const getCompletedBoards = () => {
   return new Promise((resolve) => {
-    chrome.storage.local.get(['completedBoards'], (result) => {
+    browser.storage.local.get(['completedBoards'], (result) => {
       resolve(result.completedBoards || 0);
     });
   });
@@ -176,7 +177,7 @@ export const getCompletedBoards = () => {
 
 export const getCurrentHue = () => {
   return new Promise((resolve) => {
-    chrome.storage.local.get(['currentHue'], (result) => {
+    browser.storage.local.get(['currentHue'], (result) => {
       resolve(result.currentHue || 0);
     });
   });
