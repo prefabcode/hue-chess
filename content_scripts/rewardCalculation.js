@@ -1,7 +1,7 @@
 import { updateProgressBar, waitForElm, updateProgressBarTooltip, resetUserMenuState, createChallengeCompletionModal } from './uiUpdates.js';
 import { getActivePerks, setAllowGladiatorPerkRemoval, resetGladiatorLossBuffer, setPlayedOpenings, resetProgress, updateActivePerks } from './storageManagement.js';
 import { calculatePerkBonuses } from './perks.js';
-import { browser } from './constants.js';
+import { browser, LEVEL_CAP } from './constants.js';
 
 
 export const getInitialRewardValue = (game) => {
@@ -11,10 +11,11 @@ export const getInitialRewardValue = (game) => {
 
     // Calculate estimated game duration
     const estimatedDuration = initialTime + (40 * increment);
-    let bulletDuration = 179; 
+    const bulletDuration = 179;
+    const calcMultiplier = initialtime < bulletDuration ? 5.5 : 3.5;  
 
     let gameType;
-    let rewardMultiplier = Math.ceil(3.5 * (estimatedDuration / bulletDuration));
+    let rewardMultiplier = Math.ceil(calcMultiplier * (estimatedDuration / bulletDuration));
     let rewardRange = [rewardMultiplier - 1, rewardMultiplier + 1];
 
 
@@ -100,7 +101,7 @@ export const incrementHue = async (game) => {
       let completedBoards = (result.completedBoards || 0) + 1;
       let prestige = result.prestige || 0;
 
-      if (completedBoards >= 17) {
+      if (completedBoards >= LEVEL_CAP) {
         prestige += 1;
         console.log(`Prestige level increased to: ${prestige}, and resetting to level 1`);
         boardBackButton.click();
