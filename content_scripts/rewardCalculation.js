@@ -11,8 +11,9 @@ export const getInitialRewardValue = (game) => {
 
     // Calculate estimated game duration
     const estimatedDuration = initialTime + (40 * increment);
-    const bulletDuration = 179;
-    const calcMultiplier = initialTime < bulletDuration ? 5.5 : 3.5;  
+    const bulletDuration = 160;
+    const oneMinuteBullet = 60; 
+    const calcMultiplier = initialTime <= oneMinuteBullet ? 5.5 : 3;  
 
     let gameType;
     let rewardMultiplier = Math.ceil(calcMultiplier * (estimatedDuration / bulletDuration));
