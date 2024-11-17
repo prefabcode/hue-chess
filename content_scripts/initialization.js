@@ -26,7 +26,7 @@ function createOnboardingModal() {
       <p>Hue Chess features a <strong>Perk System</strong> that boosts the number of Hue Points you earn for every win, in exchange for completing specific challenges on Lichess. As you progress and gain levels in Hue Chess, you'll unlock new perks that provide different ways to accumulate even more Hue Points for your victories!</p>
       
       <h3>Level Up with Hue Points</h3>
-      <p>Each level requires 100 Hue Points, and every level features a unique chessboard theme. Journey through 17 distinct levels, discover 9 unique perks, and complete the Hue Chess Challenge!</p>
+      <p>Each level requires 100 Hue Points, and every level features a unique chessboard theme. Journey through 15 distinct levels, discover 9 unique perks, and complete the Hue Chess Challenge!</p>
 
       <h3>Get Started</h3>
       <p>To choose your perks, simply click on the <strong>Hue Progress Bar</strong> in the top right corner of your navigation bar.</p>

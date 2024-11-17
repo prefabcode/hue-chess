@@ -12,7 +12,7 @@ import {
   getCompletedBoards,
 } from './storageManagement.js';
 import { showPerkToast } from './perks.js';
-import { levelNames, PREPARATION_TIME, TIPS, PERK_DISPLAY_NAMES, MAX_PERKS, browser } from './constants.js';
+import { levelNames, PREPARATION_TIME, TIPS, PERK_DISPLAY_NAMES, MAX_PERKS, browser, LEVEL_CAP } from './constants.js';
 import tippy from 'tippy.js';
 
 const showRandomTip = () => {
@@ -286,8 +286,8 @@ export const updatePerksModalContent = async () => {
         existingPrestigeIcon.remove();
       }
 
-      const imageNumber = Math.min(prestige, 17); // if prestige is > 17, we want to use 17th prestige icon.
-      const imageFormat = [1, 10, 15, 16].includes(imageNumber) ? 'svg' : 'jpg';
+      const imageNumber = Math.min(prestige, LEVEL_CAP); // if prestige is > 15, we want to use 15th prestige icon.
+      const imageFormat = [1, 10, 15].includes(imageNumber) ? 'svg' : 'jpg';
       const imagePath = browser.runtime.getURL(`imgs/prestige/${imageNumber}.${imageFormat}`);
       prestigeIcon = document.createElement('div');
       prestigeIcon.className = `prestige-icon prestige-icon-${imageNumber}`;
@@ -693,7 +693,7 @@ export const createChallengeCompletionModal = () => {
       <p>You've successfully completed the Hue Chess Challenge! 🏆</p>
       
       <h3>New Prestige Rank Unlocked!</h3>
-      <p>Every time you beat level 17 you will gain a new prestige rank and a unique prestige icon visible in the perk selection menu. Your prestige icon will change as your prestige rank increases. </p>
+      <p>Every time you beat level 15 you will gain a new prestige rank and a unique prestige icon visible in the perk selection menu. Your prestige icon will change as your prestige rank increases. </p>
       
       <h3>What’s Next?</h3>
       <p>Try to challenge yourself by playing one specific time control throughout an entire prestige, or a specific variant throughout an entire prestige. You can try a self-imposed "hardcore" mode, where you reset your progress if you lose a certain number of games within any given level. Reset Progress is accessible through the extension settings (it will not wipe your current prestige, just reset your level back to 1). You can also try a speedrun to a specific level. The possibilities for Hue Chess are limited by your own imagination! Good luck, have fun and experiment!</p>

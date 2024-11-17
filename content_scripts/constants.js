@@ -40,3 +40,5 @@ export const PERK_DISPLAY_NAMES = {
 export const browser = typeof chrome !== "undefined" ? chrome : browser;
 
 export const MAX_PERKS = 2;
+
+export const LEVEL_CAP = 15;
