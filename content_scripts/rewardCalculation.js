@@ -11,14 +11,10 @@ export const getInitialRewardValue = (game) => {
 
     // Calculate estimated game duration
     const estimatedDuration = initialTime + (40 * increment);
-    const bulletDuration = 160;
-    const oneMinuteBullet = 60; 
-    const calcMultiplier = initialTime <= oneMinuteBullet ? 5.5 : 3;  
-
+    const bulletDuration = 179;
+    const rewardMultiplier = Math.ceil(3.5 * (estimatedDuration / bulletDuration));
+    const rewardRange = [rewardMultiplier - 1, rewardMultiplier + 1];
     let gameType;
-    let rewardMultiplier = Math.ceil(calcMultiplier * (estimatedDuration / bulletDuration));
-    let rewardRange = [rewardMultiplier - 1, rewardMultiplier + 1];
-
 
     if (estimatedDuration < 29) {
       gameType = 'UltraBullet';
