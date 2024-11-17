@@ -287,7 +287,7 @@ export const updatePerksModalContent = async () => {
       }
 
       const imageNumber = Math.min(prestige, LEVEL_CAP); // if prestige is > 15, we want to use 15th prestige icon.
-      const imageFormat = [1, 10, 15, 16].includes(imageNumber) ? 'svg' : 'jpg';
+      const imageFormat = [1, 10, 15].includes(imageNumber) ? 'svg' : 'jpg';
       const imagePath = browser.runtime.getURL(`imgs/prestige/${imageNumber}.${imageFormat}`);
       prestigeIcon = document.createElement('div');
       prestigeIcon.className = `prestige-icon prestige-icon-${imageNumber}`;
