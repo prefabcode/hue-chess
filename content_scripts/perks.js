@@ -196,7 +196,7 @@ const isGambiteerFulfilled = (userName, game) => {
   const moves = game.moves;
 
   if (opening.toLowerCase().includes('gambit')) {
-    const bonus = calculateRandomBonus(3, 5);
+    const bonus = calculateRandomBonus(2, 4);
     console.log(`Gambiteer bonus points: ${bonus}`);
     const message = `Gambiteer: ${bonus} points`;
     showPerkToast('gambiteer', message);
@@ -222,7 +222,7 @@ const isGambiteerFulfilled = (userName, game) => {
 
   for (const move of moves) {
     if (move.notation.notation === 'O-O-O' && move.turn === playerColor.charAt(0)) {
-      const bonus = calculateRandomBonus(3, 5);
+      const bonus = calculateRandomBonus(2, 4);
       console.log(`Gambiteer bonus points: ${bonus}`);
       const message = `Gambiteer: ${bonus} points`;
       showPerkToast('gambiteer', message);
