@@ -16,7 +16,7 @@ function createOnboardingModal() {
   const content = document.createElement('div');
   content.innerHTML = `
     <div class="close-button-anchor">
-      <button id="close-hue-onboarding-modal-x" class="close-button" data-icon="" aria-label="Close"></button>
+      <button id="close-hue-onboarding-modal-x" class="close-button" data-icon="" aria-label="Close"></button>
     </div>
     <div class="scrollable dialog-content">
       <h2>Welcome to Hue Chess!</h2>

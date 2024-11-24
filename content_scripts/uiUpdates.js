@@ -686,7 +686,7 @@ export const createChallengeCompletionModal = () => {
   const content = document.createElement('div');
   content.innerHTML = `
     <div class="close-button-anchor">
-      <button id="close-hue-challenge-completion-modal-x" class="close-button" data-icon="" aria-label="Close"></button>
+      <button id="close-hue-challenge-completion-modal-x" class="close-button" data-icon="" aria-label="Close"></button>
     </div>
     <div class="scrollable dialog-content">
       <h2>Congratulations!</h2>
