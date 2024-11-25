@@ -95,6 +95,10 @@
   background: linear-gradient(to right, #8e44ad, #f39c12);
 }
 
+#knight-moves-perk.active {
+  background:  linear-gradient(to right, #ff7e5f, #feb47b);
+}
+
 
 .perks {
   display: flex;

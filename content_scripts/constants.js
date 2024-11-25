@@ -35,6 +35,7 @@ export const PERK_DISPLAY_NAMES = {
   'rivalry': 'Rivalry',
   'opportunist': 'Opportunist',
   'versatility': 'Versatility',
+  'knight-moves': 'Knight Moves',
 };
 
 export const browser = typeof chrome !== "undefined" ? chrome : browser;
