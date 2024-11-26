@@ -98,6 +98,9 @@
 #knight-moves-perk.active {
   background:  linear-gradient(to right, #ff7e5f, #feb47b);
 }
+#marksman-perk.active {
+  background: linear-gradient(to right, #ff9a9e, #fad0c4);
+}
 
 
 .perks {

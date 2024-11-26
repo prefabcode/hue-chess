@@ -25,6 +25,7 @@ export function showPerkToast(perkId, message) {
     'opportunist': 'linear-gradient(to right, #daa520, #b8860b)',
     'versatility': 'linear-gradient(to right, #8e44ad, #f39c12)',
     'knight-moves': 'linear-gradient(to right, #ff7e5f, #feb47b)',
+    'marksman': 'linear-gradient(to right, #ff9a9e, #fad0c4)',
   };
 
   const gradient = gradientMap[perkId];
@@ -440,7 +441,40 @@ const isKnightMovesFulfilled = (userName, game) => {
    }
 
    return 0;                         
- };        
+ };
+
+ const isMarksmanFulfilled = (userName, game) => {
+  const whitePlayer = game.tags.White;             
+  const blackPlayer = game.tags.Black;             
+                              
+  let playerColor = null;    
+                              
+  if (whitePlayer === userName) {                  
+    playerColor = 'white';   
+  } else if (blackPlayer === userName) {                  
+    playerColor = 'black';   
+  }                          
+                              
+  if (!playerColor) {        
+    console.error('Player no found in this game.');       
+     return 0;                
+   }                          
+                                 
+   const moves = game.moves;  
+   const fianchettoSquares = playerColor === 'white' ? ['b2', 'g2'] : ['b7', 'g7']; 
+                              
+   for (const move of moves) {
+    if (move.notation.notation.startsWith('B') 
+      && fianchettoSquares.includes(move.notation.notation.slice(1))) {
+    
+      const bonus = calculateRandomBonus(1, 3);  
+      const message = `Marksman: ${bonus} points`; 
+      showPerkToast('marksman', message);                  
+      return bonus;          
+    }  
+  }
+ }
+ 
 
 const calculateEndgameMaterialFromFEN = (fen) => {
   const pieceCount = { white: 0, black: 0 };
@@ -528,6 +562,9 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
   }
   if (activePerks.includes('knight-moves')) {
     bonus += isKnightMovesFulfilled(userName, game);
+  }
+  if (activePerks.includes('marksman')) {
+    bonus += isMarksmanFulfilled(userName, game);
   }
   
   bonus += isHueFocusFulfilled();
