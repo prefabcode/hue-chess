@@ -25,8 +25,7 @@ export function showPerkToast(perkId, message) {
     'opportunist': 'linear-gradient(to right, #daa520, #b8860b)',
     'versatility': 'linear-gradient(to right, #8e44ad, #f39c12)',
     'knight-moves': 'linear-gradient(to right, #0b3d91, #6a1b9a)',
-    'marksman': 'linear-gradient(to right, #ff9a9e, #fad0c4)',
-    // background: linear-gradient(to right, #0b3d91, #6a1b9a);
+    'fianchetto': 'linear-gradient(to right, #18371e, #6b8e23)',
   };
 
   const gradient = gradientMap[perkId];

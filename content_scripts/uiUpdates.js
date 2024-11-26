@@ -153,7 +153,7 @@ async function setImageSources() {
     'opportunist-icon',
     'versatility-icon',
     'knight-moves-icon',
-    'marksman-icon',
+    'fianchetto-icon',
   ];
 
   images.forEach(imageId => {
