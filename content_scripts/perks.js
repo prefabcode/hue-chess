@@ -311,13 +311,13 @@ const isEqualizerFulfilled = (userName, game) => {
 
 const isRivalryFulfilled = async () => {
   const hasPlayedBefore = await getHasPlayedBefore();
-  let bonus = calculateRandomBonus(1, 3);
+  let bonus = 0;
   if (hasPlayedBefore) {
-    bonus = calculateRandomBonus(4, 5);
+    bonus = calculateRandomBonus(4, 6);
+    console.log(`Rivalry bonus: ${bonus}`);
+    const message = `Rivalry: ${bonus} points`;
+    showPerkToast('rivalry', message);
   }
-  console.log(`Rivalry bonus: ${bonus}`);
-  const message = `Rivalry: ${bonus} points`;
-  showPerkToast('rivalry', message);
   return bonus;
 };
 
@@ -443,7 +443,7 @@ const isKnightMovesFulfilled = (userName, game) => {
    return 0;                         
  };
 
- const isMarksmanFulfilled = (userName, game) => {
+ const isFianchettoFulfilled = (userName, game) => {
   const whitePlayer = game.tags.White;             
   const blackPlayer = game.tags.Black;             
                               
@@ -468,8 +468,8 @@ const isKnightMovesFulfilled = (userName, game) => {
       && fianchettoSquares.includes(move.notation.notation.slice(1))) {
     
       const bonus = calculateRandomBonus(1, 3);  
-      const message = `Marksman: ${bonus} points`; 
-      showPerkToast('marksman', message);                  
+      const message = `Fianchetto: ${bonus} points`; 
+      showPerkToast('fianchetto', message);                  
       return bonus;          
     }  
   }
@@ -563,8 +563,8 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
   if (activePerks.includes('knight-moves')) {
     bonus += isKnightMovesFulfilled(userName, game);
   }
-  if (activePerks.includes('marksman')) {
-    bonus += isMarksmanFulfilled(userName, game);
+  if (activePerks.includes('fianchetto')) {
+    bonus += isFianchettoFulfilled(userName, game);
   }
   
   bonus += isHueFocusFulfilled();
