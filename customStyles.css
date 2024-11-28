@@ -98,7 +98,9 @@
 #knight-moves-perk.active {
   background: linear-gradient(to right, #0b3d91, #6a1b9a);
 }
-
+#aggression-perk.active {
+  background: linear-gradient(to right, #d50000, #ff6f00);
+}
 
 .perks {
   display: flex;

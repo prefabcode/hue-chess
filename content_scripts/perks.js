@@ -25,6 +25,7 @@ export function showPerkToast(perkId, message) {
     'opportunist': 'linear-gradient(to right, #daa520, #b8860b)',
     'versatility': 'linear-gradient(to right, #8e44ad, #f39c12)',
     'knight-moves': 'linear-gradient(to right, #0b3d91, #6a1b9a)',
+    'aggression': 'linear-gradient(to right, #d50000, #ff6f00)'
   };
 
   const gradient = gradientMap[perkId];
@@ -441,6 +442,26 @@ const isKnightMovesFulfilled = (userName, game) => {
 
    return 0;                         
  };
+
+ const isAggressionFulfilled = (game) => {
+  const moves = Math.ceil(game.moves.length / 2);
+  let bonus = 0;
+
+  if (moves <= 20) {
+    bonus = calculateRandomBonus(8, 11);
+  } else if (moves <= 30) {
+    bonus = calculateRandomBonus(5, 7);
+  } else if (moves <= 40) {
+    bonus = calculateRandomBonus(2, 4);
+  }
+
+  if (bonus > 0) {
+    const message = `Aggression: ${bonus} points`;    
+    showPerkToast('aggression', message); 
+  }
+
+  return bonus;
+ };
  
 const calculateEndgameMaterialFromFEN = (fen) => {
   const pieceCount = { white: 0, black: 0 };
@@ -528,6 +549,9 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
   }
   if (activePerks.includes('knight-moves')) {
     bonus += isKnightMovesFulfilled(userName, game);
+  }
+  if (activePerks.includes('aggression')) {
+    bonus += isAggressionFulfilled(game);
   }
   
   bonus += isHueFocusFulfilled();
