@@ -99,10 +99,6 @@
   background: linear-gradient(to right, #0b3d91, #6a1b9a);
 }
 
-#fianchetto-perk.active {
-  background: linear-gradient(to right, #18371e, #6b8e23);
-}
-
 
 .perks {
   display: flex;
