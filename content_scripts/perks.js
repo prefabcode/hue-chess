@@ -24,6 +24,7 @@ export function showPerkToast(perkId, message) {
     'preparation': 'linear-gradient(to right, #093a5e, #0077b6)',
     'opportunist': 'linear-gradient(to right, #daa520, #b8860b)',
     'versatility': 'linear-gradient(to right, #8e44ad, #f39c12)',
+    'knight-moves': 'linear-gradient(to right, #0b3d91, #6a1b9a)',
   };
 
   const gradient = gradientMap[perkId];
@@ -309,13 +310,13 @@ const isEqualizerFulfilled = (userName, game) => {
 
 const isRivalryFulfilled = async () => {
   const hasPlayedBefore = await getHasPlayedBefore();
-  let bonus = calculateRandomBonus(1, 3);
+  let bonus = 0;
   if (hasPlayedBefore) {
-    bonus = calculateRandomBonus(4, 5);
+    bonus = calculateRandomBonus(4, 6);
+    console.log(`Rivalry bonus: ${bonus}`);
+    const message = `Rivalry: ${bonus} points`;
+    showPerkToast('rivalry', message);
   }
-  console.log(`Rivalry bonus: ${bonus}`);
-  const message = `Rivalry: ${bonus} points`;
-  showPerkToast('rivalry', message);
   return bonus;
 };
 
@@ -405,6 +406,42 @@ const isVersatilityFulfilled = async (game) => {
   return 0;
 };
 
+const isKnightMovesFulfilled = (userName, game) => {                
+   const whitePlayer = game.tags.White;                    
+   const blackPlayer = game.tags.Black;                    
+                                     
+   let playerColor = null;           
+                                     
+   if (whitePlayer === userName) {   
+     playerColor = 'white';          
+   } else if (blackPlayer === userName) {                         
+     playerColor = 'black';          
+   }                                 
+                                     
+   if (!playerColor) {               
+     console.error('Player not found in this game.');                    
+     return 0;                       
+   }                                 
+                                                              
+   const moves = game.moves;         
+   let firstMove = null;             
+                                     
+   if (playerColor === 'white' && moves.length > 0) {                 
+     firstMove = moves[0].notation.notation;         
+   } else if (playerColor === 'black' && moves.length > 1) {              
+     firstMove = moves[1].notation.notation;         
+   }                                 
+                                     
+   if (firstMove && firstMove.startsWith('N')) {        
+     const bonus = calculateRandomBonus(2, 4);         
+     const message = `Knight Moves: ${bonus} points`;                   
+     showPerkToast('knight-moves', message);                           
+     return bonus;                   
+   }
+
+   return 0;                         
+ };
+ 
 const calculateEndgameMaterialFromFEN = (fen) => {
   const pieceCount = { white: 0, black: 0 };
   const pieces = fen.split(' ')[0].split('');
@@ -488,6 +525,9 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
   }
   if (activePerks.includes('versatility')) {
     bonus += await isVersatilityFulfilled(game);
+  }
+  if (activePerks.includes('knight-moves')) {
+    bonus += isKnightMovesFulfilled(userName, game);
   }
   
   bonus += isHueFocusFulfilled();
