@@ -35,7 +35,7 @@ export function showPerkToast(perkId, message) {
 
   Toastify({
     text: message,
-    duration: 6000,
+    duration: 8000,
     close: true,
     gravity: "top", // `top` or `bottom`
     position: "right", // `left`, `center` or `right`
@@ -280,7 +280,7 @@ const isHotStreakFulfilled = async () => {
     bonus = calculateRandomBonus(1, 2);
   }
   if (bonus) {
-    const message = `${winningStreak} game win streak: ${bonus} points`;
+    const message = `${winningStreak} Game Win Streak: ${bonus} points`;
     showPerkToast('hot-streak', message);
     console.log(`Hot Streak bonus point: ${bonus}`);
   }
