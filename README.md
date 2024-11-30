@@ -9,7 +9,7 @@ Hue Chess is a browser extension that adds gamification elements to Lichess. Thi
 Hue Chess features a **Perk System** that boosts the number of Hue Points you earn for every win in exchange for completing specific challenges on Lichess. As you progress and gain levels in Hue Chess, you'll unlock new perks that provide different ways to accumulate bonus Hue Points for your wins!
 
 ### Level Up with Hue Points
-Each level requires 100 Hue Points, and every level features a unique chessboard theme. Journey through 15 distinct levels, discover 9 unique perks, and complete the Hue Chess Challenge!
+Each level requires 100 Hue Points, and every level features a unique chessboard theme. Journey through 15 distinct levels, discover 11 unique perks, and complete the Hue Chess Challenge!
 
 ### Get Started
 To choose your perks, simply click on the **Hue Progress Bar** in the top right corner of your navigation bar.
@@ -19,7 +19,7 @@ To choose your perks, simply click on the **Hue Progress Bar** in the top right 
 - **Hue Points System (implemented)**: Accumulate hue points by winning chess games. The hue of your chess board changes as you earn more points. Progress through 15 unique levels. 
 - **Time Control-Based Rewards (implemented)** : Different time controls grant varying ranges of hue points. 
 - **Progress Tracking (implemented)**: A progress bar displays your current level and how far you are from reaching the next level.
-- **Perk System (9/9 perks implemented)**: As you level up in Hue Chess, you will unlock new perks that allow you to gain bonus hue points from your wins. At launch, Hue chess will feature 9 perks to unlock spread across 15 levels. 
+- **Perk System (11/11 perks implemented)**: As you level up in Hue Chess, you will unlock new perks that allow you to gain bonus hue points from your wins. Hue chess features 11 perks to unlock spread across 15 levels. 
 - **Easter Egg Perks (implemented)**: Hue Chess will ship with a few easter eggs. 
 - **Prestige System (implemented)**: When you complete all 15 levels on Hue Chess, your progress will reset to level 1 and you will enter prestige mode. Prestige mode adds a unique icon to your perk selection menu, that changes as you obtain more prestige.
 
@@ -63,9 +63,7 @@ To choose your perks, simply click on the **Hue Progress Bar** in the top right 
 
 ## Future Features
 
-- **Feats of Strength**: These intend to be passive, large hue point bonuses for feats that occur more rarely, such as winning a minature or playing on lichess for extended periods of time.
-- **More Perks**: While Hue Chess will initially ship with 9 unique perks, I have ideas for introducing more perks after v1.  
-- **Themed Prestige System**: Once you complete your journey and beat level 15, future runs of Hue-Chess should offer unique bonuses for playing certain openings (that change based on the number of times you've beaten Hue Chess).
+- **Achievement System** - Implement an achievement system that allows players to strive for unique challenges within Hue Chess (and Lichess in general). To be implemented some time in 2025. 
 
 ## Contributing
 
