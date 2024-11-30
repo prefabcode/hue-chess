@@ -477,7 +477,7 @@ const isKnightMovesFulfilled = (userName, game) => {
   } else if (moves <= 30) {
     bonus = calculateRandomBonus(5, 7);
   } else if (moves <= 40) {
-    bonus = calculateRandomBonus(2, 4);
+    bonus = calculateRandomBonus(3, 4);
   }
 
   if (bonus > 0) {
