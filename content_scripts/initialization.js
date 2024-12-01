@@ -1,6 +1,6 @@
 import { updateProgressBar, monitorBoardDiv, waitForElm, updateProgressBarTooltip, resetUserMenuState } from './uiUpdates.js';
 import { checkUrlAndStartMonitoring } from './gameMonitoring.js';
-import { browser } from './constants.js';
+import { browser, CURRENT_VERSION } from './constants.js';
 
 
 const sleep = (milliseconds) => {
@@ -184,7 +184,14 @@ export const initializeExtension = async () => {
 export const init = async () => {
   console.log("Initializing extension...");
 
-  browser.storage.local.get(['initialized'], (result) => {
+  /* 
+    This code needs to be awaited, otherwise the tooltip will be set before active perks is wiped on new update: 
+    https://stackoverflow.com/questions/59440008/how-to-wait-for-asynchronous-chrome-storage-local-get-to-finish-before-continu
+  
+  
+  */
+
+  browser.storage.local.get(['initialized', 'version'], (result) => {
     if (!result.initialized) {
       initializeExtension();
     } else {
@@ -193,6 +200,16 @@ export const init = async () => {
       browser.storage.local.get(['completedBoards', 'currentHue'], (result) => {
         updateProgressBar(result.completedBoards, result.currentHue);
       });
+    }
+
+    if (!result.version || result.version !== CURRENT_VERSION) {
+      console.log(`incorrect version detected, setting new version: ${CURRENT_VERSION} and updating activePerks`);
+      browser.storage.local.set(
+        {
+          activePerks: [],
+          version: CURRENT_VERSION,
+        }
+      );
     }
   });
 
