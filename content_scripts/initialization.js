@@ -239,9 +239,9 @@ const checkIfInitialized = async () => {
         browser.storage.local.get(['completedBoards', 'currentHue'], (result) => {
           updateProgressBar(result.completedBoards, result.currentHue);
         });
-      }  
+      }
+      resolve();
     });
-    resolve();
   })
 }
 
@@ -257,7 +257,7 @@ const versionCheck = async () => {
           }
         );
       }
+      resolve();
     });
-    resolve();
   });
 }
