@@ -191,27 +191,29 @@ export const init = async () => {
   
   */
 
-  browser.storage.local.get(['initialized', 'version'], (result) => {
-    if (!result.initialized) {
-      initializeExtension();
-    } else {
-      console.log("Extension already initialized");
-      // Initialize the progress bar with current values
-      browser.storage.local.get(['completedBoards', 'currentHue'], (result) => {
-        updateProgressBar(result.completedBoards, result.currentHue);
-      });
-    }
+  // browser.storage.local.get(['initialized', 'version'], (result) => {
+  //   if (!result.initialized) {
+  //     initializeExtension();
+  //   } else {
+  //     console.log("Extension already initialized");
+  //     // Initialize the progress bar with current values
+  //     browser.storage.local.get(['completedBoards', 'currentHue'], (result) => {
+  //       updateProgressBar(result.completedBoards, result.currentHue);
+  //     });
+  //   }
 
-    if (!result.version || result.version !== CURRENT_VERSION) {
-      console.log(`incorrect version detected, setting new version: ${CURRENT_VERSION} and updating activePerks`);
-      browser.storage.local.set(
-        {
-          activePerks: [],
-          version: CURRENT_VERSION,
-        }
-      );
-    }
-  });
+  //   if (!result.version || result.version !== CURRENT_VERSION) {
+  //     console.log(`incorrect version detected, setting new version: ${CURRENT_VERSION} and updating activePerks`);
+  //     browser.storage.local.set(
+  //       {
+  //         activePerks: [],
+  //         version: CURRENT_VERSION,
+  //       }
+  //     );
+  //   }
+  // });
+  await checkIfInitialized();
+  await versionCheck();
 
   updateProgressBarTooltip();
   monitorBoardDiv();
@@ -225,3 +227,37 @@ export const init = async () => {
     }
   }, 1000);
 };
+
+const checkIfInitialized = async () => {
+  return new Promise((resolve) => {
+    browser.storage.local.get(['initialized'], (result) => {
+      if (!result.initialized) {
+        initializeExtension();
+      } else {
+        console.log("Extension already initialized");
+        // Initialize the progress bar with current values
+        browser.storage.local.get(['completedBoards', 'currentHue'], (result) => {
+          updateProgressBar(result.completedBoards, result.currentHue);
+        });
+      }  
+    });
+    resolve();
+  })
+}
+
+const versionCheck = async () => {
+  return new Promise((resolve) => {
+    browser.storage.local.get(['version'], (result) => {
+      if (!result.version || result.version !== CURRENT_VERSION) {
+        console.log(`incorrect version detected, setting new version: ${CURRENT_VERSION} and updating activePerks`);
+        browser.storage.local.set(
+          {
+            activePerks: [],
+            version: CURRENT_VERSION,
+          }
+        );
+      }
+    });
+    resolve();
+  });
+}
