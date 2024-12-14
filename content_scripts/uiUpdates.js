@@ -531,6 +531,7 @@ export const updateUIAfterImport = (extensionState) => {
 let progressBarTooltipInstance = null;
 
 export const updateProgressBarTooltip = () => {
+  console.log('updateProgressBarTooltip invoked DEBUG REMEMBER TO REMOVE');
   browser.storage.local.get(['activePerks', 'winningStreak', 'gladiatorLossBuffer', 'preparationStatus', 'playedOpenings'], async (result) => {
     const activePerks = result.activePerks || [];
     const gladiatorLossBuffer = result.gladiatorLossBuffer || 0;
