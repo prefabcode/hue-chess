@@ -1,6 +1,6 @@
 import { updateProgressBar, monitorBoardDiv, waitForElm, updateProgressBarTooltip, resetUserMenuState } from './uiUpdates.js';
 import { checkUrlAndStartMonitoring } from './gameMonitoring.js';
-import { browser } from './constants.js';
+import { browser, CURRENT_VERSION } from './constants.js';
 
 
 const sleep = (milliseconds) => {
@@ -26,7 +26,7 @@ function createOnboardingModal() {
       <p>Hue Chess features a <strong>Perk System</strong> that boosts the number of Hue Points you earn for every win, in exchange for completing specific challenges on Lichess. As you progress and gain levels in Hue Chess, you'll unlock new perks that provide different ways to accumulate even more Hue Points for your victories!</p>
       
       <h3>Level Up with Hue Points</h3>
-      <p>Each level requires 100 Hue Points, and every level features a unique chessboard theme. Journey through 15 distinct levels, discover 9 unique perks, and complete the Hue Chess Challenge!</p>
+      <p>Each level requires 100 Hue Points, and every level features a unique chessboard theme. Journey through 15 distinct levels, discover 11 unique perks, and complete the Hue Chess Challenge!</p>
 
       <h3>Get Started</h3>
       <p>To choose your perks, simply click on the <strong>Hue Progress Bar</strong> in the top right corner of your navigation bar.</p>
@@ -184,17 +184,8 @@ export const initializeExtension = async () => {
 export const init = async () => {
   console.log("Initializing extension...");
 
-  browser.storage.local.get(['initialized'], (result) => {
-    if (!result.initialized) {
-      initializeExtension();
-    } else {
-      console.log("Extension already initialized");
-      // Initialize the progress bar with current values
-      browser.storage.local.get(['completedBoards', 'currentHue'], (result) => {
-        updateProgressBar(result.completedBoards, result.currentHue);
-      });
-    }
-  });
+  await checkIfInitialized();
+  await versionCheck();
 
   updateProgressBarTooltip();
   monitorBoardDiv();
@@ -208,3 +199,37 @@ export const init = async () => {
     }
   }, 1000);
 };
+
+const checkIfInitialized = async () => {
+  return new Promise((resolve) => {
+    browser.storage.local.get(['initialized'], (result) => {
+      if (!result.initialized) {
+        initializeExtension();
+      } else {
+        console.log("Extension already initialized");
+        // Initialize the progress bar with current values
+        browser.storage.local.get(['completedBoards', 'currentHue'], (result) => {
+          updateProgressBar(result.completedBoards, result.currentHue);
+        });
+      }
+      resolve();
+    });
+  })
+}
+
+const versionCheck = async () => {
+  return new Promise((resolve) => {
+    browser.storage.local.get(['version'], (result) => {
+      if (!result.version || result.version !== CURRENT_VERSION) {
+        console.log(`incorrect version detected, setting new version: ${CURRENT_VERSION} and updating activePerks`);
+        browser.storage.local.set(
+          {
+            activePerks: [],
+            version: CURRENT_VERSION,
+          }
+        );
+      }
+      resolve();
+    });
+  });
+}
