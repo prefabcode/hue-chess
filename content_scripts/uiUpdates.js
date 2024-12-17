@@ -154,6 +154,7 @@ async function setImageSources() {
     'versatility-icon',
     'knight-moves-icon',
     'aggression-icon',
+    'kings-gambit-icon',
   ];
 
   images.forEach(imageId => {

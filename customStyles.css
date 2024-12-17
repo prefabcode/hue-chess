@@ -101,6 +101,9 @@
 #aggression-perk.active {
   background: linear-gradient(to right, #d50000, #ff6f00);
 }
+#kings-gambit.active {
+  background: linear-gradient(to right, #a50034, #88113f);
+}
 
 .perks {
   display: flex;
