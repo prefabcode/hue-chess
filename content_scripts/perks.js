@@ -488,6 +488,29 @@ const isKnightMovesFulfilled = (userName, game) => {
   return bonus;
  };
  
+const isKingsGambitFulfilled = (game, playerColor) => {
+  const moves = game.moves;                                                    
+  const chess = new Chess();                                                   
+                                                                                                                  
+  for (const move of moves) {                                                  
+    chess.move(move.notation.notation);                                        
+  }                                                                            
+                                                                                
+  const castlingRights = chess.castlingRights();                               
+  const hasCastledKingside = playerColor === 'white' ?                         
+    !castlingRights.includes('K') : !castlingRights.includes('k');                 
+  const hasCastledQueenside = playerColor === 'white' ?                        
+    !castlingRights.includes('Q') : !castlingRights.includes('q');                 
+                                                                                
+  if (!hasCastledKingside && !hasCastledQueenside) {                           
+    const bonus = calculateRandomBonus(4, 6);                                  
+    const message = `King's Gambit: ${bonus} points`;                          
+    showPerkToast('kings-gambit', message);                                    
+    return bonus;                                                              
+  }                                                                           
+  return 0;
+}
+ 
 const calculateEndgameMaterialFromFEN = (fen) => {
   const pieceCount = { white: 0, black: 0 };
   const pieces = fen.split(' ')[0].split('');
@@ -542,8 +565,26 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
     return 0;
   }
 
+  const whitePlayer = game.tags.White;                    
+  const blackPlayer = game.tags.Black;                    
+                                     
+  let playerColor = null;           
+                                     
+  if (whitePlayer === userName) {   
+    playerColor = 'white';          
+  } else if (blackPlayer === userName) {                         
+    playerColor = 'black';          
+  }           
+                                     
+  if (!playerColor) {              
+    console.error('Player not found in this game.');                    
+    return 0;                       
+  }
+
   const userName = userTag.innerText.trim();
-  const activePerks = await getActivePerks(); // Function to get active perks from storage
+  const activePerks = await getActivePerks(); 
+
+
 
   if (activePerks.includes('berzerker')) {
     bonus += isBerzerkerFulfilled(userName, game);
@@ -577,6 +618,9 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
   }
   if (activePerks.includes('aggression')) {
     bonus += isAggressionFulfilled(game);
+  }
+  if (activePerks.includes('kings-gambit')) {
+    bonus += isKingsGambitFulfilled(game, playerColor);
   }
   
   bonus += isHueFocusFulfilled();
