@@ -9,7 +9,7 @@ Hue Chess is a browser extension that adds gamification elements to Lichess. Thi
 Hue Chess features a **Perk System** that boosts the number of Hue Points you earn for every win in exchange for completing specific challenges on Lichess. As you progress and gain levels in Hue Chess, you'll unlock new perks that provide different ways to accumulate bonus Hue Points for your wins!
 
 ### Level Up with Hue Points
-Each level requires 100 Hue Points, and every level features a unique chessboard theme. Journey through 15 distinct levels, discover 11 unique perks, and complete the Hue Chess Challenge!
+Each level requires 100 Hue Points, and every level features a unique chessboard theme. Journey through 15 distinct levels, discover 12 unique perks, and complete the Hue Chess Challenge!
 
 ### Get Started
 To choose your perks, simply click on the **Hue Progress Bar** in the top right corner of your navigation bar.
@@ -19,7 +19,7 @@ To choose your perks, simply click on the **Hue Progress Bar** in the top right 
 - **Hue Points System (implemented)**: Accumulate hue points by winning chess games. The hue of your chess board changes as you earn more points. Progress through 15 unique levels. 
 - **Time Control-Based Rewards (implemented)** : Different time controls grant varying ranges of hue points. 
 - **Progress Tracking (implemented)**: A progress bar displays your current level and how far you are from reaching the next level.
-- **Perk System (11/11 perks implemented)**: As you level up in Hue Chess, you will unlock new perks that allow you to gain bonus hue points from your wins. Hue chess features 11 perks to unlock spread across 15 levels. 
+- **Perk System (12/12 perks implemented)**: As you level up in Hue Chess, you will unlock new perks that allow you to gain bonus hue points from your wins. Hue chess features 12 perks to unlock spread across 15 levels. 
 - **Easter Egg Perks (implemented)**: Hue Chess will ship with a few easter eggs. 
 - **Prestige System (implemented)**: When you complete all 15 levels on Hue Chess, your progress will reset to level 1 and you will enter prestige mode. Prestige mode adds a unique icon to your perk selection menu, that changes as you obtain more prestige.
 
