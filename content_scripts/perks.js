@@ -500,7 +500,7 @@ const isKingsGambitFulfilled = (game, playerColor) => {
   }
                                                                                 
   if (!hasPlayerCastled) {                        
-    const bonus = calculateRandomBonus(4, 6);
+    const bonus = calculateRandomBonus(5, 7);
     console.log(`player has not castled. Adding bonus: ${bonus}`);                                  
     const message = `King's Gambit: ${bonus} points`;                          
     showPerkToast('kings-gambit', message);                                    
