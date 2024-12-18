@@ -37,6 +37,7 @@ export const PERK_DISPLAY_NAMES = {
   'versatility': 'Versatility',
   'knight-moves': 'Knight Moves',
   'aggression': 'Aggression',
+  'kings-gambit': 'King\'s Gambit'
 };
 
 export const browser = typeof chrome !== "undefined" ? chrome : browser;

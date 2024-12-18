@@ -27,7 +27,8 @@ export function showPerkToast(perkId, message) {
     'opportunist': 'linear-gradient(to right, #daa520, #b8860b)',
     'versatility': 'linear-gradient(to right, #8e44ad, #f39c12)',
     'knight-moves': 'linear-gradient(to right, #0b3d91, #6a1b9a)',
-    'aggression': 'linear-gradient(to right, #d50000, #ff6f00)'
+    'aggression': 'linear-gradient(to right, #d50000, #ff6f00)',
+    'kings-gambit': 'linear-gradient(to right, #a50034, #88113f)'
   };
 
   const gradient = gradientMap[perkId];
@@ -490,20 +491,17 @@ const isKnightMovesFulfilled = (userName, game) => {
  
 const isKingsGambitFulfilled = (game, playerColor) => {
   const moves = game.moves;                                                    
-  const chess = new Chess();                                                   
+  let hasPlayerCastled = false;                                                   
                                                                                                                   
   for (const move of moves) {                                                  
-    chess.move(move.notation.notation);                                        
-  }                                                                            
+    if ((move.notation.notation === 'O-O' || move.notation.notation === 'O-O-O') && move.turn === playerColor.charAt(0)) {
+      hasPlayerCastled = true;
+    }
+  }
                                                                                 
-  const castlingRights = chess.castlingRights();                               
-  const hasCastledKingside = playerColor === 'white' ?                         
-    !castlingRights.includes('K') : !castlingRights.includes('k');                 
-  const hasCastledQueenside = playerColor === 'white' ?                        
-    !castlingRights.includes('Q') : !castlingRights.includes('q');                 
-                                                                                
-  if (!hasCastledKingside && !hasCastledQueenside) {                           
-    const bonus = calculateRandomBonus(4, 6);                                  
+  if (!hasPlayerCastled) {                        
+    const bonus = calculateRandomBonus(4, 6);
+    console.log(`player has not castled. Adding bonus: ${bonus}`);                                  
     const message = `King's Gambit: ${bonus} points`;                          
     showPerkToast('kings-gambit', message);                                    
     return bonus;                                                              
@@ -565,6 +563,8 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
     return 0;
   }
 
+  const userName = userTag.innerText.trim();
+
   const whitePlayer = game.tags.White;                    
   const blackPlayer = game.tags.Black;                    
                                      
@@ -580,11 +580,8 @@ export const calculatePerkBonuses = async (initialIncrementValue, gameType, game
     console.error('Player not found in this game.');                    
     return 0;                       
   }
-
-  const userName = userTag.innerText.trim();
+  
   const activePerks = await getActivePerks(); 
-
-
 
   if (activePerks.includes('berzerker')) {
     bonus += isBerzerkerFulfilled(userName, game);
