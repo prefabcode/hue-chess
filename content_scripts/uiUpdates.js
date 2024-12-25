@@ -21,77 +21,80 @@ const showRandomTip = () => {
   tipMessage.innerHTML = TIPS[randomIndex];
 }
 
-export const updateProgressBar = (completedBoards = null, hueValue = null) => {
-  browser.storage.local.get(['completedBoards'], (result) => {
-    const level = (completedBoards !== null ? completedBoards : result.completedBoards) + 1;
-    const progress = hueValue !== null ? hueValue : 0;
-    const levelName = levelNames[level - 1];
-
-    let progressBar = document.getElementById('hue-progress-bar');
-    if (!progressBar) {
-      // Create progress bar
-      progressBar = document.createElement('div');
-      progressBar.id = 'hue-progress-bar';
-      progressBar.style.display = 'flex';
-      progressBar.style.alignItems = 'center';
-      progressBar.style.margin = '0 10px';
-      progressBar.style.flexGrow = '1';
-      progressBar.style.justifyContent = 'flex-end';
-
-      const progressBarContainer = document.createElement('div');
-      progressBarContainer.id = 'progress-bar-container';
-      progressBarContainer.style.display = 'flex';
-      progressBarContainer.style.alignItems = 'center';
-      progressBarContainer.style.width = '240px';
-      progressBarContainer.style.cursor = 'pointer';
-
-      const progressBarOuter = document.createElement('div');
-      progressBarOuter.id = 'progress-bar-outer';
-      progressBarOuter.style.flexBasis = '180px';
-      progressBarOuter.style.height = '10px';
-      progressBarOuter.style.borderRadius = '5px';
-      progressBarOuter.style.backgroundColor = '#8c8c8c';
-
-      const progressFill = document.createElement('div');
-      progressFill.id = 'progress-fill';
-      progressFill.style.height = '100%';
-      progressFill.style.borderRadius = '5px';
-      progressFill.style.backgroundColor = 'hsl(88, 62%, 37%)';
-      progressFill.style.width = `${progress}%`;
-
-      progressBarOuter.appendChild(progressFill);
-      progressBarContainer.appendChild(progressBarOuter);
-
-      const levelText = document.createElement('span');
-      levelText.id = 'level-text';
-      levelText.style.marginLeft = '10px';
-      levelText.style.marginBottom = '1px';
-      levelText.textContent = `Level ${level} - ${levelName}`;
-
-      progressBarContainer.appendChild(levelText);
-      progressBar.appendChild(progressBarContainer);
-
-      const header = document.querySelector('header');
-      const siteButtons = header.querySelector('.site-buttons');
-      header.insertBefore(progressBar, siteButtons);
-
-      progressBarContainer.addEventListener('click', openPerksModal);
-
-    } else {
-      const progressFill = progressBar.querySelector('#progress-fill');
-      const levelText = document.getElementById('level-text');
-      progressFill.style.width = `${progress}%`;
-      levelText.textContent = `Level ${level} - ${levelName}`;
-    }
-
-    // Adapt to light and dark modes
-    const isDarkMode = document.body.classList.contains('dark') || document.body.classList.contains('transp');
-    if (isDarkMode) {
-      const progressBarOuter = progressBar.querySelector('#progress-bar-outer');
-      const progressFill = progressBar.querySelector('#progress-fill');
-      progressFill.style.backgroundColor = '#f7f7f7';
-      progressBarOuter.style.backgroundColor = 'hsl(37, 5%, 22%)';
-    }
+export const updateProgressBar = () => {
+  return new Promise((resolve) => {
+    browser.storage.local.get(['completedBoards', 'currentHue'], (result) => {
+      const level = (result.completedBoards !== null ? result.completedBoards : 0) + 1;
+      const progress = result.currentHue || 0;
+      const levelName = levelNames[level - 1];
+  
+      let progressBar = document.getElementById('hue-progress-bar');
+      if (!progressBar) {
+        // Create progress bar
+        progressBar = document.createElement('div');
+        progressBar.id = 'hue-progress-bar';
+        progressBar.style.display = 'flex';
+        progressBar.style.alignItems = 'center';
+        progressBar.style.margin = '0 10px';
+        progressBar.style.flexGrow = '1';
+        progressBar.style.justifyContent = 'flex-end';
+  
+        const progressBarContainer = document.createElement('div');
+        progressBarContainer.id = 'progress-bar-container';
+        progressBarContainer.style.display = 'flex';
+        progressBarContainer.style.alignItems = 'center';
+        progressBarContainer.style.width = '240px';
+        progressBarContainer.style.cursor = 'pointer';
+  
+        const progressBarOuter = document.createElement('div');
+        progressBarOuter.id = 'progress-bar-outer';
+        progressBarOuter.style.flexBasis = '180px';
+        progressBarOuter.style.height = '10px';
+        progressBarOuter.style.borderRadius = '5px';
+        progressBarOuter.style.backgroundColor = '#8c8c8c';
+  
+        const progressFill = document.createElement('div');
+        progressFill.id = 'progress-fill';
+        progressFill.style.height = '100%';
+        progressFill.style.borderRadius = '5px';
+        progressFill.style.backgroundColor = 'hsl(88, 62%, 37%)';
+        progressFill.style.width = `${progress}%`;
+  
+        progressBarOuter.appendChild(progressFill);
+        progressBarContainer.appendChild(progressBarOuter);
+  
+        const levelText = document.createElement('span');
+        levelText.id = 'level-text';
+        levelText.style.marginLeft = '10px';
+        levelText.style.marginBottom = '1px';
+        levelText.textContent = `Level ${level} - ${levelName}`;
+  
+        progressBarContainer.appendChild(levelText);
+        progressBar.appendChild(progressBarContainer);
+  
+        const header = document.querySelector('header');
+        const siteButtons = header.querySelector('.site-buttons');
+        header.insertBefore(progressBar, siteButtons);
+  
+        progressBarContainer.addEventListener('click', openPerksModal);
+  
+      } else {
+        const progressFill = progressBar.querySelector('#progress-fill');
+        const levelText = document.getElementById('level-text');
+        progressFill.style.width = `${progress}%`;
+        levelText.textContent = `Level ${level} - ${levelName}`;
+      }
+  
+      // Adapt to light and dark modes
+      const isDarkMode = document.body.classList.contains('dark') || document.body.classList.contains('transp');
+      if (isDarkMode) {
+        const progressBarOuter = progressBar.querySelector('#progress-bar-outer');
+        const progressFill = progressBar.querySelector('#progress-fill');
+        progressFill.style.backgroundColor = '#f7f7f7';
+        progressBarOuter.style.backgroundColor = 'hsl(37, 5%, 22%)';
+      }
+      resolve();
+    });
   });
 };
 
@@ -791,3 +794,21 @@ button.textContent === '2D');
     console.error('Error synchronizing UI:', error);
   }
 };
+
+
+const convertHuePointsToDegrees = (huePoints) => {
+  if (huePoints < 0 || huePoints > 100) {
+      throw new Error("Hue points must be between 0 and 100.");
+  }
+  return (huePoints / 100) * 360;
+}
+
+
+export const updateHueRotate = async (huePoints) => {
+  const degrees = convertHuePointsToDegrees(huePoints);
+  const cgBoardList = document.querySelectorAll('cg-board');
+  
+  cgBoardList.forEach((board) => {
+    board.style.filter = `hue-rotate(${degrees}deg)`;
+  });
+}

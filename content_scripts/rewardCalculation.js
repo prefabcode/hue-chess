@@ -1,7 +1,26 @@
-import { updateProgressBar, waitForElm, updateProgressBarTooltip, resetUserMenuState, createChallengeCompletionModal } from './uiUpdates.js';
-import { getActivePerks, setAllowGladiatorPerkRemoval, resetGladiatorLossBuffer, setPlayedOpenings, resetProgress, updateActivePerks } from './storageManagement.js';
+import { 
+  updateProgressBar, 
+  waitForElm, 
+  updateHueRotate,
+  updateProgressBarTooltip, 
+  resetUserMenuState, 
+  createChallengeCompletionModal 
+} from './uiUpdates.js';
+import { 
+  getActivePerks, 
+  setAllowGladiatorPerkRemoval, 
+  resetGladiatorLossBuffer, 
+  setPlayedOpenings, 
+  resetProgress, 
+  updateActivePerks, 
+  getCurrentHue,
+  setCurrentHue
+} from './storageManagement.js';
 import { calculatePerkBonuses } from './perks.js';
-import { browser, LEVEL_CAP } from './constants.js';
+import {
+  browser, 
+  LEVEL_CAP, 
+} from './constants.js';
 
 
 export const getInitialRewardValue = (game) => {
@@ -36,6 +55,22 @@ ${incrementValue}`);
   });
 };
 
+export const incrementHue = async (game) => {
+  console.log('game obj', game);
+  let { incrementValue, gameType } = await getInitialRewardValue(game);
+  console.log(`initial increment value ${incrementValue}`);
+
+  const perkBonus = await calculatePerkBonuses(incrementValue, gameType, game);
+  console.log(`Perk bonus: ${perkBonus}`);
+
+  incrementValue += perkBonus;
+  let updatedHue = await getCurrentHue() + incrementValue;
+  await updateHueRotate(updatedHue);
+  await setCurrentHue(updatedHue);
+  await updateProgressBar();
+}
+
+/* 
 export const incrementHue = async (game) => {
   console.log('game obj', game);
   let { incrementValue, gameType } = await getInitialRewardValue(game);
@@ -151,6 +186,8 @@ resolve);
   }
     
 };
+
+*/
 
 export const applyGladiatorPenalty = async () => {
   waitForElm('#user_tag').then((userTag) => {

@@ -198,3 +198,10 @@ export const getCurrentHue = () => {
     });
   });
 };
+
+export const setCurrentHue = (currentHue) => {
+  return new Promise((resolve) => {
+    browser.storage.local.set({ currentHue });
+    console.log(`Current hue updated in storage: ${currentHue}`);
+  })
+};
