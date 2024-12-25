@@ -12,18 +12,20 @@ export const confirmResetProgress = async () => {
   }
 };
 
-export const resetProgress = (prestige = 0) => {
+export const resetProgress = async () => {
   const resetState = {
     initialized: true,
     completedBoards: 0,
     currentHue: 0,
     activePerks: [],
-    prestige,
   };
-
-  browser.storage.local.set(resetState, () => {
-    console.log(`Progress has been reset. Setting Prestige to: ${prestige}`);
-    updateUIAfterImport(resetState);
+  
+  return new Promise((resolve) => {
+    browser.storage.local.set(resetState, () => {
+      console.log(`Progress has been reset. Setting Prestige to: ${prestige}`);
+      updateUIAfterImport(resetState);
+      resolve();
+    });
   });
 };
 
@@ -191,6 +193,14 @@ export const getCompletedBoards = () => {
   });
 };
 
+export const setCompletedBoards = (completedBoards) => {
+  return new Promise((resolve) => {
+    browser.storage.local.set({ completedBoards });
+    console.log(`setCompletedBoards: Completed boards set to ${completedBoards}`);
+    resolve();
+  });
+};
+
 export const getCurrentHue = () => {
   return new Promise((resolve) => {
     browser.storage.local.get(['currentHue'], (result) => {
@@ -202,6 +212,7 @@ export const getCurrentHue = () => {
 export const setCurrentHue = (currentHue) => {
   return new Promise((resolve) => {
     browser.storage.local.set({ currentHue });
-    console.log(`Current hue updated in storage: ${currentHue}`);
+    console.log(`setCurrentHue: Current hue updated in storage: ${currentHue}`);
+    resolve();
   })
 };

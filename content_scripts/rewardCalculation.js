@@ -14,7 +14,9 @@ import {
   resetProgress, 
   updateActivePerks, 
   getCurrentHue,
-  setCurrentHue
+  setCurrentHue,
+  getCompletedBoards,
+  setCompletedBoards
 } from './storageManagement.js';
 import { calculatePerkBonuses } from './perks.js';
 import {
@@ -56,15 +58,30 @@ ${incrementValue}`);
 };
 
 export const incrementHue = async (game) => {
-  console.log('game obj', game);
   let { incrementValue, gameType } = await getInitialRewardValue(game);
-  console.log(`initial increment value ${incrementValue}`);
+  console.log(`incrementHue: initial increment value ${incrementValue}`);
 
   const perkBonus = await calculatePerkBonuses(incrementValue, gameType, game);
-  console.log(`Perk bonus: ${perkBonus}`);
+  console.log(`incrementHue: perk bonus: ${perkBonus}`);
 
   incrementValue += perkBonus;
   let updatedHue = await getCurrentHue() + incrementValue;
+
+  if (updatedHue >= 100) {
+    
+    updatedHue = updatedHue - 100;
+    console.log('IncrementHue: > 100 hue reached, resetting to 0 and changing board');
+
+    let completedBoards = await getCompletedBoards() + 1;
+    if (completedBoards >= LEVEL_CAP) {
+      await resetProgress();
+      createChallengeCompletionModal();
+    }
+    await setCompletedBoards(completedBoards);
+    await changeToNextBoardInUi();
+    await cleanupPerkStateOnLevelUp();
+
+  }
   await updateHueRotateStyle(updatedHue);
   await setCurrentHue(updatedHue);
   await updateProgressBar();
@@ -231,4 +248,51 @@ export const applyGladiatorPenalty = async () => {
     });
   });
 
+};
+
+const changeToNextBoardInUi = async () => {
+  await resetUserMenuState();
+  const userTag = await waitForElm('#user_tag');
+  userTag.click();
+
+  const dasherApp = document.getElementById('dasher_app');
+  if (!dasherApp) {
+    console.log("changeToNextBoardInUi: dasher app element not found");
+    return;
+  }
+
+  const subsDiv = await waitForElm('.subs');
+  console.log('changeToNextBoardInUi: subs div detected');
+  const subButtons = subsDiv.querySelectorAll('button.sub');
+  if (subButtons.length < 5) {
+    console.error(`changeToNextBoardInUi: expected at least 5 buttons in menu container, but found ${subButtons.length}`);
+    return;
+  }
+  const boardButton = subButtons[3]; // currently binded to Board Button
+
+  boardButton.click();
+  console.log("changeToNextBoardInUi: clicked board button in menu");
+
+  const boardBackButton = await waitForElm('.head');
+
+  const boardList = dasherApp.querySelector('.list');
+  const activeButton = boardList.querySelector('button.active');
+  const nextButton = activeButton.nextElementSibling;
+  if (nextButton) {
+    nextButton.click();
+    console.log('changeToNextBoardInUi: clicked next board button.');
+  }
+
+  boardBackButton.click();
+  userTag.click();
+};
+
+const cleanupPerkStateOnLevelUp = async () => {
+  const activePerks = await getActivePerks();
+  if (activePerks.includes('gladiator')) {
+    await resetGladiatorLossBuffer();
+    await setAllowGladiatorPerkRemoval(true);
+    updateActivePerks('gladiator', false);
+  }
+  await setPlayedOpenings([]);
 };
