@@ -1,6 +1,7 @@
-import { updateProgressBar, monitorBoardDiv, waitForElm, updateProgressBarTooltip, resetUserMenuState } from './uiUpdates.js';
+import { updateProgressBar, monitorBoardDiv, waitForElm, updateProgressBarTooltip, resetUserMenuState, updateHueRotate } from './uiUpdates.js';
 import { checkUrlAndStartMonitoring } from './gameMonitoring.js';
 import { browser, CURRENT_VERSION } from './constants.js';
+import { getCurrentHue } from './storageManagement.js';
 
 
 const sleep = (milliseconds) => {
@@ -186,6 +187,10 @@ export const init = async () => {
 
   await checkIfInitialized();
   await versionCheck();
+  const currentHue = await getCurrentHue();
+  await updateHueRotate(currentHue);
+  await updateProgressBar();
+
 
   updateProgressBarTooltip();
   monitorBoardDiv();
@@ -202,16 +207,10 @@ export const init = async () => {
 
 const checkIfInitialized = async () => {
   return new Promise((resolve) => {
-    browser.storage.local.get(['initialized'], (result) => {
+    browser.storage.local.get(['initialized'], async (result) => {
       if (!result.initialized) {
-        initializeExtension();
-      } else {
-        console.log("Extension already initialized");
-        // Initialize the progress bar with current values
-        browser.storage.local.get(['completedBoards', 'currentHue'], (result) => {
-          updateProgressBar(result.completedBoards, result.currentHue);
-        });
-      }
+        await initializeExtension();
+      } 
       resolve();
     });
   })

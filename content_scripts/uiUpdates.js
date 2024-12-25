@@ -806,9 +806,13 @@ const convertHuePointsToDegrees = (huePoints) => {
 
 export const updateHueRotate = async (huePoints) => {
   const degrees = convertHuePointsToDegrees(huePoints);
-  const cgBoardList = document.querySelectorAll('cg-board');
   
-  cgBoardList.forEach((board) => {
-    board.style.filter = `hue-rotate(${degrees}deg)`;
-  });
+  addStyle(`cg-board { filter: hue-rotate(${degrees}deg) !important; }`);
+  
 }
+
+const addStyle = (() => {
+  const style = document.createElement('style');
+  document.head.append(style);
+  return (styleString) => style.textContent = styleString;
+})();
