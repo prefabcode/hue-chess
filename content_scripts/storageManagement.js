@@ -3,10 +3,9 @@ import { browser } from './constants.js';
 
 
 export const confirmResetProgress = async () => {
-  const confirmReset = confirm('Are you sure you want to reset your progress? This action cannot be undone. (Prestige level will not be reset, to do that you have to re-install hue-chess extension)');
+  const confirmReset = confirm('Are you sure you want to reset your progress? This action cannot be undone.');
   if (confirmReset) {
-    const prestige = await getPrestige();
-    resetProgress(prestige);
+    await resetProgress();
     updatePerksModalContent();
     updatePerksHeader();
   }
@@ -22,7 +21,7 @@ export const resetProgress = async () => {
   
   return new Promise((resolve) => {
     browser.storage.local.set(resetState, () => {
-      console.log(`Progress has been reset. Setting Prestige to: ${prestige}`);
+      console.log(`resetProgress: Progress has been reset. Setting state to: ${resetState}`);
       updateUIAfterImport(resetState);
       resolve();
     });

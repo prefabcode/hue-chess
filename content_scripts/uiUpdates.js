@@ -275,33 +275,12 @@ export const openPerksModal = async () => {
 }
 
 export const updatePerksModalContent = async () => {
-  browser.storage.local.get(['completedBoards', 'currentHue', 'activePerks', 'prestige'], (result) => {
+  browser.storage.local.get(['completedBoards', 'currentHue', 'activePerks'], (result) => {
     const playerLevel = (result.completedBoards !== null ? result.completedBoards : 0) + 1;
     const huePoints = `${result.currentHue || 0}/100`;
-    const prestige = (result.prestige || 0);
 
     document.getElementById('current-level').innerText = playerLevel;
     document.getElementById('hue-points').innerText = huePoints;
-
-    if (prestige) {
-      document.getElementById('prestige-points').innerText = prestige;
-      const prestigeContainer = document.getElementById('prestige-level');
-     
-      let existingPrestigeIcon = prestigeContainer.querySelector('.prestige-icon');
-      if (existingPrestigeIcon) {
-        existingPrestigeIcon.remove();
-      }
-
-      const imageNumber = Math.min(prestige, LEVEL_CAP); // if prestige is > 15, we want to use 15th prestige icon.
-      const imageFormat = [1, 10, 15].includes(imageNumber) ? 'svg' : 'jpg';
-      const imagePath = browser.runtime.getURL(`imgs/prestige/${imageNumber}.${imageFormat}`);
-      prestigeIcon = document.createElement('div');
-      prestigeIcon.className = `prestige-icon prestige-icon-${imageNumber}`;
-      prestigeIcon.style.backgroundImage = `url('${imagePath}')`;
-      prestigeContainer.appendChild(prestigeIcon);
-
-      prestigeContainer.style.display = 'flex';
-    }
 
     // Set active perks and handle locked perks
     const activePerks = result.activePerks || [];
@@ -396,25 +375,22 @@ const openSettingsModal = async () => {
     if (process.env.NODE_ENV !== 'production') {
       document.getElementById('dev-tools').style.display = 'block';
 
-       document.getElementById('export-state').addEventListener('click', () => {
-         browser.storage.local.get(['initialized', 'completedBoards', 'currentHue',
- 'prestige'], (result) => {
-           const extensionState = {
-             initialized: result.initialized,
-             completedBoards: result.completedBoards,
-             currentHue: result.currentHue || 0,
-             activePerks: [],
-           };
-           if (result.prestige) {
-             extensionState.prestige = result.prestige;
-           }
-           const jsonString = JSON.stringify(extensionState);
+      document.getElementById('export-state').addEventListener('click', () => {
+        browser.storage.local.get(['initialized', 'completedBoards', 'currentHue'], (result) => {
+          const extensionState = {
+            initialized: result.initialized,
+            completedBoards: result.completedBoards,
+            currentHue: result.currentHue || 0,
+            activePerks: [],
+          };
+          
+          const jsonString = JSON.stringify(extensionState);
 
-           navigator.clipboard.writeText(jsonString);
+          navigator.clipboard.writeText(jsonString);
 
-           alert('Hue chess profile string copied to clipboard');
-         });
-       });
+          alert('Hue chess profile string copied to clipboard');
+        });
+      });
 
        document.getElementById('import-state').addEventListener('click', () => {
          const jsonString = prompt('Paste your game data string:').trim();

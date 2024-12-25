@@ -182,10 +182,9 @@ export const initializeExtension = async () => {
     userTag.click(); // Close the user menu
 
     // Mark the initialization as done
-    browser.storage.local.set({ initialized: true, completedBoards: 0, prestige: 0 }, () => {
+    browser.storage.local.set({ initialized: true, completedBoards: 0, currentHue: 0 }, async () => {
       console.log("Initialization complete, flag set in storage");
-      // TODO: Understand how this works, wouldn't passing 0 in this method break updateProgressBar? 
-      updateProgressBar(0, 0);
+      await updateProgressBar();
     });
   } catch (error) {
     console.error('An error occurred during initialization:', error);
@@ -228,13 +227,16 @@ const checkIfInitialized = async () => {
 
 const versionCheck = async () => {
   return new Promise((resolve) => {
-    browser.storage.local.get(['version'], (result) => {
+    browser.storage.local.get(['version', 'prestige'], (result) => {
       if (!result.version || result.version !== CURRENT_VERSION) {
         console.log(`incorrect version detected, setting new version: ${CURRENT_VERSION} and updating activePerks`);
+        const hasCompletedHueChess = !!result.prestige || false; 
+        
         browser.storage.local.set(
           {
             activePerks: [],
             version: CURRENT_VERSION,
+            hasCompletedHueChess,
           }
         );
       }
