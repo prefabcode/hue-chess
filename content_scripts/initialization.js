@@ -1,6 +1,16 @@
-import { updateProgressBar, monitorBoardDiv, waitForElm, updateProgressBarTooltip, resetUserMenuState, updateHueRotate } from './uiUpdates.js';
+import {
+  updateProgressBar, 
+  monitorBoardDiv, 
+  waitForElm, 
+  updateProgressBarTooltip, 
+  resetUserMenuState, 
+  updateHueRotateStyle 
+} from './uiUpdates.js';
 import { checkUrlAndStartMonitoring } from './gameMonitoring.js';
-import { browser, CURRENT_VERSION } from './constants.js';
+import {
+  browser, 
+  CURRENT_VERSION 
+} from './constants.js';
 import { getCurrentHue } from './storageManagement.js';
 
 
@@ -188,7 +198,7 @@ export const init = async () => {
   await checkIfInitialized();
   await versionCheck();
   const currentHue = await getCurrentHue();
-  await updateHueRotate(currentHue);
+  await updateHueRotateStyle(currentHue);
   await updateProgressBar();
 
 

@@ -1,7 +1,7 @@
 import { 
   updateProgressBar, 
   waitForElm, 
-  updateHueRotate,
+  updateHueRotateStyle,
   updateProgressBarTooltip, 
   resetUserMenuState, 
   createChallengeCompletionModal 
@@ -65,7 +65,7 @@ export const incrementHue = async (game) => {
 
   incrementValue += perkBonus;
   let updatedHue = await getCurrentHue() + incrementValue;
-  await updateHueRotate(updatedHue);
+  await updateHueRotateStyle(updatedHue);
   await setCurrentHue(updatedHue);
   await updateProgressBar();
 }

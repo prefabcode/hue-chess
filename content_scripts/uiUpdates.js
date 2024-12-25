@@ -804,7 +804,7 @@ const convertHuePointsToDegrees = (huePoints) => {
 }
 
 
-export const updateHueRotate = async (huePoints) => {
+export const updateHueRotateStyle = async (huePoints) => {
   const degrees = convertHuePointsToDegrees(huePoints);
   
   addStyle(`cg-board { filter: hue-rotate(${degrees}deg) !important; }`);
