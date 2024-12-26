@@ -451,66 +451,50 @@ export const waitForElm = (selector) => {
   });
 }
 
-export const updateUIAfterImport = (extensionState) => {
+export const updateUIAfterImport = async (extensionState) => {
   const { completedBoards, currentHue } = extensionState;
 
-  waitForElm('#user_tag').then((userTag) => {
-    userTag.click();
+  const userTag = await waitForElm('#user_tag');
+  userTag.click();
+  
+  const dasherApp = document.getElementById('dasher_app');
+  if (!dasherApp) {
+    console.error("updateUIAfterImport: dasher_app element not found");
+    return;
+  }
 
-    const dasherApp = document.getElementById('dasher_app');
-    if (!dasherApp) {
-      console.log("Dasher app not found");
-      return;
-    }
+  const subsDiv = await waitForElm('.subs');
+  const subButtons = subsDiv.querySelectorAll('button.sub');
+  if (subButtons.length < 5) {
+    console.error(`updateUIAfterImport: expected at least 5 buttons in menu container, but found ${subButtons.length}`);
+    return;
+  }
+  const boardButton = subButtons[3];
+  boardButton.click();
 
-    waitForElm('.subs').then((subsDiv) => {
-      const subButtons = subsDiv.querySelectorAll('button.sub');
-      if (subButtons.length < 5) {
-        console.error(`Error: expected at least 5 buttons in menu container, but found ${subButtons.length}`);
-        return;
-      }
-      const boardButton = subButtons[3]; // currently binded to Board Button
+  const boardList = await waitForElm('.list');
+  const targetBoardTitle = levelNames[completedBoards].toLowerCase();
+  const targetBoardButton = boardList.querySelector(`button[title="${targetBoardTitle}"]`);
+  if (!targetBoardButton) {
+    console.error(`updateUIAfterImport: ${targetBoardTitle} board button not found`);
+    return;
+  }
 
-      boardButton.click();
-      console.log("Clicked board button");
+  targetBoardButton.click();
+  
+  const boardBackButton = await waitForElm('.head');
+  boardBackButton.click();
+  userTag.click();
 
-      waitForElm('.list').then((boardList) => {
-        const targetBoardTitle = levelNames[completedBoards].toLowerCase();
-        const targetBoardButton = boardList.querySelector(`button[title="${targetBoardTitle}"]`);
-        if (!targetBoardButton) {
-          console.log(`${targetBoardTitle} board button not found`);
-          return;
-        }
+  await updateHueRotateStyle(currentHue);
+  await updateProgressBar();
+  await updateProgressBarTooltip();
 
-        targetBoardButton.click();
-        console.log(`Clicked ${targetBoardTitle} board button`);
-
-        waitForElm('.board-hue').then((boardHueDiv) => {
-          const hueSlider = boardHueDiv.querySelector('input.range');
-          if (!hueSlider) {
-            console.log("Hue slider not found");
-            return;
-          }
-
-          hueSlider.value = currentHue;
-          hueSlider.dispatchEvent(new Event('input'));
-          console.log(`Set hue slider to ${currentHue}`);
-          const backButton = document.querySelector('.sub.board .head');
-          if (backButton) backButton.click();
-          userTag.click(); // Close the user menu
-
-          // Update the progress bar
-          updateProgressBar(completedBoards, currentHue);
-          updateProgressBarTooltip();
-        });
-      });
-    });
-  });
 };
 
 let progressBarTooltipInstance = null;
 
-export const updateProgressBarTooltip = () => {
+export const updateProgressBarTooltip = async () => {
   browser.storage.local.get(['activePerks', 'winningStreak', 'gladiatorLossBuffer', 'preparationStatus', 'playedOpenings'], async (result) => {
     const activePerks = result.activePerks || [];
     const gladiatorLossBuffer = result.gladiatorLossBuffer || 0;

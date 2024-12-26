@@ -200,8 +200,8 @@ export const init = async () => {
   await updateHueRotateStyle(currentHue);
   await updateProgressBar();
 
-
-  updateProgressBarTooltip();
+  await updateProgressBarTooltip();
+  
   monitorBoardDiv();
   await checkUrlAndStartMonitoring();
   let currentUrl = window.location.href;
