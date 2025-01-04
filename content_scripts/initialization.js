@@ -229,7 +229,7 @@ const versionCheck = async () => {
   return new Promise((resolve) => {
     browser.storage.local.get(['version'], async (result) => {
       if (!result.version || result.version !== CURRENT_VERSION) {
-        console.log(`incorrect version detected, setting new version: ${CURRENT_VERSION} and updating activePerks`);
+        console.log(`versionCheck: incorrect version detected, setting new version: ${CURRENT_VERSION}`);
 
         browser.storage.local.set(
           {
@@ -263,7 +263,8 @@ const extensionUpdateResetHueSliderState = async () => {
 
     boardButton.click();
     console.log("Clicked board button");
-
+    const boardBackButton = await waitForElm('.head');
+    const userTag = await waitForElm('#user_tag');
     const boardHueDiv = await waitForElm('.board-hue');
     const hueSlider = boardHueDiv.querySelector('input.range');
     

@@ -46,4 +46,4 @@ export const MAX_PERKS = 2;
 
 export const LEVEL_CAP = 15;
 
-export const CURRENT_VERSION = '0.9.4';
+export const CURRENT_VERSION = '0.9.41';
