@@ -235,11 +235,9 @@
 }
 
 #hue-chess-perks-modal .progress-info {
-  margin-bottom: 20px;
-}
-
-#hue-chess-perks-modal .progress-info p {
-  margin-bottom: 8px;
+  font-size: 16px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 #hue-chess-perks-modal #perks-header {
