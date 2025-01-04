@@ -227,7 +227,7 @@ const checkIfInitialized = async () => {
 
 const versionCheck = async () => {
   return new Promise((resolve) => {
-    browser.storage.local.get(['version'], (result) => {
+    browser.storage.local.get(['version'], async (result) => {
       if (!result.version || result.version !== CURRENT_VERSION) {
         console.log(`incorrect version detected, setting new version: ${CURRENT_VERSION} and updating activePerks`);
 
@@ -238,7 +238,47 @@ const versionCheck = async () => {
           }
         );
       }
+      await extensionUpdateResetHueSliderState();
       resolve();
     });
   });
+}
+
+const extensionUpdateResetHueSliderState = async () => {
+  await resetUserMenuState();
+
+  try {
+    const dasherResult = await ensureDasherAppIsPopulated(10);
+    if (!dasherResult) {
+      throw new Error('Failed to populate dasher_app dropdown');
+    }
+
+    const subsDiv = await waitForElm('.subs');
+    console.log('Subs div detected');
+    const subButtons = subsDiv.querySelectorAll('button.sub');
+    if (subButtons.length < 5) {
+      throw new Error(`Error: expected at least 5 buttons in menu container, but found ${subButtons.length}`);
+    }
+    const boardButton = subButtons[3]; // currently binded to Board Button
+
+    boardButton.click();
+    console.log("Clicked board button");
+
+    const boardHueDiv = await waitForElm('.board-hue');
+    const hueSlider = boardHueDiv.querySelector('input.range');
+    
+    if (!hueSlider) {
+      throw new Error('Hue slider not found in dropdown menu');
+    }
+
+    hueSlider.value = 0;
+    hueSlider.dispatchEvent(new Event('input'));
+    console.log("Set hue slider to 0");
+    boardBackButton.click(); // return to default profile view
+    userTag.click(); // Close the user menu
+  }
+  catch (error) {
+    alert('An error has occurred during a Hue Chess Update. Please report this error to prefabcode@gmail.com or make an issue on the project github: https://github.com/prefabcode/hue-chess/issues');
+    console.error(`extensionUpdateResetHueSliderState: ${error}`);
+  }
 }
