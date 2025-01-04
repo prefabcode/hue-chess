@@ -240,6 +240,10 @@
   margin-bottom: 10px;
 }
 
+#hue-chess-perks-modal .progress-info #prestige-container {
+  display: none;
+}
+
 #hue-chess-perks-modal #perks-header {
   font-size: 18px;
 }

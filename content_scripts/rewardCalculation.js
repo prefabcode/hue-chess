@@ -16,7 +16,8 @@ import {
   getCurrentHue,
   setCurrentHue,
   getCompletedBoards,
-  setCompletedBoards
+  setCompletedBoards,
+  incrementPrestige
 } from './storageManagement.js';
 import { calculatePerkBonuses } from './perks.js';
 import {
@@ -74,6 +75,7 @@ export const incrementHue = async (game) => {
 
     let completedBoards = await getCompletedBoards() + 1;
     if (completedBoards >= LEVEL_CAP) {
+      await incrementPrestige();
       await resetProgress();
       createChallengeCompletionModal();
       return;

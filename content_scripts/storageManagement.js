@@ -12,11 +12,13 @@ export const confirmResetProgress = async () => {
 };
 
 export const resetProgress = async () => {
+  const prestige = await getPrestige();
   const resetState = {
     initialized: true,
     completedBoards: 0,
     currentHue: 0,
     activePerks: [],
+    prestige,
   };
   
   return new Promise((resolve) => {
@@ -183,6 +185,15 @@ export const getPrestige = () => {
     });
   });
 };
+
+export const incrementPrestige = () => {
+  return new Promise(async (resolve) => {
+    const prestige = await getPrestige() + 1;
+    browser.storage.local.set({ prestige });
+    console.log(`incrementPrestige: prestige set to ${prestige}`);
+    resolve();
+  });
+}
 
 export const getCompletedBoards = () => {
   return new Promise((resolve) => {
