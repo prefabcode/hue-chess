@@ -227,16 +227,14 @@ const checkIfInitialized = async () => {
 
 const versionCheck = async () => {
   return new Promise((resolve) => {
-    browser.storage.local.get(['version', 'prestige'], (result) => {
+    browser.storage.local.get(['version'], (result) => {
       if (!result.version || result.version !== CURRENT_VERSION) {
         console.log(`incorrect version detected, setting new version: ${CURRENT_VERSION} and updating activePerks`);
-        const hasCompletedHueChess = !!result.prestige || false; 
-        
+
         browser.storage.local.set(
           {
             activePerks: [],
             version: CURRENT_VERSION,
-            hasCompletedHueChess,
           }
         );
       }
