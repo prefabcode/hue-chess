@@ -21,7 +21,7 @@ import {
 } from './storageManagement.js';
 import { calculatePerkBonuses } from './perks.js';
 import {
-  browser, 
+  GLADIATOR_PENALTY, 
   LEVEL_CAP, 
 } from './constants.js';
 
@@ -90,47 +90,12 @@ export const incrementHue = async (game) => {
 }
 
 export const applyGladiatorPenalty = async () => {
-  waitForElm('#user_tag').then((userTag) => {
-    userTag.click();
-
-    const dasherApp = document.getElementById('dasher_app');
-    if (!dasherApp) {
-      console.log("Dasher app not found");
-      return;
-    }
-
-    waitForElm('.subs').then((subsDiv) => {
-      console.log('Subs div detected');
-      const boardButton = Array.from(subsDiv.querySelectorAll('button')).find(button => button.textContent === 'Board');
-      if (!boardButton) {
-        console.log("Board button not found");
-        return;
-      }
-
-      boardButton.click();
-      console.log("Clicked board button");
-
-      waitForElm('.board-hue').then((boardHueDiv) => {
-        const hueSlider = boardHueDiv.querySelector('input.range');
-        if (!hueSlider) {
-          console.log("Hue slider not found");
-          return;
-        }
-
-        // Get the current hue value
-        let currentHue = parseInt(hueSlider.value, 10);
-        let newHue = currentHue - 35 >= 0 ? currentHue - 35 : 0;
-        browser.storage.local.set({ currentHue: newHue }, () => {
-          updateProgressBar(null, newHue);
-        });
-        hueSlider.value = newHue
-        hueSlider.dispatchEvent(new Event('input'));
-        console.log(`Applying gladiator penalty. Previous hue value: ${currentHue}, New hue value: ${newHue}`);
-        userTag.click();
-      });
-    });
-  });
-
+  let updatedHue = await getCurrentHue() - GLADIATOR_PENALTY;
+  if (updatedHue < 0) updatedHue = 0;
+  console.log(`applyGladiatorPenalty: new hue is ${updatedHue}`);
+  await updateHueRotateStyle(updatedHue);
+  await setCurrentHue(updatedHue);
+  await updateProgressBar();
 };
 
 const changeToNextBoardInUi = async () => {
