@@ -694,7 +694,7 @@ export const createChallengeCompletionModal = () => {
   });
 }
 
-const syncLichessUIWithExtensionState = async () => {
+export const syncLichessUIWithExtensionState = async () => {
   try {
     // Ensure the board is in the correct initial state
     const userTag = await waitForElm('#user_tag');
@@ -755,7 +755,7 @@ button.textContent === '2D');
       currentHue,
     };
 
-    updateUIAfterImport(extensionState);
+    await updateUIAfterImport(extensionState);
     console.log('UI synchronized with extension state.');
   } catch (error) {
     console.error('Error synchronizing UI:', error);

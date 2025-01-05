@@ -4,7 +4,8 @@ import {
   waitForElm, 
   updateProgressBarTooltip, 
   resetUserMenuState, 
-  updateHueRotateStyle 
+  updateHueRotateStyle, 
+  syncLichessUIWithExtensionState
 } from './uiUpdates.js';
 import { checkUrlAndStartMonitoring } from './gameMonitoring.js';
 import {
@@ -236,49 +237,9 @@ const versionCheck = async () => {
             version: CURRENT_VERSION,
           }
         );
-        await extensionUpdateResetHueSliderState();
+        await syncLichessUIWithExtensionState();
       }
       resolve();
     });
   });
-}
-
-const extensionUpdateResetHueSliderState = async () => {
-  await resetUserMenuState();
-
-  try {
-    const dasherResult = await ensureDasherAppIsPopulated(10);
-    if (!dasherResult) {
-      throw new Error('Failed to populate dasher_app dropdown');
-    }
-
-    const subsDiv = await waitForElm('.subs');
-    console.log('Subs div detected');
-    const subButtons = subsDiv.querySelectorAll('button.sub');
-    if (subButtons.length < 5) {
-      throw new Error(`Error: expected at least 5 buttons in menu container, but found ${subButtons.length}`);
-    }
-    const boardButton = subButtons[3]; // currently binded to Board Button
-
-    boardButton.click();
-    console.log("Clicked board button");
-    const boardBackButton = await waitForElm('.head');
-    const userTag = await waitForElm('#user_tag');
-    const boardHueDiv = await waitForElm('.board-hue');
-    const hueSlider = boardHueDiv.querySelector('input.range');
-    
-    if (!hueSlider) {
-      throw new Error('Hue slider not found in dropdown menu');
-    }
-
-    hueSlider.value = 0;
-    hueSlider.dispatchEvent(new Event('input'));
-    console.log("Set hue slider to 0");
-    boardBackButton.click(); // return to default profile view
-    userTag.click(); // Close the user menu
-  }
-  catch (error) {
-    alert('An error has occurred during a Hue Chess Update. Please report this error to prefabcode@gmail.com or make an issue on the project github: https://github.com/prefabcode/hue-chess/issues');
-    console.error(`extensionUpdateResetHueSliderState: ${error}`);
-  }
 }
