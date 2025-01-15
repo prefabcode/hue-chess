@@ -666,7 +666,7 @@ export const createChallengeCompletionModal = () => {
       <p>You've successfully completed the Hue Chess Challenge! 🏆</p>
       
       <h3>New Prestige Rank Unlocked!</h3>
-      <p>Every time you beat level 15 you will gain a new prestige rank and a unique prestige icon visible in the perk selection menu. Your prestige icon will change as your prestige rank increases. </p>
+      <p>Every time you beat level 15 you will gain a new prestige rank!</p>
       
       <h3>What’s Next?</h3>
       <p>Try to challenge yourself by playing one specific time control throughout an entire prestige, or a specific variant throughout an entire prestige. You can try a self-imposed "hardcore" mode, where you reset your progress if you lose a certain number of games within any given level. Reset Progress is accessible through the extension settings (it will not wipe your current prestige, just reset your level back to 1). You can also try a speedrun to a specific level. The possibilities for Hue Chess are limited by your own imagination! Good luck, have fun and experiment!</p>

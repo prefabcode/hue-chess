@@ -3,7 +3,7 @@ import { browser } from './constants.js';
 
 
 export const confirmResetProgress = async () => {
-  const confirmReset = confirm('Are you sure you want to reset your progress? This action cannot be undone.');
+  const confirmReset = confirm('Are you sure you want to reset your progress? You will be returned to level 1 but your prestige rank will be preserved. This action cannot be undone.');
   if (confirmReset) {
     await resetProgress();
     updatePerksModalContent();
