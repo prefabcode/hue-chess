@@ -1,6 +1,18 @@
-import { updateProgressBar, monitorBoardDiv, waitForElm, updateProgressBarTooltip, resetUserMenuState } from './uiUpdates.js';
+import {
+  updateProgressBar, 
+  monitorBoardDiv, 
+  waitForElm, 
+  updateProgressBarTooltip, 
+  resetUserMenuState, 
+  updateHueRotateStyle, 
+  syncLichessUIWithExtensionState
+} from './uiUpdates.js';
 import { checkUrlAndStartMonitoring } from './gameMonitoring.js';
-import { browser, CURRENT_VERSION } from './constants.js';
+import {
+  browser, 
+  CURRENT_VERSION 
+} from './constants.js';
+import { getCurrentHue } from './storageManagement.js';
 
 
 const sleep = (milliseconds) => {
@@ -171,10 +183,9 @@ export const initializeExtension = async () => {
     userTag.click(); // Close the user menu
 
     // Mark the initialization as done
-    browser.storage.local.set({ initialized: true, completedBoards: 0, prestige: 0 }, () => {
+    browser.storage.local.set({ initialized: true, completedBoards: 0, currentHue: 0 }, async () => {
       console.log("Initialization complete, flag set in storage");
-      // TODO: Understand how this works, wouldn't passing 0 in this method break updateProgressBar? 
-      updateProgressBar(0, 0);
+      await updateProgressBar();
     });
   } catch (error) {
     console.error('An error occurred during initialization:', error);
@@ -186,8 +197,12 @@ export const init = async () => {
 
   await checkIfInitialized();
   await versionCheck();
+  const currentHue = await getCurrentHue();
+  await updateHueRotateStyle(currentHue);
+  await updateProgressBar();
 
-  updateProgressBarTooltip();
+  await updateProgressBarTooltip();
+  
   monitorBoardDiv();
   await checkUrlAndStartMonitoring();
   let currentUrl = window.location.href;
@@ -202,16 +217,10 @@ export const init = async () => {
 
 const checkIfInitialized = async () => {
   return new Promise((resolve) => {
-    browser.storage.local.get(['initialized'], (result) => {
+    browser.storage.local.get(['initialized'], async (result) => {
       if (!result.initialized) {
-        initializeExtension();
-      } else {
-        console.log("Extension already initialized");
-        // Initialize the progress bar with current values
-        browser.storage.local.get(['completedBoards', 'currentHue'], (result) => {
-          updateProgressBar(result.completedBoards, result.currentHue);
-        });
-      }
+        await initializeExtension();
+      } 
       resolve();
     });
   })
@@ -219,15 +228,16 @@ const checkIfInitialized = async () => {
 
 const versionCheck = async () => {
   return new Promise((resolve) => {
-    browser.storage.local.get(['version'], (result) => {
+    browser.storage.local.get(['version'], async (result) => {
       if (!result.version || result.version !== CURRENT_VERSION) {
-        console.log(`incorrect version detected, setting new version: ${CURRENT_VERSION} and updating activePerks`);
+        console.log(`versionCheck: incorrect version detected, setting new version: ${CURRENT_VERSION} and running update logic`);
         browser.storage.local.set(
           {
             activePerks: [],
             version: CURRENT_VERSION,
           }
         );
+        await syncLichessUIWithExtensionState();
       }
       resolve();
     });

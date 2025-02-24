@@ -235,11 +235,13 @@
 }
 
 #hue-chess-perks-modal .progress-info {
-  margin-bottom: 20px;
+  font-size: 16px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
-#hue-chess-perks-modal .progress-info p {
-  margin-bottom: 8px;
+#hue-chess-perks-modal .progress-info #prestige-container {
+  display: none;
 }
 
 #hue-chess-perks-modal #perks-header {
@@ -266,88 +268,6 @@
   margin: 0;
 }
 
-#hue-chess-perks-modal #prestige-level {
-  justify-content: center;
-  align-items: center;
-}
-
-#hue-chess-perks-modal .prestige-icon {
-  display: inline-block;
-  width: 15px;
-  height: 15px;
-  background-size: 400%;
-  background-position-y: 15px;
-  margin-left: 5px;
-}
-
-#hue-chess-perks-modal .prestige-icon-1 {
-  filter: hue-rotate(240deg);
-}
-
-#hue-chess-perks-modal .prestige-icon-2 {
-  filter: hue-rotate(145deg);
-}
-
-#hue-chess-perks-modal .prestige-icon-3 {
-  filter: hue-rotate(120deg);
-}
-
-#hue-chess-perks-modal .prestige-icon-4 {
-  filter: hue-rotate(45deg);
-} 
-
-#hue-chess-perks-modal .prestige-icon-5 {
-  filter: hue-rotate(230deg);
-}
-
-#hue-chess-perks-modal .prestige-icon-6 {
-  filter: hue-rotate(150deg);
-}
-
-#hue-chess-perks-modal .prestige-icon-7 {
-  filter: hue-rotate(220deg);
-}
-
-#hue-chess-perks-modal .prestige-icon-8 {
-  filter: hue-rotate(110deg);
-}
-
-#hue-chess-perks-modal .prestige-icon-9 {
-  filter: hue-rotate(150deg);
-}
-
-#hue-chess-perks-modal .prestige-icon-10 {
-  filter: hue-rotate(45deg);
-}
-
-#hue-chess-perks-modal .prestige-icon-11 {
-  filter: hue-rotate(45deg);
-}
-
-#hue-chess-perks-modal .prestige-icon-12 {
-  filter: hue-rotate(100deg);
-}
-
-#hue-chess-perks-modal .prestige-icon-13 {
-  filter: hue-rotate(300deg);
-}
-
-#hue-chess-perks-modal .prestige-icon-14 {
-  filter: hue-rotate(50deg);
-}
-
-#hue-chess-perks-modal .prestige-icon-15 {
-  filter: hue-rotate(90deg);
-}
-
-#hue-chess-perks-modal .prestige-icon-16 {
-  filter: hue-rotate(160deg);
-}
-
-#hue-chess-perks-modal .prestige-icon-17 {
-  filter: hue-rotate(270deg);
-}
-
 #hue-onboarding-modal, #hue-challenge-completion-modal {
   width: 600px;
   z-index: 1000;
@@ -361,6 +281,10 @@
 
 #hue-onboarding-modal h2, #hue-challenge-completion-modal h2 {
   margin-bottom: 10px;
+}
+
+cg-board {
+  visibility: hidden;
 }
 
 

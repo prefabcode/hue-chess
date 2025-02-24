@@ -3,16 +3,16 @@ import { browser } from './constants.js';
 
 
 export const confirmResetProgress = async () => {
-  const confirmReset = confirm('Are you sure you want to reset your progress? This action cannot be undone. (Prestige level will not be reset, to do that you have to re-install hue-chess extension)');
+  const confirmReset = confirm('Are you sure you want to reset your progress? You will be returned to level 1 but your prestige rank will be preserved. This action cannot be undone.');
   if (confirmReset) {
-    const prestige = await getPrestige();
-    resetProgress(prestige);
+    await resetProgress();
     updatePerksModalContent();
     updatePerksHeader();
   }
 };
 
-export const resetProgress = (prestige = 0) => {
+export const resetProgress = async () => {
+  const prestige = await getPrestige();
   const resetState = {
     initialized: true,
     completedBoards: 0,
@@ -20,10 +20,13 @@ export const resetProgress = (prestige = 0) => {
     activePerks: [],
     prestige,
   };
-
-  browser.storage.local.set(resetState, () => {
-    console.log(`Progress has been reset. Setting Prestige to: ${prestige}`);
-    updateUIAfterImport(resetState);
+  
+  return new Promise((resolve) => {
+    browser.storage.local.set(resetState, () => {
+      console.log(`resetProgress: Progress has been reset. Setting state to: ${resetState}`);
+      updateUIAfterImport(resetState);
+      resolve();
+    });
   });
 };
 
@@ -183,11 +186,28 @@ export const getPrestige = () => {
   });
 };
 
+export const incrementPrestige = () => {
+  return new Promise(async (resolve) => {
+    const prestige = await getPrestige() + 1;
+    browser.storage.local.set({ prestige });
+    console.log(`incrementPrestige: prestige set to ${prestige}`);
+    resolve();
+  });
+}
+
 export const getCompletedBoards = () => {
   return new Promise((resolve) => {
     browser.storage.local.get(['completedBoards'], (result) => {
       resolve(result.completedBoards || 0);
     });
+  });
+};
+
+export const setCompletedBoards = (completedBoards) => {
+  return new Promise((resolve) => {
+    browser.storage.local.set({ completedBoards });
+    console.log(`setCompletedBoards: Completed boards set to ${completedBoards}`);
+    resolve();
   });
 };
 
@@ -197,4 +217,12 @@ export const getCurrentHue = () => {
       resolve(result.currentHue || 0);
     });
   });
+};
+
+export const setCurrentHue = (currentHue) => {
+  return new Promise((resolve) => {
+    browser.storage.local.set({ currentHue });
+    console.log(`setCurrentHue: Current hue updated in storage: ${currentHue}`);
+    resolve();
+  })
 };

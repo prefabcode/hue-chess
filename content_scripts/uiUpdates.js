@@ -21,77 +21,80 @@ const showRandomTip = () => {
   tipMessage.innerHTML = TIPS[randomIndex];
 }
 
-export const updateProgressBar = (completedBoards = null, hueValue = null) => {
-  browser.storage.local.get(['completedBoards'], (result) => {
-    const level = (completedBoards !== null ? completedBoards : result.completedBoards) + 1;
-    const progress = hueValue !== null ? hueValue : 0;
-    const levelName = levelNames[level - 1];
-
-    let progressBar = document.getElementById('hue-progress-bar');
-    if (!progressBar) {
-      // Create progress bar
-      progressBar = document.createElement('div');
-      progressBar.id = 'hue-progress-bar';
-      progressBar.style.display = 'flex';
-      progressBar.style.alignItems = 'center';
-      progressBar.style.margin = '0 10px';
-      progressBar.style.flexGrow = '1';
-      progressBar.style.justifyContent = 'flex-end';
-
-      const progressBarContainer = document.createElement('div');
-      progressBarContainer.id = 'progress-bar-container';
-      progressBarContainer.style.display = 'flex';
-      progressBarContainer.style.alignItems = 'center';
-      progressBarContainer.style.width = '240px';
-      progressBarContainer.style.cursor = 'pointer';
-
-      const progressBarOuter = document.createElement('div');
-      progressBarOuter.id = 'progress-bar-outer';
-      progressBarOuter.style.flexBasis = '180px';
-      progressBarOuter.style.height = '10px';
-      progressBarOuter.style.borderRadius = '5px';
-      progressBarOuter.style.backgroundColor = '#8c8c8c';
-
-      const progressFill = document.createElement('div');
-      progressFill.id = 'progress-fill';
-      progressFill.style.height = '100%';
-      progressFill.style.borderRadius = '5px';
-      progressFill.style.backgroundColor = 'hsl(88, 62%, 37%)';
-      progressFill.style.width = `${progress}%`;
-
-      progressBarOuter.appendChild(progressFill);
-      progressBarContainer.appendChild(progressBarOuter);
-
-      const levelText = document.createElement('span');
-      levelText.id = 'level-text';
-      levelText.style.marginLeft = '10px';
-      levelText.style.marginBottom = '1px';
-      levelText.textContent = `Level ${level} - ${levelName}`;
-
-      progressBarContainer.appendChild(levelText);
-      progressBar.appendChild(progressBarContainer);
-
-      const header = document.querySelector('header');
-      const siteButtons = header.querySelector('.site-buttons');
-      header.insertBefore(progressBar, siteButtons);
-
-      progressBarContainer.addEventListener('click', openPerksModal);
-
-    } else {
-      const progressFill = progressBar.querySelector('#progress-fill');
-      const levelText = document.getElementById('level-text');
-      progressFill.style.width = `${progress}%`;
-      levelText.textContent = `Level ${level} - ${levelName}`;
-    }
-
-    // Adapt to light and dark modes
-    const isDarkMode = document.body.classList.contains('dark') || document.body.classList.contains('transp');
-    if (isDarkMode) {
-      const progressBarOuter = progressBar.querySelector('#progress-bar-outer');
-      const progressFill = progressBar.querySelector('#progress-fill');
-      progressFill.style.backgroundColor = '#f7f7f7';
-      progressBarOuter.style.backgroundColor = 'hsl(37, 5%, 22%)';
-    }
+export const updateProgressBar = () => {
+  return new Promise((resolve) => {
+    browser.storage.local.get(['completedBoards', 'currentHue'], (result) => {
+      const level = (result.completedBoards !== null ? result.completedBoards : 0) + 1;
+      const progress = result.currentHue || 0;
+      const levelName = levelNames[level - 1];
+  
+      let progressBar = document.getElementById('hue-progress-bar');
+      if (!progressBar) {
+        // Create progress bar
+        progressBar = document.createElement('div');
+        progressBar.id = 'hue-progress-bar';
+        progressBar.style.display = 'flex';
+        progressBar.style.alignItems = 'center';
+        progressBar.style.margin = '0 10px';
+        progressBar.style.flexGrow = '1';
+        progressBar.style.justifyContent = 'flex-end';
+  
+        const progressBarContainer = document.createElement('div');
+        progressBarContainer.id = 'progress-bar-container';
+        progressBarContainer.style.display = 'flex';
+        progressBarContainer.style.alignItems = 'center';
+        progressBarContainer.style.width = '240px';
+        progressBarContainer.style.cursor = 'pointer';
+  
+        const progressBarOuter = document.createElement('div');
+        progressBarOuter.id = 'progress-bar-outer';
+        progressBarOuter.style.flexBasis = '180px';
+        progressBarOuter.style.height = '10px';
+        progressBarOuter.style.borderRadius = '5px';
+        progressBarOuter.style.backgroundColor = '#8c8c8c';
+  
+        const progressFill = document.createElement('div');
+        progressFill.id = 'progress-fill';
+        progressFill.style.height = '100%';
+        progressFill.style.borderRadius = '5px';
+        progressFill.style.backgroundColor = 'hsl(88, 62%, 37%)';
+        progressFill.style.width = `${progress}%`;
+  
+        progressBarOuter.appendChild(progressFill);
+        progressBarContainer.appendChild(progressBarOuter);
+  
+        const levelText = document.createElement('span');
+        levelText.id = 'level-text';
+        levelText.style.marginLeft = '10px';
+        levelText.style.marginBottom = '1px';
+        levelText.textContent = `Level ${level} - ${levelName}`;
+  
+        progressBarContainer.appendChild(levelText);
+        progressBar.appendChild(progressBarContainer);
+  
+        const header = document.querySelector('header');
+        const siteButtons = header.querySelector('.site-buttons');
+        header.insertBefore(progressBar, siteButtons);
+  
+        progressBarContainer.addEventListener('click', openPerksModal);
+  
+      } else {
+        const progressFill = progressBar.querySelector('#progress-fill');
+        const levelText = document.getElementById('level-text');
+        progressFill.style.width = `${progress}%`;
+        levelText.textContent = `Level ${level} - ${levelName}`;
+      }
+  
+      // Adapt to light and dark modes
+      const isDarkMode = document.body.classList.contains('dark') || document.body.classList.contains('transp');
+      if (isDarkMode) {
+        const progressBarOuter = progressBar.querySelector('#progress-bar-outer');
+        const progressFill = progressBar.querySelector('#progress-fill');
+        progressFill.style.backgroundColor = '#f7f7f7';
+        progressBarOuter.style.backgroundColor = 'hsl(37, 5%, 22%)';
+      }
+      resolve();
+    });
   });
 };
 
@@ -275,29 +278,15 @@ export const updatePerksModalContent = async () => {
   browser.storage.local.get(['completedBoards', 'currentHue', 'activePerks', 'prestige'], (result) => {
     const playerLevel = (result.completedBoards !== null ? result.completedBoards : 0) + 1;
     const huePoints = `${result.currentHue || 0}/100`;
-    const prestige = (result.prestige || 0);
+    const prestige = result.prestige || 0;
 
     document.getElementById('current-level').innerText = playerLevel;
     document.getElementById('hue-points').innerText = huePoints;
 
     if (prestige) {
-      document.getElementById('prestige-points').innerText = prestige;
-      const prestigeContainer = document.getElementById('prestige-level');
-     
-      let existingPrestigeIcon = prestigeContainer.querySelector('.prestige-icon');
-      if (existingPrestigeIcon) {
-        existingPrestigeIcon.remove();
-      }
-
-      const imageNumber = Math.min(prestige, LEVEL_CAP); // if prestige is > 15, we want to use 15th prestige icon.
-      const imageFormat = [1, 10, 15].includes(imageNumber) ? 'svg' : 'jpg';
-      const imagePath = browser.runtime.getURL(`imgs/prestige/${imageNumber}.${imageFormat}`);
-      prestigeIcon = document.createElement('div');
-      prestigeIcon.className = `prestige-icon prestige-icon-${imageNumber}`;
-      prestigeIcon.style.backgroundImage = `url('${imagePath}')`;
-      prestigeContainer.appendChild(prestigeIcon);
-
-      prestigeContainer.style.display = 'flex';
+      const prestigeContainer = document.getElementById('prestige-container');
+      prestigeContainer.innerText = `| Prestige: ${prestige}`;
+      prestigeContainer.style.display = 'inline';
     }
 
     // Set active perks and handle locked perks
@@ -393,25 +382,22 @@ const openSettingsModal = async () => {
     if (process.env.NODE_ENV !== 'production') {
       document.getElementById('dev-tools').style.display = 'block';
 
-       document.getElementById('export-state').addEventListener('click', () => {
-         browser.storage.local.get(['initialized', 'completedBoards', 'currentHue',
- 'prestige'], (result) => {
-           const extensionState = {
-             initialized: result.initialized,
-             completedBoards: result.completedBoards,
-             currentHue: result.currentHue || 0,
-             activePerks: [],
-           };
-           if (result.prestige) {
-             extensionState.prestige = result.prestige;
-           }
-           const jsonString = JSON.stringify(extensionState);
+      document.getElementById('export-state').addEventListener('click', () => {
+        browser.storage.local.get(['initialized', 'completedBoards', 'currentHue'], (result) => {
+          const extensionState = {
+            initialized: result.initialized,
+            completedBoards: result.completedBoards,
+            currentHue: result.currentHue || 0,
+            activePerks: [],
+          };
+          
+          const jsonString = JSON.stringify(extensionState);
 
-           navigator.clipboard.writeText(jsonString);
+          navigator.clipboard.writeText(jsonString);
 
-           alert('Hue chess profile string copied to clipboard');
-         });
-       });
+          alert('Hue chess profile string copied to clipboard');
+        });
+      });
 
        document.getElementById('import-state').addEventListener('click', () => {
          const jsonString = prompt('Paste your game data string:').trim();
@@ -472,66 +458,50 @@ export const waitForElm = (selector) => {
   });
 }
 
-export const updateUIAfterImport = (extensionState) => {
+export const updateUIAfterImport = async (extensionState) => {
   const { completedBoards, currentHue } = extensionState;
 
-  waitForElm('#user_tag').then((userTag) => {
-    userTag.click();
+  const userTag = await waitForElm('#user_tag');
+  userTag.click();
+  
+  const dasherApp = document.getElementById('dasher_app');
+  if (!dasherApp) {
+    console.error("updateUIAfterImport: dasher_app element not found");
+    return;
+  }
 
-    const dasherApp = document.getElementById('dasher_app');
-    if (!dasherApp) {
-      console.log("Dasher app not found");
-      return;
-    }
+  const subsDiv = await waitForElm('.subs');
+  const subButtons = subsDiv.querySelectorAll('button.sub');
+  if (subButtons.length < 5) {
+    console.error(`updateUIAfterImport: expected at least 5 buttons in menu container, but found ${subButtons.length}`);
+    return;
+  }
+  const boardButton = subButtons[3];
+  boardButton.click();
 
-    waitForElm('.subs').then((subsDiv) => {
-      const subButtons = subsDiv.querySelectorAll('button.sub');
-      if (subButtons.length < 5) {
-        console.error(`Error: expected at least 5 buttons in menu container, but found ${subButtons.length}`);
-        return;
-      }
-      const boardButton = subButtons[3]; // currently binded to Board Button
+  const boardList = await waitForElm('.list');
+  const targetBoardTitle = levelNames[completedBoards].toLowerCase();
+  const targetBoardButton = boardList.querySelector(`button[title="${targetBoardTitle}"]`);
+  if (!targetBoardButton) {
+    console.error(`updateUIAfterImport: ${targetBoardTitle} board button not found`);
+    return;
+  }
 
-      boardButton.click();
-      console.log("Clicked board button");
+  targetBoardButton.click();
+  
+  const boardBackButton = await waitForElm('.head');
+  boardBackButton.click();
+  userTag.click();
 
-      waitForElm('.list').then((boardList) => {
-        const targetBoardTitle = levelNames[completedBoards].toLowerCase();
-        const targetBoardButton = boardList.querySelector(`button[title="${targetBoardTitle}"]`);
-        if (!targetBoardButton) {
-          console.log(`${targetBoardTitle} board button not found`);
-          return;
-        }
+  await updateHueRotateStyle(currentHue);
+  await updateProgressBar();
+  await updateProgressBarTooltip();
 
-        targetBoardButton.click();
-        console.log(`Clicked ${targetBoardTitle} board button`);
-
-        waitForElm('.board-hue').then((boardHueDiv) => {
-          const hueSlider = boardHueDiv.querySelector('input.range');
-          if (!hueSlider) {
-            console.log("Hue slider not found");
-            return;
-          }
-
-          hueSlider.value = currentHue;
-          hueSlider.dispatchEvent(new Event('input'));
-          console.log(`Set hue slider to ${currentHue}`);
-          const backButton = document.querySelector('.sub.board .head');
-          if (backButton) backButton.click();
-          userTag.click(); // Close the user menu
-
-          // Update the progress bar
-          updateProgressBar(completedBoards, currentHue);
-          updateProgressBarTooltip();
-        });
-      });
-    });
-  });
 };
 
 let progressBarTooltipInstance = null;
 
-export const updateProgressBarTooltip = () => {
+export const updateProgressBarTooltip = async () => {
   browser.storage.local.get(['activePerks', 'winningStreak', 'gladiatorLossBuffer', 'preparationStatus', 'playedOpenings'], async (result) => {
     const activePerks = result.activePerks || [];
     const gladiatorLossBuffer = result.gladiatorLossBuffer || 0;
@@ -696,7 +666,7 @@ export const createChallengeCompletionModal = () => {
       <p>You've successfully completed the Hue Chess Challenge! 🏆</p>
       
       <h3>New Prestige Rank Unlocked!</h3>
-      <p>Every time you beat level 15 you will gain a new prestige rank and a unique prestige icon visible in the perk selection menu. Your prestige icon will change as your prestige rank increases. </p>
+      <p>Every time you beat level 15 you will gain a new prestige rank!</p>
       
       <h3>What’s Next?</h3>
       <p>Try to challenge yourself by playing one specific time control throughout an entire prestige, or a specific variant throughout an entire prestige. You can try a self-imposed "hardcore" mode, where you reset your progress if you lose a certain number of games within any given level. Reset Progress is accessible through the extension settings (it will not wipe your current prestige, just reset your level back to 1). You can also try a speedrun to a specific level. The possibilities for Hue Chess are limited by your own imagination! Good luck, have fun and experiment!</p>
@@ -724,7 +694,7 @@ export const createChallengeCompletionModal = () => {
   });
 }
 
-const syncLichessUIWithExtensionState = async () => {
+export const syncLichessUIWithExtensionState = async () => {
   try {
     // Ensure the board is in the correct initial state
     const userTag = await waitForElm('#user_tag');
@@ -785,9 +755,31 @@ button.textContent === '2D');
       currentHue,
     };
 
-    updateUIAfterImport(extensionState);
+    await updateUIAfterImport(extensionState);
     console.log('UI synchronized with extension state.');
   } catch (error) {
     console.error('Error synchronizing UI:', error);
   }
 };
+
+
+const convertHuePointsToDegrees = (huePoints) => {
+  if (huePoints < 0 || huePoints > 100) {
+      throw new Error("Hue points must be between 0 and 100.");
+  }
+  return (huePoints / 100) * 360;
+}
+
+
+export const updateHueRotateStyle = async (huePoints) => {
+  const degrees = convertHuePointsToDegrees(huePoints);
+  
+  addStyle(`cg-board { filter: hue-rotate(${degrees}deg) !important; visibility: visible !important; }`);
+  
+}
+
+const addStyle = (() => {
+  const style = document.createElement('style');
+  document.head.append(style);
+  return (styleString) => style.textContent = styleString;
+})();
