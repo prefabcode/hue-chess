@@ -10,10 +10,12 @@ import {
   getPlayingId,
   getCurrentHue,
   getCompletedBoards,
+  getPrestige,
 } from './storageManagement.js';
 import { showPerkToast } from './perks.js';
 import { levelNames, PREPARATION_TIME, TIPS, PERK_DISPLAY_NAMES, MAX_PERKS, browser, LEVEL_CAP } from './constants.js';
 import tippy from 'tippy.js';
+import { PERK_MARKUP_TEMPLATE, PERK_METADATA, PERK_UNLOCK_ORDERS } from './perkConstants.js';
 
 const showRandomTip = () => {
   const tipMessage = document.getElementById('tips-message');
@@ -177,7 +179,6 @@ async function setImageSources() {
 
 export const openPerksModal = async () => {
   try {
-    // Check if the modal already exists
     let modal = document.querySelector('#hue-chess-perks-modal');
     if (modal) {
       document.body.style.overflowY = 'hidden';
@@ -190,26 +191,39 @@ export const openPerksModal = async () => {
     const response = await fetch(browser.runtime.getURL('perks.html'));
     const data = await response.text();
 
-    // Create a temporary div to hold the fetched HTML
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = data;
 
-    // Extract the modal element from the fetched HTML
     modal = tempDiv.querySelector('#hue-chess-perks-modal');
+    const perksContainer = modal.querySelector('#perks-container');
+    const prestigeLevel = await getPrestige();
+    const unlockOrderIndex = prestigeLevel % PERK_UNLOCK_ORDERS.length;
+    const unlockOrder = PERK_UNLOCK_ORDERS[unlockOrderIndex];
+    console.log(`prestigeLevel: ${prestigeLevel}, unlockOrderIndex: ${unlockOrderIndex}, unlockOrder: ${unlockOrder}`);
+    let perkContainerHtmlStr = '';
+    
+    unlockOrder.forEach((unlockMetadata) => {
+      const perkMetadata = PERK_METADATA.find(perk => perk.id === unlockMetadata.id);
+      let perkRawHtml = PERK_MARKUP_TEMPLATE
+        .replaceAll('{internalName}', perkMetadata.internalName)
+        .replaceAll('{displayName}', perkMetadata.displayName)
+        .replaceAll('{description}', perkMetadata.description)
+        .replaceAll('{unlockLevel}', unlockMetadata.level);
+      perkContainerHtmlStr += perkRawHtml;
+    });
 
-    // Append the modal to the body
+    perksContainer.innerHTML = perkContainerHtmlStr;
+
     document.body.appendChild(modal);
 
     document.body.style.overflowY = 'hidden';
     modal.showModal();
 
-    // Add event listeners for modal buttons
     document.getElementById('close-perks-modal').addEventListener('click', () => {
       document.body.style.overflowY = 'scroll';
       modal.close();
     });
 
-    // Add event listeners for perks
     const perkBoxes = document.querySelectorAll('.perks .perk-box');
     perkBoxes.forEach(box => {
       box.addEventListener('click', async () => {
@@ -264,7 +278,6 @@ export const openPerksModal = async () => {
       });
     });
 
-    // Update the modal content with current level and hue progress
     await setImageSources();
     await updatePerksModalContent();
     await updatePerksHeader();

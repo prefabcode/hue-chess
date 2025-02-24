@@ -75,8 +75,8 @@ export const PERK_METADATA = [
   },
 ]
 
-export const PERK_UNLOCK_ORDERS = {
-  0: [
+export const PERK_UNLOCK_ORDERS = [
+  [
     { id: 1, level: 1 },
     { id: 2, level: 2 },
     { id: 3, level: 3 },
@@ -90,7 +90,7 @@ export const PERK_UNLOCK_ORDERS = {
     { id: 11, level: 11 },
     { id: 12, level: 13 }
   ],
-  1: [
+  [
     { id: 12, level: 1 },
     { id: 11, level: 2 },
     { id: 10, level: 3 },
@@ -104,6 +104,7 @@ export const PERK_UNLOCK_ORDERS = {
     { id: 2, level: 11 },
     { id: 1, level: 13 }
   ]
-};
+]
+
 
 
