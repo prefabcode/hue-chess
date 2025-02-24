@@ -13,6 +13,7 @@ import {
   setHasPlayedBefore,
   setPreparationStatus,
   getPreparationStatus,
+  updateActivePerks,
 } from "./storageManagement.js";
 import { PREPARATION_TIME } from "./constants.js";
 import { startAnalysisTimer, updateProgressBarTooltip } from "./uiUpdates.js";
@@ -168,6 +169,7 @@ export const fetchGameStream = async (streamId, playingId, userColor) => {
                         await resetGladiatorLossBuffer();
                         await applyGladiatorPenalty();
                         await setAllowGladiatorPerkRemoval(true);
+                        await updateActivePerks('gladiator', false);
                       }
                     }
                     if (activePerks.includes('preparation')) {
