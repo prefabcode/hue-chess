@@ -76,11 +76,12 @@ export const PERK_METADATA = [
 ]
 
 export const PERK_UNLOCK_ORDERS = [
+  // Prestige 0
   [
-    { id: 1, level: 1 },
-    { id: 2, level: 2 },
-    { id: 3, level: 3 },
-    { id: 4, level: 4 },
+    { id: 1, level: 1, },
+    { id: 2, level: 2, },
+    { id: 3, level: 3, },
+    { id: 4, level: 4, },
     { id: 5, level: 5 },
     { id: 6, level: 6 },
     { id: 7, level: 7 },
@@ -90,6 +91,52 @@ export const PERK_UNLOCK_ORDERS = [
     { id: 11, level: 11 },
     { id: 12, level: 13 }
   ],
+  // Prestige 1
+  [
+    { id: 8, level: 1 },
+    { id: 4, level: 1 },
+    { id: 9, level: 2 },
+    { id: 7, level: 3 },
+    { id: 6, level: 3 },
+    { id: 10, level: 4 },
+    { id: 11, level: 5 },
+    { id: 12, level: 6 },
+    { id: 5, level: 7 },
+    { id: 3, level: 8, },
+    { id: 2, level: 9, },
+    { id: 1, level: 11, },
+  ],
+  // Prestige 2
+  [
+    { id: 12, level: 1 },
+    { id: 4, level: 1 },
+    { id: 6, level: 2 },
+    { id: 8, level: 3 },
+    { id: 3, level: 4, },
+    { id: 9, level: 5 },
+    { id: 2, level: 6, },
+    { id: 10, level: 7 },
+    { id: 11, level: 8 },
+    { id: 1, level: 9, },
+    { id: 7, level: 11 },
+    { id: 5, level: 13 },
+  ],
+  // Prestige 3
+  [
+    { id: 10, level: 1 },
+    { id: 4, level: 1 },
+    { id: 11, level: 2 },
+    { id: 8, level: 3 },
+    { id: 6, level: 3 },
+    { id: 5, level: 4 },
+    { id: 3, level: 5, },
+    { id: 7, level: 6 },
+    { id: 9, level: 7 },
+    { id: 12, level: 8 },
+    { id: 1, level: 9, },
+    { id: 2, level: 11, },
+  ],
+  // Prestige 4
   [
     { id: 12, level: 1 },
     { id: 11, level: 2 },
