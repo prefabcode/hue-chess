@@ -93,64 +93,49 @@ export const PERK_UNLOCK_ORDERS = [
   ],
   // Prestige 1
   [
-    { id: 8, level: 1 },
-    { id: 4, level: 1 },
-    { id: 9, level: 2 },
-    { id: 7, level: 3 },
-    { id: 6, level: 3 },
-    { id: 10, level: 4 },
-    { id: 11, level: 5 },
-    { id: 12, level: 6 },
-    { id: 5, level: 7 },
-    { id: 3, level: 8, },
-    { id: 2, level: 9, },
-    { id: 1, level: 11, },
+    { id: 4, level: 1 }, // preparation
+    { id: 8, level: 2 }, // aggression
+    { id: 7, level: 3 }, // equalizer
+    { id: 11, level: 4 }, // berzerker
+    { id: 9, level: 5 }, // gambiteer 
+    { id: 10, level: 6 }, // gladiator
+    { id: 5, level: 7 }, // king's gambit
+    { id: 2, level: 8, }, // endgame specialist
+    { id: 12, level: 9 }, // versatility
+    { id: 6, level: 10 }, // rivalry 
+    { id: 3, level: 11, }, // knight moves
+    { id: 1, level: 13, }, // opportunist
   ],
   // Prestige 2
   [
-    { id: 12, level: 1 },
-    { id: 4, level: 1 },
-    { id: 6, level: 2 },
-    { id: 8, level: 3 },
-    { id: 3, level: 4, },
-    { id: 9, level: 5 },
-    { id: 2, level: 6, },
-    { id: 10, level: 7 },
-    { id: 11, level: 8 },
-    { id: 1, level: 9, },
-    { id: 7, level: 11 },
-    { id: 5, level: 13 },
+    { id: 4, level: 1 }, // preparation
+    { id: 12, level: 2 }, // versatility
+    { id: 1, level: 3, }, // opportunist
+    { id: 7, level: 4 }, // equalizer
+    { id: 9, level: 5 }, // gambiteer
+    { id: 6, level: 5 }, // rivalry 
+    { id: 3, level: 6, }, // knight moves
+    { id: 5, level: 7 }, // king's gambit
+    { id: 2, level: 8, }, // endgame specialist
+    { id: 8, level: 9 }, // aggression
+    { id: 10, level: 11 }, // gladiator 
+    { id: 11, level: 13 }, // berzerker
   ],
   // Prestige 3
   [
-    { id: 10, level: 1 },
-    { id: 4, level: 1 },
-    { id: 11, level: 2 },
-    { id: 8, level: 3 },
-    { id: 6, level: 3 },
-    { id: 5, level: 4 },
-    { id: 3, level: 5, },
-    { id: 7, level: 6 },
-    { id: 9, level: 7 },
-    { id: 12, level: 8 },
-    { id: 1, level: 9, },
-    { id: 2, level: 11, },
+    { id: 4, level: 1 }, // preparation
+    { id: 10, level: 2 }, // gladiator
+    { id: 7, level: 3 }, // equalizer
+    { id: 2, level: 4, }, // endgame specialist
+    { id: 6, level: 5 }, // rivalry
+    { id: 11, level: 6 }, // berzerker 
+    { id: 9, level: 7 }, // gambiteer
+    { id: 5, level: 8 }, // king's gambit
+    { id: 8, level: 9 }, // aggression
+    { id: 1, level: 10, }, // opportunist
+    { id: 3, level: 11, }, // knight moves
+    { id: 12, level: 13 }, // versatility
   ],
-  // Prestige 4
-  [
-    { id: 12, level: 1 },
-    { id: 11, level: 2 },
-    { id: 10, level: 3 },
-    { id: 9, level: 4 },
-    { id: 8, level: 5 },
-    { id: 7, level: 6 },
-    { id: 6, level: 7 },
-    { id: 5, level: 7 },
-    { id: 4, level: 8 },
-    { id: 3, level: 9 },
-    { id: 2, level: 11 },
-    { id: 1, level: 13 }
-  ]
 ]
 
 
