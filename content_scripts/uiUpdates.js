@@ -13,7 +13,7 @@ import {
   getPrestige,
 } from './storageManagement.js';
 import { showPerkToast } from './perks.js';
-import { levelNames, PREPARATION_TIME, TIPS, PERK_DISPLAY_NAMES, MAX_PERKS, browser, LEVEL_CAP } from './constants.js';
+import { levelNames, PREPARATION_TIME, TIPS, PERK_DISPLAY_NAMES, MAX_PERKS, browser } from './constants.js';
 import tippy from 'tippy.js';
 import { PERK_MARKUP_TEMPLATE, PERK_METADATA, PERK_UNLOCK_ORDERS } from './perkConstants.js';
 
@@ -665,7 +665,12 @@ export const resetUserMenuState = async () => {
 
 export const syncLichessUIWithExtensionState = async () => {
   try {
-    // Ensure the board is in the correct initial state
+    // Ensure dasher-app event handler for populating user menu is set on page-load before performing any menu interactions (otherwise this function hangs).
+    const dasherResult = await ensureDasherAppIsPopulated(10);
+    if (!dasherResult) {
+      throw new Error('Dasher-App menu failed to initialize, please contact prefabcode@gmail.com or file an issue on https://github.com/prefabcode/hue-chess');
+    }
+    
     const userTag = await waitForElm('#user_tag');
     userTag.click();
     console.log('SyncLichessUIWithExtensionState: UserTag Clicked');
@@ -754,3 +759,38 @@ const addStyle = (() => {
   document.head.append(style);
   return (styleString) => style.textContent = styleString;
 })();
+
+// TODO: Move this to a utils file someday.
+const sleep = (milliseconds) => {
+  return new Promise(resolve => setTimeout(resolve, milliseconds));
+};
+
+// event handler that populates dasher-app user-menu may not be set immediately on page-load.
+// retry to see if dasher_app menu is populated before continuing with any menu interactions 
+// (you usually need to only check for this if you're doing menu interactions on page-load). 
+export async function ensureDasherAppIsPopulated(maxRetries) {
+  let retries = 0;
+   while (retries < maxRetries) {
+     const userTag = document.querySelector('#user_tag');
+     const dasherApp = document.querySelector('#dasher_app');
+
+     if (userTag) {
+       userTag.click();
+       console.log('user_tag clicked');
+
+       await sleep(500);
+
+       if (dasherApp && dasherApp.children.length > 0) {
+         console.log('dasher_app populated');
+         return true;
+       }
+     }
+
+     retries++;
+     console.log(`Retrying to click user_tag and check dasher_app... Attempt
+ ${retries}`);
+     await sleep(500);
+   }
+   console.error('Failed to populate dasher_app after multiple attempts');
+   return false;
+}
