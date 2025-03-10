@@ -16,6 +16,7 @@ import { showPerkToast } from './perks.js';
 import { levelNames, PREPARATION_TIME, TIPS, PERK_DISPLAY_NAMES, MAX_PERKS, browser } from './constants.js';
 import tippy from 'tippy.js';
 import { PERK_MARKUP_TEMPLATE, PERK_METADATA, PERK_UNLOCK_ORDERS } from './perkConstants.js';
+import { sleep } from './utils.js';
 
 const showRandomTip = () => {
   const tipMessage = document.getElementById('tips-message');
@@ -669,16 +670,87 @@ export const resetUserMenuState = async () => {
 
 export const syncLichessUIWithExtensionState = async () => {
   try {
+    await resetLichessBoardState();
+    const completedBoards = await getCompletedBoards();
+    const currentHue = await getCurrentHue();
+
+    const extensionState = {
+      completedBoards,
+      currentHue,
+    };
+
+    await updateUIAfterImport(extensionState);
+    userTag.click(); // close the menu
+    console.log('syncLichessUIWithExtensionState: UI synchronized with extension state.');
+  } catch (error) {
+    console.error('syncLichessUIWithExtensionState: Error Occurred:', error);
+  }
+};
+
+
+const convertHuePointsToDegrees = (huePoints) => {
+  if (huePoints < 0 || huePoints > 100) {
+      throw new Error("Hue points must be between 0 and 100.");
+  }
+  return (huePoints / 100) * 360;
+}
+
+
+export const updateHueRotateStyle = async (huePoints) => {
+  const degrees = convertHuePointsToDegrees(huePoints);
+  
+  addStyle(`cg-board { filter: hue-rotate(${degrees}deg) !important; visibility: visible !important; }`);
+  
+}
+
+const addStyle = (() => {
+  const style = document.createElement('style');
+  document.head.append(style);
+  return (styleString) => style.textContent = styleString;
+})();
+
+// event handler that populates dasher-app user-menu may not be set immediately on page-load.
+// retry to see if dasher_app menu is populated before continuing with any menu interactions 
+// (you usually need to only check for this if you're doing menu interactions on page-load). 
+export async function ensureDasherAppIsPopulated(maxRetries) {
+  let retries = 0;
+   while (retries < maxRetries) {
+     const userTag = document.querySelector('#user_tag');
+     const dasherApp = document.querySelector('#dasher_app');
+
+     if (userTag) {
+       userTag.click();
+       console.log('user_tag clicked');
+
+       await sleep(500);
+
+       if (dasherApp && dasherApp.children.length > 0) {
+         console.log('dasher_app populated');
+         return true;
+       }
+     }
+
+     retries++;
+     console.log(`Retrying to click user_tag and check dasher_app... Attempt
+ ${retries}`);
+     await sleep(500);
+   }
+   console.error('Failed to populate dasher_app after multiple attempts');
+   return false;
+}
+
+async function resetLichessBoardState() {
+  try {
+    // This section resets the board settings to default state, before applying extension state
     // Ensure dasher-app event handler for populating user menu is set on page-load before performing any menu interactions (otherwise this function hangs).
     const dasherResult = await ensureDasherAppIsPopulated(10);
-    if (!dasherResult) {
-      throw new Error('Dasher-App menu failed to initialize, please contact prefabcode@gmail.com or file an issue on https://github.com/prefabcode/hue-chess');
-    }
-    
+      if (!dasherResult) {
+        throw new Error('Dasher-App menu failed to initialize, please contact prefabcode@gmail.com or file an issue on https://github.com/prefabcode/hue-chess');
+      }
+      
     const userTag = await waitForElm('#user_tag');
     userTag.click();
     console.log('SyncLichessUIWithExtensionState: UserTag Clicked');
-
 
     const subsDiv = await waitForElm('.subs');
     console.log('SyncLichessUIWithExtensionState: .subs retrieved');
@@ -723,78 +795,11 @@ button.textContent === '2D');
     console.log("SyncLichessUIWithExtensionState: Set hue slider to 0");
 
     const boardBackButton = await waitForElm('.head');
-    boardBackButton.click(); // Return to default profile view
-    userTag.click(); // Close the user menu
+    boardBackButton.click(); 
+    userTag.click();
 
-    // Now apply the extension state
-    const completedBoards = await getCompletedBoards();
-    const currentHue = await getCurrentHue();
-
-    const extensionState = {
-      completedBoards,
-      currentHue,
-    };
-
-    await updateUIAfterImport(extensionState);
-    console.log('UI synchronized with extension state.');
   } catch (error) {
-    console.error('Error synchronizing UI:', error);
+    console.error(`resetLichessBoardState: Error occurred: ${error}`);
   }
-};
-
-
-const convertHuePointsToDegrees = (huePoints) => {
-  if (huePoints < 0 || huePoints > 100) {
-      throw new Error("Hue points must be between 0 and 100.");
-  }
-  return (huePoints / 100) * 360;
-}
-
-
-export const updateHueRotateStyle = async (huePoints) => {
-  const degrees = convertHuePointsToDegrees(huePoints);
-  
-  addStyle(`cg-board { filter: hue-rotate(${degrees}deg) !important; visibility: visible !important; }`);
-  
-}
-
-const addStyle = (() => {
-  const style = document.createElement('style');
-  document.head.append(style);
-  return (styleString) => style.textContent = styleString;
-})();
-
-// TODO: Move this to a utils file someday.
-const sleep = (milliseconds) => {
-  return new Promise(resolve => setTimeout(resolve, milliseconds));
-};
-
-// event handler that populates dasher-app user-menu may not be set immediately on page-load.
-// retry to see if dasher_app menu is populated before continuing with any menu interactions 
-// (you usually need to only check for this if you're doing menu interactions on page-load). 
-export async function ensureDasherAppIsPopulated(maxRetries) {
-  let retries = 0;
-   while (retries < maxRetries) {
-     const userTag = document.querySelector('#user_tag');
-     const dasherApp = document.querySelector('#dasher_app');
-
-     if (userTag) {
-       userTag.click();
-       console.log('user_tag clicked');
-
-       await sleep(500);
-
-       if (dasherApp && dasherApp.children.length > 0) {
-         console.log('dasher_app populated');
-         return true;
-       }
-     }
-
-     retries++;
-     console.log(`Retrying to click user_tag and check dasher_app... Attempt
- ${retries}`);
-     await sleep(500);
-   }
-   console.error('Failed to populate dasher_app after multiple attempts');
-   return false;
+ 
 }
