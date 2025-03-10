@@ -502,8 +502,6 @@ export const updateUIAfterImport = async (extensionState) => {
 
   targetBoardButton.click();
 
-  await resetUserMenuState();
-
   await updateHueRotateStyle(currentHue);
   await updateProgressBar();
   await updateProgressBarTooltip();
@@ -730,6 +728,7 @@ button.textContent === '2D');
     };
 
     await updateUIAfterImport(extensionState);
+    await resetUserMenuState();
     console.log('UI synchronized with extension state.');
   } catch (error) {
     console.error('Error synchronizing UI:', error);
