@@ -501,10 +501,6 @@ export const updateUIAfterImport = async (extensionState) => {
   }
 
   targetBoardButton.click();
-  
-  // const boardBackButton = await waitForElm('.head');
-  // boardBackButton.click();
-  // userTag.click();
 
   await resetUserMenuState();
 
