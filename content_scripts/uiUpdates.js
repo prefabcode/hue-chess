@@ -752,15 +752,15 @@ async function resetLichessBoardState() {
       
     const userTag = await waitForElm('#user_tag');
     userTag.click();
-    console.log('SyncLichessUIWithExtensionState: UserTag Clicked');
+    console.log('resetLichessBoardState: UserTag Clicked');
 
     const subsDiv = await waitForElm('.subs');
-    console.log('SyncLichessUIWithExtensionState: .subs retrieved');
+    console.log('resetLichessBoardState: .subs retrieved');
     const subButtons = subsDiv.querySelectorAll('button.sub');
     const boardButton = subButtons[3]; // Assuming this is the board button
 
     boardButton.click();
-    console.log("SyncLichessUIWithExtensionState: Clicked board button");
+    console.log("resetLichessBoardState: Clicked board button");
 
     const boardSettingsDiv = await waitForElm('.board');
     const dimensionSelector = boardSettingsDiv.querySelector('.selector');
@@ -768,12 +768,12 @@ async function resetLichessBoardState() {
 Array.from(dimensionSelector.querySelectorAll('button')).find(button =>
 button.textContent === '2D');
     the2DButton.click();
-    console.log('SyncLichessUIWithExtensionState: Clicked 2D button');
+    console.log('resetLichessBoardState: Clicked 2D button');
 
     const boardList = await waitForElm('.list');
     const brownBoardButton = boardList.querySelector('button[title="brown"]');
     brownBoardButton.click();
-    console.log("SyncLichessUIWithExtensionState: Clicked brown board button");
+    console.log("resetLichessBoardState: Clicked brown board button");
 
     const isTransparentMode = document.body.classList.contains('transp');
     if (isTransparentMode) {
@@ -781,20 +781,20 @@ button.textContent === '2D');
       const opacitySlider = boardOpacityDiv.querySelector('input.range');
       opacitySlider.value = 100;
       opacitySlider.dispatchEvent(new Event('input'));
-      console.log('SyncLichessUIWithExtensionState: Opacity slider set to 100');
+      console.log('resetLichessBoardState: Opacity slider set to 100');
     } else {
       const boardBrightnessDiv = await waitForElm('.board-brightness');
       const brightnessSlider = boardBrightnessDiv.querySelector('input.range');
       brightnessSlider.value = 100;
       brightnessSlider.dispatchEvent(new Event('input'));
-      console.log('SyncLichessUIWithExtensionState: Brightness slider set to 100');
+      console.log('resetLichessBoardState: Brightness slider set to 100');
     }
 
     const boardHueDiv = await waitForElm('.board-hue');
     const hueSlider = boardHueDiv.querySelector('input.range');
     hueSlider.value = 0;
     hueSlider.dispatchEvent(new Event('input'));
-    console.log("SyncLichessUIWithExtensionState: Set hue slider to 0");
+    console.log("resetLichessBoardState: Set hue slider to 0");
 
     const boardBackButton = await waitForElm('.head');
     boardBackButton.click(); 
