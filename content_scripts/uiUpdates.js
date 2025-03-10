@@ -663,50 +663,6 @@ export const resetUserMenuState = async () => {
 };
 
 
-export const createChallengeCompletionModal = () => {
-  // Create the dialog element
-  const dialog = document.createElement('dialog');
-  dialog.id = 'hue-challenge-completion-modal';
-
-  // Create the content for the dialog
-  const content = document.createElement('div');
-  content.innerHTML = `
-    <div class="close-button-anchor">
-      <button id="close-hue-challenge-completion-modal-x" class="close-button" data-icon="" aria-label="Close"></button>
-    </div>
-    <div class="scrollable dialog-content">
-      <h2>Congratulations!</h2>
-      <p>You've successfully completed the Hue Chess Challenge! 🏆</p>
-      
-      <h3>New Prestige Rank Unlocked!</h3>
-      <p>Every time you beat level 15 you will gain a new prestige rank!</p>
-      
-      <h3>What’s Next?</h3>
-      <p>Try to challenge yourself by playing one specific time control throughout an entire prestige, or a specific variant throughout an entire prestige. You can try a self-imposed "hardcore" mode, where you reset your progress if you lose a certain number of games within any given level. Reset Progress is accessible through the extension settings (it will not wipe your current prestige, just reset your level back to 1). You can also try a speedrun to a specific level. The possibilities for Hue Chess are limited by your own imagination! Good luck, have fun and experiment!</p>
-      
-      <button id="close-hue-challenge-completion-modal" class="button" style="margin-top: 20px;">Continue Playing</button>
-    </div>
-  `;
-
-  // Append the content to the dialog
-  dialog.appendChild(content);
-  document.body.appendChild(dialog);
-
-  // Show the dialog
-  dialog.showModal();
-
-  // Add event listener to close the dialog
-  document.getElementById('close-hue-challenge-completion-modal').addEventListener('click', () => {
-    dialog.close();
-    dialog.remove();
-  });
-
-  document.getElementById('close-hue-challenge-completion-modal-x').addEventListener('click', () => {
-    dialog.close();
-    dialog.remove();
-  });
-}
-
 export const syncLichessUIWithExtensionState = async () => {
   try {
     // Ensure the board is in the correct initial state

@@ -3,8 +3,7 @@ import {
   waitForElm, 
   updateHueRotateStyle,
   updateProgressBarTooltip, 
-  resetUserMenuState, 
-  createChallengeCompletionModal 
+  resetUserMenuState,  
 } from './uiUpdates.js';
 import { 
   getActivePerks, 
@@ -77,7 +76,6 @@ export const incrementHue = async (game) => {
     if (completedBoards >= LEVEL_CAP) {
       await incrementPrestige();
       await resetProgress();
-      createChallengeCompletionModal();
       return;
     }
     await setCompletedBoards(completedBoards);

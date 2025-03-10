@@ -231,7 +231,7 @@ const versionCheck = async () => {
     browser.storage.local.get(['version'], async (result) => {
       if (!result.version || result.version !== CURRENT_VERSION) {
         console.log(`versionCheck: incorrect version detected, setting new version: ${CURRENT_VERSION} and running update logic`);
-        browser.storage.local.set(
+        await browser.storage.local.set(
           {
             activePerks: [],
             version: CURRENT_VERSION,
