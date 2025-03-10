@@ -680,7 +680,9 @@ export const syncLichessUIWithExtensionState = async () => {
     };
 
     await updateUIAfterImport(extensionState);
-    userTag.click(); // close the menu
+    // close user menu
+    const userTag = await waitForElm('#user_tag');
+    userTag.click(); 
     console.log('syncLichessUIWithExtensionState: UI synchronized with extension state.');
   } catch (error) {
     console.error('syncLichessUIWithExtensionState: Error Occurred:', error);
