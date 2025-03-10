@@ -288,6 +288,8 @@ export const openPerksModal = async () => {
 }
 
 export const updatePerksModalContent = async () => {
+  const modal = document.querySelector('#hue-chess-perks-modal');
+  if (!modal) return;
   browser.storage.local.get(['completedBoards', 'currentHue', 'activePerks', 'prestige'], (result) => {
     const playerLevel = (result.completedBoards !== null ? result.completedBoards : 0) + 1;
     const huePoints = `${result.currentHue || 0}/100`;
@@ -355,7 +357,9 @@ export const updatePerksModalContent = async () => {
 export const updatePerksHeader = async () => {
   const activePerks = await getActivePerks();
   const perksHeader = document.getElementById('perks-header');
-  perksHeader.textContent = `Select Perks: (${activePerks.length}/${MAX_PERKS})`;
+  if (perksHeader) {
+    perksHeader.textContent = `Select Perks: (${activePerks.length}/${MAX_PERKS})`;
+  }
 }
 
 const openSettingsModal = async () => {
@@ -501,6 +505,10 @@ export const updateUIAfterImport = async (extensionState) => {
   }
 
   targetBoardButton.click();
+
+  const boardBackButton = await waitForElm('.head');
+  boardBackButton.click();
+  userTag.click();
 
   await updateHueRotateStyle(currentHue);
   await updateProgressBar();
@@ -728,7 +736,6 @@ button.textContent === '2D');
     };
 
     await updateUIAfterImport(extensionState);
-    await resetUserMenuState();
     console.log('UI synchronized with extension state.');
   } catch (error) {
     console.error('Error synchronizing UI:', error);
