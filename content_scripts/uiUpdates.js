@@ -670,7 +670,9 @@ export const syncLichessUIWithExtensionState = async () => {
     userTag.click();
     console.log('SyncLichessUIWithExtensionState: UserTag Clicked');
 
+
     const subsDiv = await waitForElm('.subs');
+    console.log('SyncLichessUIWithExtensionState: .subs retrieved');
     const subButtons = subsDiv.querySelectorAll('button.sub');
     const boardButton = subButtons[3]; // Assuming this is the board button
 
