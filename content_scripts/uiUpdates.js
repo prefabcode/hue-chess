@@ -200,7 +200,7 @@ export const openPerksModal = async () => {
     const prestigeLevel = await getPrestige();
     const unlockOrderIndex = prestigeLevel % PERK_UNLOCK_ORDERS.length;
     const unlockOrder = PERK_UNLOCK_ORDERS[unlockOrderIndex];
-    console.log(`prestigeLevel: ${prestigeLevel}, unlockOrderIndex: ${unlockOrderIndex}, unlockOrder: ${unlockOrder}`);
+   
     let perkContainerHtmlStr = '';
     
     unlockOrder.forEach((unlockMetadata) => {
