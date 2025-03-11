@@ -5,7 +5,8 @@ import {
   updateProgressBarTooltip, 
   resetUserMenuState, 
   updateHueRotateStyle, 
-  syncLichessUIWithExtensionState
+  syncLichessUIWithExtensionState,
+  ensureDasherAppIsPopulated
 } from './uiUpdates.js';
 import { checkUrlAndStartMonitoring } from './gameMonitoring.js';
 import {
@@ -13,11 +14,6 @@ import {
   CURRENT_VERSION 
 } from './constants.js';
 import { getCurrentHue } from './storageManagement.js';
-
-
-const sleep = (milliseconds) => {
-  return new Promise(resolve => setTimeout(resolve, milliseconds));
-};
 
 function createOnboardingModal() {
   // Create the dialog element
@@ -66,34 +62,7 @@ function createOnboardingModal() {
   });
 }
 
-// event handler that populates dasher app may not be set at the time this is called initially
-// retry to see if dasher_app menu is populated before continuing with installation. 
-async function ensureDasherAppIsPopulated(maxRetries) {
-  let retries = 0;
-   while (retries < maxRetries) {
-     const userTag = document.querySelector('#user_tag');
-     const dasherApp = document.querySelector('#dasher_app');
 
-     if (userTag) {
-       userTag.click();
-       console.log('user_tag clicked');
-
-       await sleep(500);
-
-       if (dasherApp && dasherApp.children.length > 0) {
-         console.log('dasher_app populated');
-         return true;
-       }
-     }
-
-     retries++;
-     console.log(`Retrying to click user_tag and check dasher_app... Attempt
- ${retries}`);
-     await sleep(500);
-   }
-   console.error('Failed to populate dasher_app after multiple attempts');
-   return false;
-}
 
 export const initializeExtension = async () => {
   console.log("Initializing extension for the first time...");
@@ -231,7 +200,7 @@ const versionCheck = async () => {
     browser.storage.local.get(['version'], async (result) => {
       if (!result.version || result.version !== CURRENT_VERSION) {
         console.log(`versionCheck: incorrect version detected, setting new version: ${CURRENT_VERSION} and running update logic`);
-        browser.storage.local.set(
+        await browser.storage.local.set(
           {
             activePerks: [],
             version: CURRENT_VERSION,

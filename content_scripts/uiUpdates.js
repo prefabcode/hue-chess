@@ -10,10 +10,13 @@ import {
   getPlayingId,
   getCurrentHue,
   getCompletedBoards,
+  getPrestige,
 } from './storageManagement.js';
 import { showPerkToast } from './perks.js';
-import { levelNames, PREPARATION_TIME, TIPS, PERK_DISPLAY_NAMES, MAX_PERKS, browser, LEVEL_CAP } from './constants.js';
+import { levelNames, PREPARATION_TIME, TIPS, PERK_DISPLAY_NAMES, MAX_PERKS, browser } from './constants.js';
 import tippy from 'tippy.js';
+import { PERK_MARKUP_TEMPLATE, PERK_METADATA, PERK_UNLOCK_ORDERS } from './perkConstants.js';
+import { sleep } from './utils.js';
 
 const showRandomTip = () => {
   const tipMessage = document.getElementById('tips-message');
@@ -177,7 +180,6 @@ async function setImageSources() {
 
 export const openPerksModal = async () => {
   try {
-    // Check if the modal already exists
     let modal = document.querySelector('#hue-chess-perks-modal');
     if (modal) {
       document.body.style.overflowY = 'hidden';
@@ -190,26 +192,39 @@ export const openPerksModal = async () => {
     const response = await fetch(browser.runtime.getURL('perks.html'));
     const data = await response.text();
 
-    // Create a temporary div to hold the fetched HTML
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = data;
 
-    // Extract the modal element from the fetched HTML
     modal = tempDiv.querySelector('#hue-chess-perks-modal');
+    const perksContainer = modal.querySelector('#perks-container');
+    const prestigeLevel = await getPrestige();
+    const unlockOrderIndex = prestigeLevel % PERK_UNLOCK_ORDERS.length;
+    const unlockOrder = PERK_UNLOCK_ORDERS[unlockOrderIndex];
+   
+    let perkContainerHtmlStr = '';
+    
+    unlockOrder.forEach((unlockMetadata) => {
+      const perkMetadata = PERK_METADATA.find(perk => perk.id === unlockMetadata.id);
+      let perkRawHtml = PERK_MARKUP_TEMPLATE
+        .replaceAll('{internalName}', perkMetadata.internalName)
+        .replaceAll('{displayName}', perkMetadata.displayName)
+        .replaceAll('{description}', perkMetadata.description)
+        .replaceAll('{unlockLevel}', unlockMetadata.level);
+      perkContainerHtmlStr += perkRawHtml;
+    });
 
-    // Append the modal to the body
+    perksContainer.innerHTML = perkContainerHtmlStr;
+
     document.body.appendChild(modal);
 
     document.body.style.overflowY = 'hidden';
     modal.showModal();
 
-    // Add event listeners for modal buttons
     document.getElementById('close-perks-modal').addEventListener('click', () => {
       document.body.style.overflowY = 'scroll';
       modal.close();
     });
 
-    // Add event listeners for perks
     const perkBoxes = document.querySelectorAll('.perks .perk-box');
     perkBoxes.forEach(box => {
       box.addEventListener('click', async () => {
@@ -264,7 +279,6 @@ export const openPerksModal = async () => {
       });
     });
 
-    // Update the modal content with current level and hue progress
     await setImageSources();
     await updatePerksModalContent();
     await updatePerksHeader();
@@ -275,6 +289,8 @@ export const openPerksModal = async () => {
 }
 
 export const updatePerksModalContent = async () => {
+  const modal = document.querySelector('#hue-chess-perks-modal');
+  if (!modal) return;
   browser.storage.local.get(['completedBoards', 'currentHue', 'activePerks', 'prestige'], (result) => {
     const playerLevel = (result.completedBoards !== null ? result.completedBoards : 0) + 1;
     const huePoints = `${result.currentHue || 0}/100`;
@@ -342,7 +358,9 @@ export const updatePerksModalContent = async () => {
 export const updatePerksHeader = async () => {
   const activePerks = await getActivePerks();
   const perksHeader = document.getElementById('perks-header');
-  perksHeader.textContent = `Select Perks: (${activePerks.length}/${MAX_PERKS})`;
+  if (perksHeader) {
+    perksHeader.textContent = `Select Perks: (${activePerks.length}/${MAX_PERKS})`;
+  }
 }
 
 const openSettingsModal = async () => {
@@ -488,7 +506,7 @@ export const updateUIAfterImport = async (extensionState) => {
   }
 
   targetBoardButton.click();
-  
+
   const boardBackButton = await waitForElm('.head');
   boardBackButton.click();
   userTag.click();
@@ -650,103 +668,9 @@ export const resetUserMenuState = async () => {
 };
 
 
-export const createChallengeCompletionModal = () => {
-  // Create the dialog element
-  const dialog = document.createElement('dialog');
-  dialog.id = 'hue-challenge-completion-modal';
-
-  // Create the content for the dialog
-  const content = document.createElement('div');
-  content.innerHTML = `
-    <div class="close-button-anchor">
-      <button id="close-hue-challenge-completion-modal-x" class="close-button" data-icon="" aria-label="Close"></button>
-    </div>
-    <div class="scrollable dialog-content">
-      <h2>Congratulations!</h2>
-      <p>You've successfully completed the Hue Chess Challenge! 🏆</p>
-      
-      <h3>New Prestige Rank Unlocked!</h3>
-      <p>Every time you beat level 15 you will gain a new prestige rank!</p>
-      
-      <h3>What’s Next?</h3>
-      <p>Try to challenge yourself by playing one specific time control throughout an entire prestige, or a specific variant throughout an entire prestige. You can try a self-imposed "hardcore" mode, where you reset your progress if you lose a certain number of games within any given level. Reset Progress is accessible through the extension settings (it will not wipe your current prestige, just reset your level back to 1). You can also try a speedrun to a specific level. The possibilities for Hue Chess are limited by your own imagination! Good luck, have fun and experiment!</p>
-      
-      <button id="close-hue-challenge-completion-modal" class="button" style="margin-top: 20px;">Continue Playing</button>
-    </div>
-  `;
-
-  // Append the content to the dialog
-  dialog.appendChild(content);
-  document.body.appendChild(dialog);
-
-  // Show the dialog
-  dialog.showModal();
-
-  // Add event listener to close the dialog
-  document.getElementById('close-hue-challenge-completion-modal').addEventListener('click', () => {
-    dialog.close();
-    dialog.remove();
-  });
-
-  document.getElementById('close-hue-challenge-completion-modal-x').addEventListener('click', () => {
-    dialog.close();
-    dialog.remove();
-  });
-}
-
 export const syncLichessUIWithExtensionState = async () => {
   try {
-    // Ensure the board is in the correct initial state
-    const userTag = await waitForElm('#user_tag');
-    userTag.click();
-
-    const dasherApp = await waitForElm('#dasher_app');
-    const subsDiv = await waitForElm('.subs');
-    const subButtons = subsDiv.querySelectorAll('button.sub');
-    const boardButton = subButtons[3]; // Assuming this is the board button
-
-    boardButton.click();
-    console.log("Clicked board button");
-
-    const boardSettingsDiv = await waitForElm('.board');
-    const dimensionSelector = boardSettingsDiv.querySelector('.selector');
-    const the2DButton =
-Array.from(dimensionSelector.querySelectorAll('button')).find(button =>
-button.textContent === '2D');
-    the2DButton.click();
-    console.log('Clicked 2D button');
-
-    const boardList = await waitForElm('.list');
-    const brownBoardButton = boardList.querySelector('button[title="brown"]');
-    brownBoardButton.click();
-    console.log("Clicked brown board button");
-
-    const isTransparentMode = document.body.classList.contains('transp');
-    if (isTransparentMode) {
-      const boardOpacityDiv = await waitForElm('.board-opacity');
-      const opacitySlider = boardOpacityDiv.querySelector('input.range');
-      opacitySlider.value = 100;
-      opacitySlider.dispatchEvent(new Event('input'));
-      console.log('Opacity slider set to 100');
-    } else {
-      const boardBrightnessDiv = await waitForElm('.board-brightness');
-      const brightnessSlider = boardBrightnessDiv.querySelector('input.range');
-      brightnessSlider.value = 100;
-      brightnessSlider.dispatchEvent(new Event('input'));
-      console.log('Brightness slider set to 100');
-    }
-
-    const boardHueDiv = await waitForElm('.board-hue');
-    const hueSlider = boardHueDiv.querySelector('input.range');
-    hueSlider.value = 0;
-    hueSlider.dispatchEvent(new Event('input'));
-    console.log("Set hue slider to 0");
-
-    const boardBackButton = await waitForElm('.head');
-    boardBackButton.click(); // Return to default profile view
-    userTag.click(); // Close the user menu
-
-    // Now apply the extension state
+    await resetLichessBoardState();
     const completedBoards = await getCompletedBoards();
     const currentHue = await getCurrentHue();
 
@@ -756,9 +680,12 @@ button.textContent === '2D');
     };
 
     await updateUIAfterImport(extensionState);
-    console.log('UI synchronized with extension state.');
+    // close user menu
+    const userTag = await waitForElm('#user_tag');
+    userTag.click(); 
+    console.log('syncLichessUIWithExtensionState: UI synchronized with extension state.');
   } catch (error) {
-    console.error('Error synchronizing UI:', error);
+    console.error('syncLichessUIWithExtensionState: Error Occurred:', error);
   }
 };
 
@@ -783,3 +710,98 @@ const addStyle = (() => {
   document.head.append(style);
   return (styleString) => style.textContent = styleString;
 })();
+
+// event handler that populates dasher-app user-menu may not be set immediately on page-load.
+// retry to see if dasher_app menu is populated before continuing with any menu interactions 
+// (you usually need to only check for this if you're doing menu interactions on page-load). 
+export async function ensureDasherAppIsPopulated(maxRetries) {
+  let retries = 0;
+   while (retries < maxRetries) {
+     const userTag = document.querySelector('#user_tag');
+     const dasherApp = document.querySelector('#dasher_app');
+
+     if (userTag) {
+       userTag.click();
+       console.log('user_tag clicked');
+
+       await sleep(500);
+
+       if (dasherApp && dasherApp.children.length > 0) {
+         console.log('dasher_app populated');
+         return true;
+       }
+     }
+
+     retries++;
+     console.log(`Retrying to click user_tag and check dasher_app... Attempt
+ ${retries}`);
+     await sleep(500);
+   }
+   console.error('Failed to populate dasher_app after multiple attempts');
+   return false;
+}
+
+async function resetLichessBoardState() {
+  try {
+    // This section resets the board settings to default state, before applying extension state
+    // Ensure dasher-app event handler for populating user menu is set on page-load before performing any menu interactions (otherwise this function hangs).
+    const dasherResult = await ensureDasherAppIsPopulated(10);
+      if (!dasherResult) {
+        throw new Error('Dasher-App menu failed to initialize, please contact prefabcode@gmail.com or file an issue on https://github.com/prefabcode/hue-chess');
+      }
+      
+    const userTag = await waitForElm('#user_tag');
+    userTag.click();
+    console.log('resetLichessBoardState: UserTag Clicked');
+
+    const subsDiv = await waitForElm('.subs');
+    console.log('resetLichessBoardState: .subs retrieved');
+    const subButtons = subsDiv.querySelectorAll('button.sub');
+    const boardButton = subButtons[3]; // Assuming this is the board button
+
+    boardButton.click();
+    console.log("resetLichessBoardState: Clicked board button");
+
+    const boardSettingsDiv = await waitForElm('.board');
+    const dimensionSelector = boardSettingsDiv.querySelector('.selector');
+    const the2DButton =
+Array.from(dimensionSelector.querySelectorAll('button')).find(button =>
+button.textContent === '2D');
+    the2DButton.click();
+    console.log('resetLichessBoardState: Clicked 2D button');
+
+    const boardList = await waitForElm('.list');
+    const brownBoardButton = boardList.querySelector('button[title="brown"]');
+    brownBoardButton.click();
+    console.log("resetLichessBoardState: Clicked brown board button");
+
+    const isTransparentMode = document.body.classList.contains('transp');
+    if (isTransparentMode) {
+      const boardOpacityDiv = await waitForElm('.board-opacity');
+      const opacitySlider = boardOpacityDiv.querySelector('input.range');
+      opacitySlider.value = 100;
+      opacitySlider.dispatchEvent(new Event('input'));
+      console.log('resetLichessBoardState: Opacity slider set to 100');
+    } else {
+      const boardBrightnessDiv = await waitForElm('.board-brightness');
+      const brightnessSlider = boardBrightnessDiv.querySelector('input.range');
+      brightnessSlider.value = 100;
+      brightnessSlider.dispatchEvent(new Event('input'));
+      console.log('resetLichessBoardState: Brightness slider set to 100');
+    }
+
+    const boardHueDiv = await waitForElm('.board-hue');
+    const hueSlider = boardHueDiv.querySelector('input.range');
+    hueSlider.value = 0;
+    hueSlider.dispatchEvent(new Event('input'));
+    console.log("resetLichessBoardState: Set hue slider to 0");
+
+    const boardBackButton = await waitForElm('.head');
+    boardBackButton.click(); 
+    userTag.click();
+
+  } catch (error) {
+    console.error(`resetLichessBoardState: Error occurred: ${error}`);
+  }
+ 
+}
