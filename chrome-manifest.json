@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Hue Chess",
-    "version": "0.9.5",
+    "version": "0.9.60",
     "description": "Gamification mod that adds colors, xp points, levels, and unlockable perks to lichess.org.",
     "permissions": [
         "activeTab",

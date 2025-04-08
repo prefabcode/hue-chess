@@ -13,7 +13,7 @@ import {
   getPrestige,
 } from './storageManagement.js';
 import { showPerkToast } from './perks.js';
-import { levelNames, PREPARATION_TIME, TIPS, PERK_DISPLAY_NAMES, MAX_PERKS, browser } from './constants.js';
+import { levelNames, PREPARATION_TIME, TIPS, PERK_DISPLAY_NAMES, MAX_PERKS, browser, BOARD_LEVEL_MAP } from './constants.js';
 import tippy from 'tippy.js';
 import { PERK_MARKUP_TEMPLATE, PERK_METADATA, PERK_UNLOCK_ORDERS } from './perkConstants.js';
 import { sleep } from './utils.js';
@@ -698,18 +698,25 @@ const convertHuePointsToDegrees = (huePoints) => {
 }
 
 
-export const updateHueRotateStyle = async (huePoints) => {
+export const updateHueRotateStyle = (huePoints) => {
   const degrees = convertHuePointsToDegrees(huePoints);
   
   addStyle(`cg-board { filter: hue-rotate(${degrees}deg) !important; visibility: visible !important; }`);
   
 }
 
-const addStyle = (() => {
+export const updateBoardStyle = (level) => {
+  const boardUrl = browser.runtime.getURL(BOARD_LEVEL_MAP[level]);
+  
+  addStyle(`body .is2d.is2d cg-board::before { background-image: url(${boardUrl}) !important; }`);
+  addStyle(`cg-board::before { background-image: url(${boardUrl}) !important; }`);
+}
+
+const addStyle = ((styleString) => {
   const style = document.createElement('style');
+  style.textContent = styleString;
   document.head.append(style);
-  return (styleString) => style.textContent = styleString;
-})();
+});
 
 // event handler that populates dasher-app user-menu may not be set immediately on page-load.
 // retry to see if dasher_app menu is populated before continuing with any menu interactions 

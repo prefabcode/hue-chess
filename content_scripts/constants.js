@@ -40,12 +40,17 @@ export const PERK_DISPLAY_NAMES = {
   'kings-gambit': 'King\'s Gambit'
 };
 
+export const BOARD_LEVEL_MAP = {
+  0: 'imgs/boards/brown.png',
+  1: 'imgs/boards/wood.jpg',
+}
+
 export const browser = typeof chrome !== "undefined" ? chrome : browser;
 
 export const MAX_PERKS = 2;
 
 export const LEVEL_CAP = 15;
 
-export const CURRENT_VERSION = '0.9.5';
+export const CURRENT_VERSION = '0.9.60';
 
 export const GLADIATOR_PENALTY = 35;

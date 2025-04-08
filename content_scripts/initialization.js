@@ -1,26 +1,22 @@
 import {
   updateProgressBar, 
-  monitorBoardDiv, 
-  waitForElm, 
-  updateProgressBarTooltip, 
-  resetUserMenuState, 
+  monitorBoardDiv,  
+  updateProgressBarTooltip,  
   updateHueRotateStyle, 
   syncLichessUIWithExtensionState,
-  ensureDasherAppIsPopulated
+  updateBoardStyle
 } from './uiUpdates.js';
 import { checkUrlAndStartMonitoring } from './gameMonitoring.js';
 import {
   browser, 
   CURRENT_VERSION 
 } from './constants.js';
-import { getCurrentHue } from './storageManagement.js';
+import { getCompletedBoards, getCurrentHue, setCompletedBoards, setCurrentHue } from './storageManagement.js';
 
 function createOnboardingModal() {
-  // Create the dialog element
   const dialog = document.createElement('dialog');
   dialog.id = 'hue-onboarding-modal';
   
-  // Create the content for the dialog
   const content = document.createElement('div');
   content.innerHTML = `
     <div class="close-button-anchor">
@@ -43,14 +39,11 @@ function createOnboardingModal() {
     </div>
   `;
 
-  // Append the content to the dialog
   dialog.appendChild(content);
   document.body.appendChild(dialog);
 
-  // Show the dialog
   dialog.showModal();
 
-  // Add event listener to close the dialog
   document.getElementById('close-hue-onboarding-modal').addEventListener('click', () => {
     dialog.close();
     dialog.remove();
@@ -63,102 +56,17 @@ function createOnboardingModal() {
 }
 
 
-
 export const initializeExtension = async () => {
-  console.log("Initializing extension for the first time...");
-  await resetUserMenuState();
+  console.log("initializeExtension: Initializing hue-chess...");
   createOnboardingModal();
+  await setCompletedBoards(0);
+  await setCurrentHue(0);
 
-  try {
-    const dasherResult = await ensureDasherAppIsPopulated(10);
-    if (!dasherResult) {
-      alert('Hue Chess installation failed. Try to reinstall the extension. Please report this error to prefabcode@gmail.com or make an issue on the project github: https://github.com/prefabcode/hue-chess/issues');
-      return; 
-    }
-
-    const subsDiv = await waitForElm('.subs');
-    console.log('Subs div detected');
-    const subButtons = subsDiv.querySelectorAll('button.sub');
-    if (subButtons.length < 5) {
-      console.error(`Error: expected at least 5 buttons in menu container, but found ${subButtons.length}`);
-      return;
-    }
-    const boardButton = subButtons[3]; // currently binded to Board Button
-
-    boardButton.click();
-    console.log("Clicked board button");
-
-    const userTag = await waitForElm('#user_tag');
-    const boardSettingsDiv = await waitForElm('.board');
-    const boardBackButton = await waitForElm('.head');
-
-    const dimensionSelector = boardSettingsDiv.querySelector('.selector');
-    if (!dimensionSelector) {
-      console.error('Dimension selector element not detected, initialization failed');
-      return;
-    }
-    const the2DButton = Array.from(dimensionSelector.querySelectorAll('button')).find(button => button.textContent === '2D');
-    if (!the2DButton) {
-      console.error('2d button not found, initialization failed');
-      return;
-    }
-    the2DButton.click();
-    console.log('Clicked 2d button');
-
-    const boardList = await waitForElm('.list');
-    const brownBoardButton = boardList.querySelector('button[title="brown"]');
-    if (!brownBoardButton) {
-      console.log("Brown board button not found");
-      return;
-    }
-
-    brownBoardButton.click();
-    console.log("Clicked brown board button");
-
-    const isTransparentMode = document.body.classList.contains('transp');
-    if (isTransparentMode) {
-      const boardOpacityDiv = await waitForElm('.board-opacity');
-      const opacitySlider = boardOpacityDiv.querySelector('input.range');
-      if (!opacitySlider) {
-        console.error('transparency mode detected but opacity not found');
-        return;
-      }
-      opacitySlider.value = 100;
-      opacitySlider.dispatchEvent(new Event('input'));
-      console.log('Opacity slider set to 100');
-    } else {
-      const boardBrightnessDiv = await waitForElm('.board-brightness');
-      const brightnessSlider = boardBrightnessDiv.querySelector('input.range');
-      if (!brightnessSlider) {
-        console.error('light/dark mode detected but brightness not found');
-        return;
-      }
-      brightnessSlider.value = 100;
-      brightnessSlider.dispatchEvent(new Event('input'));
-      console.log('Brightness slider set to 100');
-    }
-
-    const boardHueDiv = await waitForElm('.board-hue');
-    const hueSlider = boardHueDiv.querySelector('input.range');
-    if (!hueSlider) {
-      console.log("Hue slider not found");
-      return;
-    }
-
-    hueSlider.value = 0;
-    hueSlider.dispatchEvent(new Event('input'));
-    console.log("Set hue slider to 0");
-    boardBackButton.click(); // return to default profile view
-    userTag.click(); // Close the user menu
-
-    // Mark the initialization as done
-    browser.storage.local.set({ initialized: true, completedBoards: 0, currentHue: 0 }, async () => {
-      console.log("Initialization complete, flag set in storage");
-      await updateProgressBar();
+  return new Promise((resolve) => {
+    browser.storage.local.set({ initialized: false}, () => {
+      resolve();
     });
-  } catch (error) {
-    console.error('An error occurred during initialization:', error);
-  }
+  });
 };
 
 export const init = async () => {
@@ -166,10 +74,13 @@ export const init = async () => {
 
   await checkIfInitialized();
   await versionCheck();
+  
+  const currentLevel = await getCompletedBoards();
   const currentHue = await getCurrentHue();
-  await updateHueRotateStyle(currentHue);
+  updateBoardStyle(currentLevel);
+  updateHueRotateStyle(currentHue);
+  
   await updateProgressBar();
-
   await updateProgressBarTooltip();
   
   monitorBoardDiv();
