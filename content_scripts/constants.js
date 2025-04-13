@@ -40,9 +40,23 @@ export const PERK_DISPLAY_NAMES = {
 };
 
 export const BOARD_LEVEL_MAP = {
-  0: 'imgs/boards/brown.png',
-  1: 'imgs/boards/wood.jpg',
-}
+  0: 'imgs/boards/level-1.png',
+  1: 'imgs/boards/level-2.jpg',
+  2: 'imgs/boards/level-3.jpg',
+  3: 'imgs/boards/level-4.jpg',
+  4: 'imgs/boards/level-5.jpg',
+  5: 'imgs/boards/level-6.jpg',
+  6: 'imgs/boards/level-7.jpg',
+  7: 'imgs/boards/level-8.jpg',
+  8: 'imgs/boards/level-9.jpg',
+  9: 'imgs/boards/level-10.png', 
+  10: 'imgs/boards/level-11.jpg',
+  11: 'imgs/boards/level-12.jpg',
+  12: 'imgs/boards/level-13.jpg',
+  13: 'imgs/boards/level-14.jpg',
+  14: 'imgs/boards/level-15.png',
+};
+
 
 export const browser = typeof chrome !== "undefined" ? chrome : browser;
 
