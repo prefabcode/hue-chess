@@ -11,7 +11,7 @@ import {
   getPrestige,
 } from './storageManagement.js';
 import { showPerkToast } from './perks.js';
-import { levelNames, PREPARATION_TIME, TIPS, PERK_DISPLAY_NAMES, MAX_PERKS, browser, BOARD_LEVEL_MAP } from './constants.js';
+import { PREPARATION_TIME, TIPS, PERK_DISPLAY_NAMES, MAX_PERKS, browser, BOARD_LEVEL_MAP } from './constants.js';
 import tippy from 'tippy.js';
 import { PERK_MARKUP_TEMPLATE, PERK_METADATA, PERK_UNLOCK_ORDERS } from './perkConstants.js';
 
@@ -26,7 +26,6 @@ export const updateProgressBar = () => {
     browser.storage.local.get(['completedBoards', 'currentHue'], (result) => {
       const level = (result.completedBoards !== null ? result.completedBoards : 0) + 1;
       const progress = result.currentHue || 0;
-      const levelName = levelNames[level - 1];
   
       let progressBar = document.getElementById('hue-progress-bar');
       if (!progressBar) {
@@ -67,7 +66,7 @@ export const updateProgressBar = () => {
         levelText.id = 'level-text';
         levelText.style.marginLeft = '10px';
         levelText.style.marginBottom = '1px';
-        levelText.textContent = `Level ${level} - ${levelName}`;
+        levelText.textContent = `Level ${level}`;
   
         progressBarContainer.appendChild(levelText);
         progressBar.appendChild(progressBarContainer);
@@ -82,7 +81,7 @@ export const updateProgressBar = () => {
         const progressFill = progressBar.querySelector('#progress-fill');
         const levelText = document.getElementById('level-text');
         progressFill.style.width = `${progress}%`;
-        levelText.textContent = `Level ${level} - ${levelName}`;
+        levelText.textContent = `Level ${level}`;
       }
   
       // Adapt to light and dark modes
