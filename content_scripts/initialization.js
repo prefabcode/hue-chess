@@ -61,7 +61,7 @@ export const initializeExtension = async () => {
   await setCurrentHue(0);
 
   return new Promise((resolve) => {
-    browser.storage.local.set({ initialized: false}, () => {
+    browser.storage.local.set({ initialized: true }, () => {
       resolve();
     });
   });
