@@ -21,7 +21,6 @@ export const TIPS = [
   "Wins in slower time controls award more hue points than wins in shorter time controls.",
   "You can only earn hue points if you are signed in to Lichess.",
   "You can look at other tabs while the preparation timer is counting down. Just make sure that it's chess related material so that you're getting the most out of the perk!",
-  "If your Lichess board settings are out of sync with your Hue Chess profile, simply re-synchronize them through the Hue Chess settings. You can access these settings by clicking the extension icon in your browser.",
   "Got feedback? Want to tell everyone about your favorite perk setup? Join the Hue Chess Discord community: <a href='https://discord.gg/Q5zKzcJA2b' target='_blank'>Join Discord</a>",
 ];
 

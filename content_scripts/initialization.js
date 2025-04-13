@@ -1,9 +1,7 @@
 import {
-  updateProgressBar, 
-  monitorBoardDiv,  
+  updateProgressBar,   
   updateProgressBarTooltip,  
-  updateHueRotateStyle, 
-  syncLichessUIWithExtensionState,
+  updateHueRotateStyle,
   updateBoardStyle
 } from './uiUpdates.js';
 import { checkUrlAndStartMonitoring } from './gameMonitoring.js';
@@ -70,7 +68,7 @@ export const initializeExtension = async () => {
 };
 
 export const init = async () => {
-  console.log("Initializing extension...");
+  console.log("Init: Running Hue-Chess...");
 
   await checkIfInitialized();
   await versionCheck();
@@ -83,7 +81,6 @@ export const init = async () => {
   await updateProgressBar();
   await updateProgressBarTooltip();
   
-  monitorBoardDiv();
   await checkUrlAndStartMonitoring();
   let currentUrl = window.location.href;
 
@@ -117,7 +114,6 @@ const versionCheck = async () => {
             version: CURRENT_VERSION,
           }
         );
-        await syncLichessUIWithExtensionState();
       }
       resolve();
     });
