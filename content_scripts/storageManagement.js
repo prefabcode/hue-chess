@@ -1,4 +1,9 @@
-import { updateUIAfterImport, updatePerksModalContent, updateProgressBarTooltip, updatePerksHeader } from './uiUpdates.js';
+import { 
+  updatePerksModalContent, 
+  updateProgressBarTooltip, 
+  updatePerksHeader,
+  updateHueChessUI,
+} from './uiUpdates.js';
 import { browser } from './constants.js';
 
 
@@ -22,9 +27,10 @@ export const resetProgress = async () => {
   };
   
   return new Promise((resolve) => {
-    browser.storage.local.set(resetState, () => {
+    browser.storage.local.set(resetState, async () => {
       console.log(`resetProgress: Progress has been reset. Setting state to: ${resetState}`);
-      updateUIAfterImport(resetState);
+      await updateHueChessUI(resetState);
+      
       resolve();
     });
   });

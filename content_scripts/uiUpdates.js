@@ -377,11 +377,9 @@ const openSettingsModal = async () => {
          try {
            const extensionState = JSON.parse(jsonString);
 
-           browser.storage.local.set(extensionState, () => {
+           browser.storage.local.set(extensionState, async () => {
             alert('Extension state imported successfully.');
-            updateUIAfterImport(extensionState);
-            updatePerksModalContent();
-            updatePerksHeader();
+            await updateHueChessUI(extensionState);
            });
          } catch (error) {
            alert('Invalid game string. Please try again.');
@@ -579,3 +577,12 @@ const addStyle = ((styleString) => {
   style.textContent = styleString;
   document.head.append(style);
 });
+
+export const updateHueChessUI = async (state) => {
+  updateBoardStyle(state.completedBoards);
+  updateHueRotateStyle(state.currentHue);
+  await updatePerksModalContent();
+  await updatePerksHeader();
+  await updateProgressBar();
+  await updateProgressBarTooltip();
+}
