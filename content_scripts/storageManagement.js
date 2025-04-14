@@ -11,26 +11,37 @@ export const confirmResetProgress = async () => {
   const confirmReset = confirm('Are you sure you want to reset your progress? You will be returned to level 1 but your prestige rank will be preserved. This action cannot be undone.');
   if (confirmReset) {
     await resetProgress();
-    updatePerksModalContent();
-    updatePerksHeader();
   }
 };
 
-export const resetProgress = async () => {
-  const prestige = await getPrestige();
+export const confirmResetAllSettings = async () => {
+    const confirmReset = confirm('Are you sure you want to reset all settings? Warning: This action will return you to level 1 and clear your prestige rank. This action cannot be undone.');
+    if (confirmReset) {
+      await resetProgress(true);
+      const prestigeContainer = document.getElementById('prestige-container');
+      if (prestigeContainer) { prestigeContainer.style.display = 'none'; }
+    }
+};
+
+export const resetProgress = async (clearPrestige = false) => {
   const resetState = {
     initialized: true,
     completedBoards: 0,
     currentHue: 0,
     activePerks: [],
-    prestige,
   };
+
+  if (clearPrestige) {
+    resetState.prestige = 0
+  } else {
+    resetState.prestige = await getPrestige();
+  }
   
   return new Promise((resolve) => {
     browser.storage.local.set(resetState, async () => {
       console.log(`resetProgress: Progress has been reset. Setting state to: ${resetState}`);
       await updateHueChessUI(resetState);
-      
+
       resolve();
     });
   });
@@ -46,10 +57,10 @@ export const updateActivePerks = (perk, isChecked) => {
     } else {
       activePerks = activePerks.filter(p => p !== perk);
     }
-    browser.storage.local.set({ activePerks }, () => {
+    browser.storage.local.set({ activePerks }, async () => {
       console.log(`Active perks updated: ${activePerks}`);
-      updateProgressBarTooltip();  // Update the tooltip content
-      updatePerksHeader();
+      await updateProgressBarTooltip();
+      await updatePerksHeader();
     });
   });
 };
@@ -81,7 +92,7 @@ export const setPlayingId = (playingId) => {
 
 export const getWinningStreak = () => {
   return new Promise((resolve) => {
-    chrome.storage.local.get(['winningStreak'], (result) => {
+    browser.storage.local.get(['winningStreak'], (result) => {
       resolve(result.winningStreak || 0);
     });
   });
@@ -89,7 +100,7 @@ export const getWinningStreak = () => {
 
 export const setWinningStreak = (streak) => {
   return new Promise((resolve) => {
-    chrome.storage.local.set({ winningStreak: streak }, () => {
+    browser.storage.local.set({ winningStreak: streak }, () => {
       resolve();
     });
   });

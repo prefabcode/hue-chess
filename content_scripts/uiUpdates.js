@@ -1,14 +1,15 @@
 import {
-  confirmResetProgress, 
-  updateActivePerks, 
-  resetGladiatorLossBuffer, 
-  setAllowGladiatorPerkRemoval, 
-  getAllowGladiatorPerkRemoval, 
+  confirmResetProgress,
+  updateActivePerks,
+  resetGladiatorLossBuffer,
+  setAllowGladiatorPerkRemoval,
+  getAllowGladiatorPerkRemoval,
   getActivePerks,
   getPreparationStatus,
-  setPreparationStatus, 
+  setPreparationStatus,
   getPlayingId,
   getPrestige,
+  confirmResetAllSettings,
 } from './storageManagement.js';
 import { showPerkToast } from './perks.js';
 import { PREPARATION_TIME, TIPS, PERK_DISPLAY_NAMES, MAX_PERKS, browser, BOARD_LEVEL_MAP } from './constants.js';
@@ -345,6 +346,7 @@ const openSettingsModal = async () => {
     });
 
     document.getElementById('reset-progress').addEventListener('click', confirmResetProgress);
+    document.getElementById('reset-all').addEventListener('click', confirmResetAllSettings);
 
     if (process.env.NODE_ENV !== 'production') {
       document.getElementById('dev-tools').style.display = 'block';
