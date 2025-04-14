@@ -535,11 +535,11 @@ export const startAnalysisTimer = async (analysisTimeInSeconds) => {
       clearInterval(analysisTimer);
       timerElement.remove();
       document.title = 'Preparation: done';
-      activePerks = await getActivePerks(); 
+      const activePerks = await getActivePerks();
       if (activePerks.includes('preparation')) {
-        setPreparationStatus(true);
+        await setPreparationStatus(true);
         showPerkToast('preparation', 'Preparation: requirement fulfilled');
-        updateProgressBarTooltip();
+        await updateProgressBarTooltip();
       }
     }
   }, 200);
