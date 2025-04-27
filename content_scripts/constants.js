@@ -1,8 +1,3 @@
-export const levelNames = [
-  "Brown", "Wood", "Wood2", "Wood3", "Wood4", "Maple", "Maple2", "Horsey", "Leather", "Blue",
-  "Blue2", "Blue3", "Canvas", "Blue-Marble", "IC", "Green", "Marble", "Green-Plastic", "Olive", "Grey",
-  "Metal", "Newspaper", "Purple", "Purple-Diag", "Pink"
-];
 
 export const materialValues = {
   'Q': 9,
@@ -21,7 +16,6 @@ export const TIPS = [
   "Wins in slower time controls award more hue points than wins in shorter time controls.",
   "You can only earn hue points if you are signed in to Lichess.",
   "You can look at other tabs while the preparation timer is counting down. Just make sure that it's chess related material so that you're getting the most out of the perk!",
-  "If your Lichess board settings are out of sync with your Hue Chess profile, simply re-synchronize them through the Hue Chess settings. You can access these settings by clicking the extension icon in your browser.",
   "Got feedback? Want to tell everyone about your favorite perk setup? Join the Hue Chess Discord community: <a href='https://discord.gg/Q5zKzcJA2b' target='_blank'>Join Discord</a>",
 ];
 
@@ -40,12 +34,31 @@ export const PERK_DISPLAY_NAMES = {
   'kings-gambit': 'King\'s Gambit'
 };
 
+export const BOARD_LEVEL_MAP = {
+  0: 'imgs/boards/level-1.png',
+  1: 'imgs/boards/level-2.jpg',
+  2: 'imgs/boards/level-3.jpg',
+  3: 'imgs/boards/level-4.jpg',
+  4: 'imgs/boards/level-5.jpg',
+  5: 'imgs/boards/level-6.jpg',
+  6: 'imgs/boards/level-7.jpg',
+  7: 'imgs/boards/level-8.jpg',
+  8: 'imgs/boards/level-9.jpg',
+  9: 'imgs/boards/level-10.png', 
+  10: 'imgs/boards/level-11.jpg',
+  11: 'imgs/boards/level-12.jpg',
+  12: 'imgs/boards/level-13.jpg',
+  13: 'imgs/boards/level-14.jpg',
+  14: 'imgs/boards/level-15.png',
+};
+
+
 export const browser = typeof chrome !== "undefined" ? chrome : browser;
 
 export const MAX_PERKS = 2;
 
 export const LEVEL_CAP = 15;
 
-export const CURRENT_VERSION = '0.9.5';
+export const CURRENT_VERSION = '0.9.60';
 
 export const GLADIATOR_PENALTY = 35;

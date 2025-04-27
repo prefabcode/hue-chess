@@ -1,9 +1,8 @@
 import { 
-  updateProgressBar, 
-  waitForElm, 
+  updateProgressBar,  
   updateHueRotateStyle,
-  updateProgressBarTooltip, 
-  resetUserMenuState,  
+  updateProgressBarTooltip,
+  updateBoardStyle,   
 } from './uiUpdates.js';
 import { 
   getActivePerks, 
@@ -30,7 +29,6 @@ export const getInitialRewardValue = (game) => {
     const timeControl = game.tags.TimeControl.value;
     const [initialTime, increment] = timeControl.split('+').map(Number);
 
-    // Calculate estimated game duration
     const estimatedDuration = initialTime + (40 * increment);
     const bulletDuration = 179;
     const rewardMultiplier = Math.ceil(3.5 * (estimatedDuration / bulletDuration));
@@ -79,10 +77,10 @@ export const incrementHue = async (game) => {
       return;
     }
     await setCompletedBoards(completedBoards);
-    await changeToNextBoardInUi();
+    updateBoardStyle(completedBoards);
     await cleanupPerkStateOnLevelUp();
   }
-  await updateHueRotateStyle(updatedHue);
+  updateHueRotateStyle(updatedHue);
   await setCurrentHue(updatedHue);
   await updateProgressBar();
 }
@@ -91,47 +89,11 @@ export const applyGladiatorPenalty = async () => {
   let updatedHue = await getCurrentHue() - GLADIATOR_PENALTY;
   if (updatedHue < 0) updatedHue = 0;
   console.log(`applyGladiatorPenalty: new hue is ${updatedHue}`);
-  await updateHueRotateStyle(updatedHue);
+  updateHueRotateStyle(updatedHue);
   await setCurrentHue(updatedHue);
   await updateProgressBar();
 };
 
-const changeToNextBoardInUi = async () => {
-  await resetUserMenuState();
-  const userTag = await waitForElm('#user_tag');
-  userTag.click();
-
-  const dasherApp = document.getElementById('dasher_app');
-  if (!dasherApp) {
-    console.log("changeToNextBoardInUi: dasher app element not found");
-    return;
-  }
-
-  const subsDiv = await waitForElm('.subs');
-  console.log('changeToNextBoardInUi: subs div detected');
-  const subButtons = subsDiv.querySelectorAll('button.sub');
-  if (subButtons.length < 5) {
-    console.error(`changeToNextBoardInUi: expected at least 5 buttons in menu container, but found ${subButtons.length}`);
-    return;
-  }
-  const boardButton = subButtons[3]; // currently binded to Board Button
-
-  boardButton.click();
-  console.log("changeToNextBoardInUi: clicked board button in menu");
-
-  const boardBackButton = await waitForElm('.head');
-
-  const boardList = dasherApp.querySelector('.list');
-  const activeButton = boardList.querySelector('button.active');
-  const nextButton = activeButton.nextElementSibling;
-  if (nextButton) {
-    nextButton.click();
-    console.log('changeToNextBoardInUi: clicked next board button.');
-  }
-
-  boardBackButton.click();
-  userTag.click();
-};
 
 const cleanupPerkStateOnLevelUp = async () => {
   const activePerks = await getActivePerks();

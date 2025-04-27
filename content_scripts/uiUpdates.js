@@ -1,22 +1,20 @@
 import {
-  confirmResetProgress, 
-  updateActivePerks, 
-  resetGladiatorLossBuffer, 
-  setAllowGladiatorPerkRemoval, 
-  getAllowGladiatorPerkRemoval, 
+  confirmResetProgress,
+  updateActivePerks,
+  resetGladiatorLossBuffer,
+  setAllowGladiatorPerkRemoval,
+  getAllowGladiatorPerkRemoval,
   getActivePerks,
   getPreparationStatus,
-  setPreparationStatus, 
+  setPreparationStatus,
   getPlayingId,
-  getCurrentHue,
-  getCompletedBoards,
   getPrestige,
+  confirmResetAllSettings,
 } from './storageManagement.js';
 import { showPerkToast } from './perks.js';
-import { levelNames, PREPARATION_TIME, TIPS, PERK_DISPLAY_NAMES, MAX_PERKS, browser } from './constants.js';
+import { PREPARATION_TIME, TIPS, PERK_DISPLAY_NAMES, MAX_PERKS, browser, BOARD_LEVEL_MAP } from './constants.js';
 import tippy from 'tippy.js';
 import { PERK_MARKUP_TEMPLATE, PERK_METADATA, PERK_UNLOCK_ORDERS } from './perkConstants.js';
-import { sleep } from './utils.js';
 
 const showRandomTip = () => {
   const tipMessage = document.getElementById('tips-message');
@@ -29,7 +27,6 @@ export const updateProgressBar = () => {
     browser.storage.local.get(['completedBoards', 'currentHue'], (result) => {
       const level = (result.completedBoards !== null ? result.completedBoards : 0) + 1;
       const progress = result.currentHue || 0;
-      const levelName = levelNames[level - 1];
   
       let progressBar = document.getElementById('hue-progress-bar');
       if (!progressBar) {
@@ -70,7 +67,7 @@ export const updateProgressBar = () => {
         levelText.id = 'level-text';
         levelText.style.marginLeft = '10px';
         levelText.style.marginBottom = '1px';
-        levelText.textContent = `Level ${level} - ${levelName}`;
+        levelText.textContent = `Level ${level}`;
   
         progressBarContainer.appendChild(levelText);
         progressBar.appendChild(progressBarContainer);
@@ -85,7 +82,7 @@ export const updateProgressBar = () => {
         const progressFill = progressBar.querySelector('#progress-fill');
         const levelText = document.getElementById('level-text');
         progressFill.style.width = `${progress}%`;
-        levelText.textContent = `Level ${level} - ${levelName}`;
+        levelText.textContent = `Level ${level}`;
       }
   
       // Adapt to light and dark modes
@@ -99,52 +96,6 @@ export const updateProgressBar = () => {
       resolve();
     });
   });
-};
-
-export const monitorBoardDiv = () => {
-  const observer = new MutationObserver(() => {
-    const boardDiv = document.querySelector('.sub.board');
-    const injectedDiv = document.querySelector('#injected-div');
-    if (boardDiv && !injectedDiv) {
-      injectDiv(boardDiv);
-    }
-  });
-
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true
-  });
-};
-
-export const injectDiv = (boardDiv) => {
-  // Create the injected div
-  const injectedDiv = document.createElement('div');
-  injectedDiv.id = 'injected-div';
-
-  // Create the message
-  const message = document.createElement('p');
-  message.innerText = 'Board Settings controlled by Hue Chess Extension';
-
-  // Create the settings button
-  const settingsButton = document.createElement('button');
-  settingsButton.innerText = 'Open Hue Chess Settings';
-  settingsButton.classList.add('button', 'button-green', 'text');
-  settingsButton.addEventListener('click', () => {
-    const userTag = document.getElementById('user_tag');
-    const backButton = document.querySelector('.sub.board .head');
-    if (backButton) backButton.click();
-    if (userTag) userTag.click();
-    openPerksModal();
-  });
-
-  // Append the message and button to the injected div
-  injectedDiv.appendChild(message);
-  injectedDiv.appendChild(settingsButton);
-
-  // Append the injected div to the board div
-  boardDiv.appendChild(injectedDiv);
-
-  console.log('Injected div added to .sub .board');
 };
 
 async function setImageSources() {
@@ -395,7 +346,7 @@ const openSettingsModal = async () => {
     });
 
     document.getElementById('reset-progress').addEventListener('click', confirmResetProgress);
-    document.getElementById('sync-ui').addEventListener('click', syncLichessUIWithExtensionState);
+    document.getElementById('reset-all').addEventListener('click', confirmResetAllSettings);
 
     if (process.env.NODE_ENV !== 'production') {
       document.getElementById('dev-tools').style.display = 'block';
@@ -427,11 +378,9 @@ const openSettingsModal = async () => {
          try {
            const extensionState = JSON.parse(jsonString);
 
-           browser.storage.local.set(extensionState, () => {
+           browser.storage.local.set(extensionState, async () => {
             alert('Extension state imported successfully.');
-            updateUIAfterImport(extensionState);
-            updatePerksModalContent();
-            updatePerksHeader();
+            await updateHueChessUI(extensionState);
            });
          } catch (error) {
            alert('Invalid game string. Please try again.');
@@ -475,47 +424,6 @@ export const waitForElm = (selector) => {
     });
   });
 }
-
-export const updateUIAfterImport = async (extensionState) => {
-  const { completedBoards, currentHue } = extensionState;
-
-  const userTag = await waitForElm('#user_tag');
-  userTag.click();
-  
-  const dasherApp = document.getElementById('dasher_app');
-  if (!dasherApp) {
-    console.error("updateUIAfterImport: dasher_app element not found");
-    return;
-  }
-
-  const subsDiv = await waitForElm('.subs');
-  const subButtons = subsDiv.querySelectorAll('button.sub');
-  if (subButtons.length < 5) {
-    console.error(`updateUIAfterImport: expected at least 5 buttons in menu container, but found ${subButtons.length}`);
-    return;
-  }
-  const boardButton = subButtons[3];
-  boardButton.click();
-
-  const boardList = await waitForElm('.list');
-  const targetBoardTitle = levelNames[completedBoards].toLowerCase();
-  const targetBoardButton = boardList.querySelector(`button[title="${targetBoardTitle}"]`);
-  if (!targetBoardButton) {
-    console.error(`updateUIAfterImport: ${targetBoardTitle} board button not found`);
-    return;
-  }
-
-  targetBoardButton.click();
-
-  const boardBackButton = await waitForElm('.head');
-  boardBackButton.click();
-  userTag.click();
-
-  await updateHueRotateStyle(currentHue);
-  await updateProgressBar();
-  await updateProgressBarTooltip();
-
-};
 
 let progressBarTooltipInstance = null;
 
@@ -627,11 +535,11 @@ export const startAnalysisTimer = async (analysisTimeInSeconds) => {
       clearInterval(analysisTimer);
       timerElement.remove();
       document.title = 'Preparation: done';
-      activePerks = await getActivePerks(); 
+      const activePerks = await getActivePerks();
       if (activePerks.includes('preparation')) {
-        setPreparationStatus(true);
+        await setPreparationStatus(true);
         showPerkToast('preparation', 'Preparation: requirement fulfilled');
-        updateProgressBarTooltip();
+        await updateProgressBarTooltip();
       }
     }
   }, 200);
@@ -643,53 +551,6 @@ const formatTime = (seconds) => {
   return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
 };
 
-export const resetUserMenuState = async () => {
-  try {
-    const userTag = await waitForElm('#user_tag');
-    userTag.click();
-
-    const dasherApp = document.getElementById('dasher_app');
-    if (!dasherApp) {
-      console.log("Dasher app not found");
-      return;
-    }
-
-    const backButton = dasherApp.querySelector('.head');
-    if (backButton) {
-      backButton.click();
-      console.log('Menu was not in default state, clicked back button to reset');
-    } else {
-      console.log('Menu is already in default state');
-    }
-    userTag.click();
-  } catch (error) {
-    console.error('An error occurred while resetting the user menu state:', error);
-  }
-};
-
-
-export const syncLichessUIWithExtensionState = async () => {
-  try {
-    await resetLichessBoardState();
-    const completedBoards = await getCompletedBoards();
-    const currentHue = await getCurrentHue();
-
-    const extensionState = {
-      completedBoards,
-      currentHue,
-    };
-
-    await updateUIAfterImport(extensionState);
-    // close user menu
-    const userTag = await waitForElm('#user_tag');
-    userTag.click(); 
-    console.log('syncLichessUIWithExtensionState: UI synchronized with extension state.');
-  } catch (error) {
-    console.error('syncLichessUIWithExtensionState: Error Occurred:', error);
-  }
-};
-
-
 const convertHuePointsToDegrees = (huePoints) => {
   if (huePoints < 0 || huePoints > 100) {
       throw new Error("Hue points must be between 0 and 100.");
@@ -698,110 +559,31 @@ const convertHuePointsToDegrees = (huePoints) => {
 }
 
 
-export const updateHueRotateStyle = async (huePoints) => {
+export const updateHueRotateStyle = (huePoints) => {
   const degrees = convertHuePointsToDegrees(huePoints);
   
   addStyle(`cg-board { filter: hue-rotate(${degrees}deg) !important; visibility: visible !important; }`);
   
 }
 
-const addStyle = (() => {
-  const style = document.createElement('style');
-  document.head.append(style);
-  return (styleString) => style.textContent = styleString;
-})();
-
-// event handler that populates dasher-app user-menu may not be set immediately on page-load.
-// retry to see if dasher_app menu is populated before continuing with any menu interactions 
-// (you usually need to only check for this if you're doing menu interactions on page-load). 
-export async function ensureDasherAppIsPopulated(maxRetries) {
-  let retries = 0;
-   while (retries < maxRetries) {
-     const userTag = document.querySelector('#user_tag');
-     const dasherApp = document.querySelector('#dasher_app');
-
-     if (userTag) {
-       userTag.click();
-       console.log('user_tag clicked');
-
-       await sleep(500);
-
-       if (dasherApp && dasherApp.children.length > 0) {
-         console.log('dasher_app populated');
-         return true;
-       }
-     }
-
-     retries++;
-     console.log(`Retrying to click user_tag and check dasher_app... Attempt
- ${retries}`);
-     await sleep(500);
-   }
-   console.error('Failed to populate dasher_app after multiple attempts');
-   return false;
+export const updateBoardStyle = (level) => {
+  const boardUrl = browser.runtime.getURL(BOARD_LEVEL_MAP[level]);
+  
+  addStyle(`body .is2d.is2d cg-board::before { background-image: url(${boardUrl}) !important; }`);
+  addStyle(`cg-board::before { background-image: url(${boardUrl}) !important; }`);
 }
 
-async function resetLichessBoardState() {
-  try {
-    // This section resets the board settings to default state, before applying extension state
-    // Ensure dasher-app event handler for populating user menu is set on page-load before performing any menu interactions (otherwise this function hangs).
-    const dasherResult = await ensureDasherAppIsPopulated(10);
-      if (!dasherResult) {
-        throw new Error('Dasher-App menu failed to initialize, please contact prefabcode@gmail.com or file an issue on https://github.com/prefabcode/hue-chess');
-      }
-      
-    const userTag = await waitForElm('#user_tag');
-    userTag.click();
-    console.log('resetLichessBoardState: UserTag Clicked');
+const addStyle = ((styleString) => {
+  const style = document.createElement('style');
+  style.textContent = styleString;
+  document.head.append(style);
+});
 
-    const subsDiv = await waitForElm('.subs');
-    console.log('resetLichessBoardState: .subs retrieved');
-    const subButtons = subsDiv.querySelectorAll('button.sub');
-    const boardButton = subButtons[3]; // Assuming this is the board button
-
-    boardButton.click();
-    console.log("resetLichessBoardState: Clicked board button");
-
-    const boardSettingsDiv = await waitForElm('.board');
-    const dimensionSelector = boardSettingsDiv.querySelector('.selector');
-    const the2DButton =
-Array.from(dimensionSelector.querySelectorAll('button')).find(button =>
-button.textContent === '2D');
-    the2DButton.click();
-    console.log('resetLichessBoardState: Clicked 2D button');
-
-    const boardList = await waitForElm('.list');
-    const brownBoardButton = boardList.querySelector('button[title="brown"]');
-    brownBoardButton.click();
-    console.log("resetLichessBoardState: Clicked brown board button");
-
-    const isTransparentMode = document.body.classList.contains('transp');
-    if (isTransparentMode) {
-      const boardOpacityDiv = await waitForElm('.board-opacity');
-      const opacitySlider = boardOpacityDiv.querySelector('input.range');
-      opacitySlider.value = 100;
-      opacitySlider.dispatchEvent(new Event('input'));
-      console.log('resetLichessBoardState: Opacity slider set to 100');
-    } else {
-      const boardBrightnessDiv = await waitForElm('.board-brightness');
-      const brightnessSlider = boardBrightnessDiv.querySelector('input.range');
-      brightnessSlider.value = 100;
-      brightnessSlider.dispatchEvent(new Event('input'));
-      console.log('resetLichessBoardState: Brightness slider set to 100');
-    }
-
-    const boardHueDiv = await waitForElm('.board-hue');
-    const hueSlider = boardHueDiv.querySelector('input.range');
-    hueSlider.value = 0;
-    hueSlider.dispatchEvent(new Event('input'));
-    console.log("resetLichessBoardState: Set hue slider to 0");
-
-    const boardBackButton = await waitForElm('.head');
-    boardBackButton.click(); 
-    userTag.click();
-
-  } catch (error) {
-    console.error(`resetLichessBoardState: Error occurred: ${error}`);
-  }
- 
+export const updateHueChessUI = async (state) => {
+  updateBoardStyle(state.completedBoards);
+  updateHueRotateStyle(state.currentHue);
+  await updatePerksModalContent();
+  await updatePerksHeader();
+  await updateProgressBar();
+  await updateProgressBarTooltip();
 }
