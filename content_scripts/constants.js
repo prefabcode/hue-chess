@@ -16,7 +16,7 @@ export const TIPS = [
   "Wins in slower time controls award more hue points than wins in shorter time controls.",
   "You can only earn hue points if you are signed in to Lichess.",
   "You can look at other tabs while the preparation timer is counting down. Just make sure that it's chess related material so that you're getting the most out of the perk!",
-  "Got feedback? Want to tell everyone about your favorite perk setup? Join the Hue Chess Discord community: <a href='https://discord.gg/Q5zKzcJA2b' target='_blank'>Join Discord</a>",
+  "Got feedback? Want to tell everyone about your favorite perk setup? Join the Hue Chess League team: <a href='https://lichess.org/team/hue-chess-league' target='_blank'>Join Team</a>",
 ];
 
 export const PERK_DISPLAY_NAMES = {
