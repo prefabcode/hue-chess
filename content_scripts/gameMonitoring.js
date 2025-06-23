@@ -86,117 +86,124 @@ export const fetchParsedGame = async () => {
   }
 };
 
-function generateStreamId() {
-  return Math.random().toString(36).substring(2, 12);
-}
+export const fetchGameStream = async (playingId, userColor) => {
+  const connectToStream = async () => {
+    const streamId = Math.random().toString(36).substring(2, 12);
+    const apiUrl = `https://lichess.org/api/stream/games/${streamId}`;
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain'
+        },
+        body: playingId
+      });
 
-export const fetchGameStream = async (streamId, playingId, userColor) => {
-  const apiUrl = `https://lichess.org/api/stream/games/${streamId}`;
-  try {
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'text/plain'
-      },
-      body: playingId
-    });
+      if (!response.ok) {
+        throw new Error(`API request failed with status ${response.status}`);
+      }
 
-    if (!response.ok) {
-      throw new Error(`API request failed with status ${response.status}`);
-    }
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let ndjsonBuffer = '';
 
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let ndjsonBuffer = '';
+      const read = async () => {
+        try {
+          const { done, value } = await reader.read();
+          if (done) {
+            console.log('Stream ended.'); 
+            return;
+          }
 
-    const read = async () => {
-      try {
-        const { done, value } = await reader.read();
-        if (done) {
-          console.log('Stream ended.');
-          return;
-        }
+          ndjsonBuffer += decoder.decode(value, { stream: true });
+          let lines = ndjsonBuffer.split('\n');
+          ndjsonBuffer = lines.pop(); // Keep the last incomplete line in the buffer
 
-        ndjsonBuffer += decoder.decode(value, { stream: true });
-        let lines = ndjsonBuffer.split('\n');
-        ndjsonBuffer = lines.pop(); // Keep the last incomplete line in the buffer
+          for (const line of lines) {
+            if (line.trim()) {
+              try {
+                const data = JSON.parse(line);
+                console.log(`[${new Date().toISOString()}] Received data:`, data);
 
-        for (const line of lines) {
-          if (line.trim()) {
-            try {
-              const data = JSON.parse(line);
-              console.log(`[${new Date().toISOString()}] Received data:`, data);
+                // Check if the game has started
+                if (data.statusName === 'started') {
+                  const user1 = data.players.white.userId;
+                  const user2 = data.players.black.userId;
 
-              // Check if the game has started
-              if (data.statusName === 'started') {
-                const user1 = data.players.white.userId;
-                const user2 = data.players.black.userId;
+                  // Reset the global variable
+                  await setHasPlayedBefore(false);
 
-                // Reset the global variable
-                await setHasPlayedBefore(false);
-
-                // Fetch the crosstable data
-                const crosstableResponse = await fetch(`https://lichess.org/api/crosstable/${user1}/${user2}`);
-                const crosstableData = await crosstableResponse.json();
-                if (crosstableData.nbGames > 0) {
-                  await setHasPlayedBefore(true);
+                  // Fetch the crosstable data
+                  const crosstableResponse = await fetch(`https://lichess.org/api/crosstable/${user1}/${user2}`);
+                  const crosstableData = await crosstableResponse.json();
+                  if (crosstableData.nbGames > 0) {
+                    await setHasPlayedBefore(true);
+                  }
                 }
-              }
 
-              // Handle the data (e.g., check if the game has finished)
-              if (data.statusName && data.statusName !== 'started') {
-                console.log('The game has finished.', data);
-                const game = await fetchParsedGame();
-                if (game) {
-                  const result = checkForWinOrLoss(userColor, game);
-                  const activePerks = await getActivePerks();
-                  if (result.win) {
-                    const winningStreak = await getWinningStreak();
-                    await setWinningStreak(winningStreak + 1);
-                    
-                    if (activePerks.includes('gladiator')) {
-                      const gladiatorLossBuffer = await getGladiatorLossBuffer();
-                      await setGladiatorLossBuffer(gladiatorLossBuffer + 1);
-                    }
-                    await incrementHue(game);
-                  } else if (result.loss) {
-                    setWinningStreak(0);
-                    if (activePerks.includes('gladiator')) {
-                      const gladiatorLossBuffer = await getGladiatorLossBuffer();
-                      if (gladiatorLossBuffer > 0) {
-                        await setGladiatorLossBuffer(gladiatorLossBuffer - 1);
-                      } else {
-                        await resetGladiatorLossBuffer();
-                        await applyGladiatorPenalty();
-                        await setAllowGladiatorPerkRemoval(true);
-                        await updateActivePerks('gladiator', false);
+                // Handle the data (e.g., check if the game has finished)
+                if (data.statusName && data.statusName !== 'started') {
+                  console.log('The game has finished.', data);
+                  const game = await fetchParsedGame();
+                  if (game) {
+                    const result = checkForWinOrLoss(userColor, game);
+                    const activePerks = await getActivePerks();
+                    if (result.win) {
+                      const winningStreak = await getWinningStreak();
+                      await setWinningStreak(winningStreak + 1);
+                      
+                      if (activePerks.includes('gladiator')) {
+                        const gladiatorLossBuffer = await getGladiatorLossBuffer();
+                        await setGladiatorLossBuffer(gladiatorLossBuffer + 1);
+                      }
+                      await incrementHue(game);
+                    } else if (result.loss) {
+                      setWinningStreak(0);
+                      if (activePerks.includes('gladiator')) {
+                        const gladiatorLossBuffer = await getGladiatorLossBuffer();
+                        if (gladiatorLossBuffer > 0) {
+                          await setGladiatorLossBuffer(gladiatorLossBuffer - 1);
+                        } else {
+                          await resetGladiatorLossBuffer();
+                          await applyGladiatorPenalty();
+                          await setAllowGladiatorPerkRemoval(true);
+                          await updateActivePerks('gladiator', false);
+                        }
+                      }
+                      if (activePerks.includes('preparation')) {
+                        await setPreparationStatus(false);
                       }
                     }
-                    if (activePerks.includes('preparation')) {
-                      await setPreparationStatus(false);
-                    }
+                    await setPlayingId(null);
+                    updateProgressBarTooltip();
+                    reader.cancel();
                   }
-                  await setPlayingId(null);
-                  updateProgressBarTooltip();
-                  reader.cancel();
                 }
+              } catch (error) {
+                console.error('Error parsing NDJSON line:', error);
               }
-            } catch (error) {
-              console.error('Error parsing NDJSON line:', error);
             }
           }
+
+          read(); // Continue reading
+        } catch (error) {
+          console.error('Error reading stream:', error);
+          await reconnectToStream();
         }
+      };
 
-        read(); // Continue reading
-      } catch (error) {
-        console.error('Error reading stream:', error);
-      }
-    };
+      read();
 
-    read();
+    } catch (error) {
+      console.error("Error fetching game stream from Lichess API:", error);
+      await reconnectToStream();
+    }
+  }
 
-  } catch (error) {
-    console.error("Error fetching game stream from Lichess API:", error);
+  await connectToStream();
+  const reconnectToStream = async () => {
+    console.log('FetchGameStream: reconnecting to game stream...');
+    setTimeout(() => connectToStream(), 3000);
   }
 };
 
@@ -253,8 +260,7 @@ export const monitorGame = async () => {
   const playingId = await getPlayingId();
   if (!playingId) return;
 
-  const streamId = generateStreamId();
-  fetchGameStream(streamId, playingId, userColor);
+  fetchGameStream(playingId, userColor);
 };
 
 export const checkUrlAndStartMonitoring = async () => {
