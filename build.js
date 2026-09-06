@@ -73,7 +73,7 @@ function buildForChrome() {
 
   esbuild.build({
     entryPoints: ['background-chrome.js'],
-    bundle: false,
+    bundle: true,
     outfile: path.join(buildDirChrome, 'background-bundle.js')
   }).catch(() => process.exit(1));
   console.log('background-bundle.js created for chrome');

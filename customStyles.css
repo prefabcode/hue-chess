@@ -544,3 +544,44 @@ dialog.hue-modal .dialog-content.alert .invalid {
 #reroll-perks-btn:hover {
   transform: scale(1.15);
 }
+
+.obs-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  justify-content: center;
+  margin: 0.8em 0;
+  cursor: pointer;
+}
+
+.obs-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5em 0.8em;
+  align-items: center;
+  max-width: 22em;
+  margin: 0 auto 0.8em;
+  text-align: start;
+}
+
+.obs-grid input {
+  background: var(--c-bg-zebra);
+  color: var(--c-font);
+  border: 1px solid var(--c-border);
+  border-radius: 3px;
+  padding: 0.35em 0.5em;
+  font-family: inherit;
+  width: 100%;
+}
+
+.obs-status {
+  font-weight: bold;
+}
+
+.obs-status[data-state='connected'] {
+  color: var(--c-good);
+}
+
+.obs-status[data-state='auth-failed'] {
+  color: var(--c-bad);
+}

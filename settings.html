@@ -16,7 +16,25 @@
       <!-- Streamer Kit Section -->
       <div id="streamer-kit" class="section">
         <h3>Streamer Kit</h3>
-        <p>Open the broadcast overlay in its own window. Capture that window in OBS, or use it to check the layout before going live.</p>
+        <p>Broadcast your progress to an OBS browser source. In OBS, open Tools &rarr; WebSocket Server Settings, enable the server, then paste its password here.</p>
+
+        <label class="obs-toggle">
+          <input type="checkbox" id="obs-enabled">
+          <span>Send state to OBS</span>
+        </label>
+
+        <div class="obs-grid">
+          <label for="obs-host">Host</label>
+          <input id="obs-host" type="text" spellcheck="false" autocomplete="off">
+          <label for="obs-port">Port</label>
+          <input id="obs-port" type="text" inputmode="numeric" autocomplete="off">
+          <label for="obs-password">Password</label>
+          <input id="obs-password" type="password" autocomplete="off">
+        </div>
+
+        <p id="obs-status" class="obs-status">Disconnected</p>
+
+        <p>The overlay window below is for previewing the layout. Use an OBS browser source for streaming &mdash; a window capture goes stale whenever another window covers it.</p>
         <button id="open-streamer-overlay" class="styled-button">Open overlay window</button>
       </div>
 

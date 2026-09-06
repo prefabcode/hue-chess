@@ -18,6 +18,7 @@ import {
   getRandomizerOrder,
   setRandomizerOrder
 } from './storageManagement.js';
+import { getObsSettings, setObsSettings, OBS_DEFAULTS } from '../streamer/obsSettings.js';
 import { showPerkToast } from './perks.js';
 import { PREPARATION_TIME, TIPS, MAX_PERKS, browser, BOARD_LEVEL_MAP } from './constants.js';
 import tippy from 'tippy.js';
@@ -473,12 +474,65 @@ export const updatePerksHeader = async () => {
   }
 }
 
+const OBS_STATUS_LABELS = {
+  'disconnected': 'Disconnected',
+  'connecting': 'Connecting…',
+  'connected': 'Connected to OBS',
+  'auth-failed': 'Wrong password — check OBS WebSocket settings',
+};
+
+let obsStatusTimer = null;
+
+const initObsSettings = async (modal) => {
+  const fields = {
+    obsEnabled: modal.querySelector('#obs-enabled'),
+    obsHost: modal.querySelector('#obs-host'),
+    obsPort: modal.querySelector('#obs-port'),
+    obsPassword: modal.querySelector('#obs-password'),
+  };
+
+  const settings = await getObsSettings();
+  fields.obsEnabled.checked = settings.obsEnabled;
+  fields.obsHost.value = settings.obsHost;
+  fields.obsPort.value = settings.obsPort;
+  fields.obsPassword.value = settings.obsPassword;
+
+  const persist = () => setObsSettings({
+    obsEnabled: fields.obsEnabled.checked,
+    obsHost: fields.obsHost.value.trim() || OBS_DEFAULTS.obsHost,
+    obsPort: fields.obsPort.value.trim() || OBS_DEFAULTS.obsPort,
+    obsPassword: fields.obsPassword.value,
+  });
+
+  Object.values(fields).forEach((field) => field.addEventListener('change', persist));
+};
+
+const startObsStatusPolling = (modal) => {
+  const readout = modal.querySelector('#obs-status');
+  if (!readout) return;
+
+  const refresh = () => {
+    browser.runtime.sendMessage({ action: 'getObsStatus' }, (response) => {
+      if (browser.runtime.lastError || !response) return;
+      readout.textContent = OBS_STATUS_LABELS[response.status] ?? response.status;
+      readout.dataset.state = response.status;
+    });
+  };
+
+  clearInterval(obsStatusTimer);
+  refresh();
+  obsStatusTimer = setInterval(refresh, 1000);
+
+  modal.addEventListener('close', () => clearInterval(obsStatusTimer), { once: true });
+};
+
 const openSettingsModal = async () => {
   try {
     let modal = document.querySelector('#hue-chess-settings-modal');
     if (modal) {
       document.body.style.overflowY = 'hidden';
       modal.showModal();
+      startObsStatusPolling(modal);
       return;
     }
 
@@ -509,6 +563,9 @@ const openSettingsModal = async () => {
     document.getElementById('open-streamer-overlay').addEventListener('click', () => {
       browser.runtime.sendMessage({ action: 'openStreamerOverlay' });
     });
+
+    await initObsSettings(modal);
+    startObsStatusPolling(modal);
 
     if (process.env.NODE_ENV !== 'production') {
       document.getElementById('dev-tools').style.display = 'block';
