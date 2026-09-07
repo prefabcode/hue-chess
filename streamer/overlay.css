@@ -333,11 +333,43 @@ body {
 
 /* ---------- centre ---------- */
 
+.center {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
 .board-slot {
-  align-self: center;
   width: 100%;
   aspect-ratio: 1;
   pointer-events: none;
+}
+
+.brand {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: calc(50% + var(--board-size) / 2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .7rem;
+  opacity: .92;
+}
+
+.brand__mark {
+  width: 2.1rem;
+  height: 2.1rem;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, .7));
+}
+
+.brand__word {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, .7);
 }
 
 /* ---------- right: clocks ---------- */

@@ -109,7 +109,7 @@ function buildForChrome() {
   }).catch(() => process.exit(1));
   console.log('overlay-live.js created for chrome');
 
-  ['overlay.html', 'overlay.css'].forEach(file => {
+  ['overlay.html', 'overlay.css', 'lichess-logo.svg'].forEach(file => {
     copyFileSync(path.join(__dirname, 'streamer', file),
       path.join(streamerDirChrome, file));
   });
