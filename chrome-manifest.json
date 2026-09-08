@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Perk Chess",
-    "version": "2.0.03",
+    "version": "2.0.4",
     "description": "Adds Call of Duty–inspired gamification to lichess.org: XP points, Levels, Perks, Specializations, and Prestige.",
     "permissions": [
         "activeTab",

@@ -1,6 +1,10 @@
 <dialog id="hue-chess-perks-modal" class="hue-modal">
     <div class="close-button-anchor">
-      <button id="close-perks-modal" class="close-button" data-icon="" aria-label="Close"></button>
+      <button id="close-perks-modal" class="close-button" aria-label="Close">
+        <svg class="hue-close-icon" width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 5 19 19M19 5 5 19" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/>
+        </svg>
+      </button>
     </div>
     <div class="scrollable">
       <div class="dialog-content">
@@ -34,7 +38,10 @@
         </div>
 
          <div class="flash flash-quiet">
-          <p id="tips-message" class="text" data-icon=""></p>
+          <svg class="hue-tip-icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" fill-rule="evenodd" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM12 6a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm-1.25 5h2.5v7h-2.5z"/>
+          </svg>
+          <p id="tips-message" class="text"></p>
         </div>
       </div>
     </div>
