@@ -18,7 +18,11 @@ function createOnboardingModal() {
   const content = document.createElement('div');
   content.innerHTML = `
     <div class="close-button-anchor">
-      <button id="close-hue-onboarding-modal-x" class="close-button" data-icon="" aria-label="Close"></button>
+      <button id="close-hue-onboarding-modal-x" class="close-button" aria-label="Close">
+        <svg class="hue-close-icon" width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 5 19 19M19 5 5 19" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/>
+        </svg>
+      </button>
     </div>
     <div class="scrollable dialog-content">
       <h2>Welcome to Perk Chess!</h2>
