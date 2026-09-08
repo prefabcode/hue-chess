@@ -42,6 +42,6 @@ export const MAX_PERKS = 2;
 
 export const LEVEL_CAP = 15;
 
-export const CURRENT_VERSION = '2.0.03';
+export const CURRENT_VERSION = '2.0.4';
 
 export const GLADIATOR_PENALTY = 35;
