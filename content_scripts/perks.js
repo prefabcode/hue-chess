@@ -455,7 +455,7 @@ const isHypermodernFulfilled = (userName, game) => {
   const moves = game.moves;
   const startIndex = playerColor === 'white' ? 0 : 1;
 
-  for (let count = 0, i = startIndex; count < 5 && i < moves.length; count++, i += 2) {
+  for (let count = 0, i = startIndex; count < 4 && i < moves.length; count++, i += 2) {
     const san = moves[i].notation.notation;
     // Pawn moves start with a file letter; piece moves start with N/B/R/Q/K and castling with O.
     if (!/^[a-h]/.test(san)) continue;

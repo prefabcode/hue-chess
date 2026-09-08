@@ -17,7 +17,7 @@ export const PERK_METADATA = [
     id: 3,
     internalName: 'hypermodern',
     displayName: 'Hypermodern',
-    description: 'Earn an additional [3-5] XP points for winning a game in which you do not move a pawn to one of the four central squares (e4, e5, d4, d5) within your first five moves.'
+    description: 'Earn an additional [3-5] XP points for winning a game in which you do not move a pawn to one of the four central squares (e4, e5, d4, d5) within your first four moves.'
   },
   {
     id: 4,
